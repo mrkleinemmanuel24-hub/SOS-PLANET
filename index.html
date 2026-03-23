@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Planet — Sauvons la planete ensemble</title>
+<meta name="description" content="100 outils concrets pour sauver la planete. Gratuit, open source, pour tous.">
+<meta name="theme-color" content="#0a1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a1628;color:#e0e7ef;min-height:100vh;overflow-x:hidden}
+
+/* Header */
+.header{text-align:center;padding:48px 24px 32px}
+.globe{font-size:4.5rem;animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+h1{font-size:2.4rem;font-weight:900;margin:12px 0 8px;background:linear-gradient(135deg,#34d399,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tagline{color:rgba(224,231,239,.55);font-size:1rem;line-height:1.6;max-width:440px;margin:0 auto 24px}
+
+/* Stats */
+.stats{display:flex;gap:12px;justify-content:center;padding:0 24px;margin-bottom:32px;flex-wrap:wrap}
+.stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 20px;min-width:90px;flex:1;max-width:130px}
+.stat-val{font-size:1.5rem;font-weight:900;color:#34d399}
+.stat-lbl{font-size:.65rem;color:rgba(224,231,239,.35);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+
+/* Section titles */
+.section-title{padding:0 24px;margin-bottom:16px}
+.section-title h2{font-size:1.1rem;font-weight:800;color:#34d399;display:flex;align-items:center;gap:8px}
+.section-title h2::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(52,211,153,.3),transparent)}
+.section-title p{font-size:.8rem;color:rgba(224,231,239,.4);margin-top:4px}
+
+/* Module cards */
+.modules{padding:0 16px;margin-bottom:40px}
+.module-grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:520px){.module-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:800px){.module-grid{grid-template-columns:1fr 1fr 1fr}}
+
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;text-decoration:none;color:inherit;transition:all .3s ease;position:relative;overflow:hidden;display:block}
+.card:hover{transform:translateY(-3px);border-color:rgba(52,211,153,.3);box-shadow:0 8px 32px rgba(52,211,153,.1)}
+.card.active{border-color:rgba(52,211,153,.5);background:rgba(52,211,153,.06)}
+.card.coming-soon{opacity:.6}
+.card.coming-soon:hover{transform:none;cursor:default}
+
+.card-icon{font-size:2rem;margin-bottom:10px;display:block}
+.card-title{font-size:1rem;font-weight:800;margin-bottom:6px}
+.card-desc{font-size:.8rem;color:rgba(224,231,239,.5);line-height:1.5}
+.card-badge{position:absolute;top:12px;right:12px;font-size:.6rem;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+.badge-live{background:rgba(52,211,153,.15);color:#34d399}
+.badge-soon{background:rgba(234,179,8,.12);color:#eab308}
+
+/* Upcoming modules grid */
+.upcoming{padding:0 16px;margin-bottom:48px}
+.upcoming-grid{display:flex;flex-wrap:wrap;gap:8px}
+.upcoming-chip{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:8px 14px;font-size:.75rem;color:rgba(224,231,239,.4);display:flex;align-items:center;gap:6px}
+.upcoming-chip span{font-size:1rem}
+
+/* Footer */
+.footer{text-align:center;padding:32px 24px;border-top:1px solid rgba(255,255,255,.06)}
+.footer p{font-size:.75rem;color:rgba(224,231,239,.25);line-height:1.8}
+.footer a{color:#34d399;text-decoration:none}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="globe">🌍</div>
+  <h1>SOS Planet</h1>
+  <p class="tagline">100 outils concrets pour sauver la planete.<br>Gratuit. Open source. Pour tous.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-val">100</div><div class="stat-lbl">Modules</div></div>
+    <div class="stat"><div class="stat-val">10</div><div class="stat-lbl">Domaines</div></div>
+    <div class="stat"><div class="stat-val">30+</div><div class="stat-lbl">APIs</div></div>
+    <div class="stat"><div class="stat-val">0</div><div class="stat-lbl">Tracking</div></div>
+  </div>
+</header>
+
+<!-- Active Module -->
+<div class="section-title">
+  <h2>Modules actifs</h2>
+  <p>Prets a utiliser maintenant</p>
+</div>
+<div class="modules">
+  <div class="module-grid">
+    <a href="carbone.html" class="card active">
+      <span class="card-badge badge-live">En ligne</span>
+      <span class="card-icon">🌡️</span>
+      <div class="card-title">SOS Carbone</div>
+      <div class="card-desc">Calculez votre empreinte carbone personnelle en 5 min. Score 0-100, plan de reduction, gamification.</div>
+    </a>
+  </div>
+</div>
+
+<!-- Prochains modules -->
+<div class="section-title">
+  <h2>Prochains modules</h2>
+  <p>En construction — bientot disponibles</p>
+</div>
+<div class="modules">
+  <div class="module-grid">
+    <div class="card coming-soon">
+      <span class="card-badge badge-soon">Bientot</span>
+      <span class="card-icon">💨</span>
+      <div class="card-title">SOS Air</div>
+      <div class="card-desc">Qualite de l'air en temps reel. Indice ATMO, polluants, alertes sante personnalisees.</div>
+    </div>
+    <div class="card coming-soon">
+      <span class="card-badge badge-soon">Bientot</span>
+      <span class="card-icon">💧</span>
+      <div class="card-title">SOS Eau Potable</div>
+      <div class="card-desc">Qualite de votre eau du robinet. Analyses ARS, nitrates, pesticides, plomb.</div>
+    </div>
+    <div class="card coming-soon">
+      <span class="card-badge badge-soon">Bientot</span>
+      <span class="card-icon">♻️</span>
+      <div class="card-title">SOS Tri</div>
+      <div class="card-desc">Ou jeter quoi ? Consignes de tri de votre commune, scan code-barres, parcours du dechet.</div>
+    </div>
+    <div class="card coming-soon">
+      <span class="card-badge badge-soon">Bientot</span>
+      <span class="card-icon">🏜️</span>
+      <div class="card-title">SOS Secheresse</div>
+      <div class="card-desc">Restrictions d'eau en temps reel. Niveau d'alerte, gestes obligatoires, economies d'eau.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Tous les modules -->
+<div class="section-title">
+  <h2>Les 100 modules</h2>
+  <p>La boite a outils environnementale complete</p>
+</div>
+<div class="upcoming">
+  <div class="upcoming-grid">
+    <div class="upcoming-chip"><span>⚡</span> SOS Energie</div>
+    <div class="upcoming-chip"><span>🌡️</span> SOS Climat Local</div>
+    <div class="upcoming-chip"><span>🔌</span> SOS Electricite Verte</div>
+    <div class="upcoming-chip"><span>🏠</span> SOS Renovation</div>
+    <div class="upcoming-chip"><span>☀️</span> SOS Chaleur</div>
+    <div class="upcoming-chip"><span>🧱</span> SOS Isolation</div>
+    <div class="upcoming-chip"><span>☀️</span> SOS Solaire</div>
+    <div class="upcoming-chip"><span>🌳</span> SOS Biodiversite</div>
+    <div class="upcoming-chip"><span>🌲</span> SOS Arbres</div>
+    <div class="upcoming-chip"><span>🐦</span> SOS Oiseaux</div>
+    <div class="upcoming-chip"><span>🐝</span> SOS Abeilles</div>
+    <div class="upcoming-chip"><span>🌿</span> SOS Foret</div>
+    <div class="upcoming-chip"><span>🌱</span> SOS Jardin</div>
+    <div class="upcoming-chip"><span>☠️</span> SOS PFAS</div>
+    <div class="upcoming-chip"><span>🧴</span> SOS Perturbateurs</div>
+    <div class="upcoming-chip"><span>🔊</span> SOS Bruit</div>
+    <div class="upcoming-chip"><span>🌡️</span> SOS Sites Pollues</div>
+    <div class="upcoming-chip"><span>🗑️</span> SOS Dechetterie</div>
+    <div class="upcoming-chip"><span>🍂</span> SOS Compost</div>
+    <div class="upcoming-chip"><span>🔧</span> SOS Reparation</div>
+    <div class="upcoming-chip"><span>👕</span> SOS Textile</div>
+    <div class="upcoming-chip"><span>📱</span> SOS Electronique</div>
+    <div class="upcoming-chip"><span>🍽️</span> SOS Anti-Gaspi</div>
+    <div class="upcoming-chip"><span>🥗</span> SOS Assiette</div>
+    <div class="upcoming-chip"><span>🍎</span> SOS Saisons</div>
+    <div class="upcoming-chip"><span>🚲</span> SOS Velo</div>
+    <div class="upcoming-chip"><span>✈️</span> SOS Avion</div>
+    <div class="upcoming-chip"><span>🚗</span> SOS Voiture</div>
+    <div class="upcoming-chip"><span>🏠</span> SOS Teletravail</div>
+    <div class="upcoming-chip"><span>🌊</span> SOS Ocean</div>
+    <div class="upcoming-chip"><span>💧</span> SOS Eau</div>
+    <div class="upcoming-chip"><span>🏖️</span> SOS Plage</div>
+    <div class="upcoming-chip"><span>🏢</span> SOS Bureau Vert</div>
+    <div class="upcoming-chip"><span>🎓</span> SOS Ecole</div>
+    <div class="upcoming-chip"><span>📊</span> SOS ESG</div>
+    <div class="upcoming-chip"><span>🏙️</span> SOS Ville Verte</div>
+    <div class="upcoming-chip"><span>+64 autres...</span></div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>
+    SOS Planet — Un projet <a href="https://github.com/mrkleinemmanuel24-hub" target="_blank">Emmanuel Klein</a><br>
+    Donnees : ADEME Base Carbone, data.gouv.fr, Copernicus, OpenAQ<br>
+    Zero tracking. Zero cookie. Heberge sur Cloudflare Pages (green CDN).<br>
+    🚀 Lancement Q2 2026
+  </p>
+</footer>
+
+</body>
+</html>

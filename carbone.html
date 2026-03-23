@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Carbone — Calculez votre empreinte carbone</title>
+<meta name="description" content="Calculateur d'empreinte carbone personnelle base sur les facteurs ADEME Base Carbone. Gratuit, sans tracking.">
+<meta name="theme-color" content="#0a1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a1628;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --text:#e0e7ef;--text-dim:rgba(224,231,239,.5);--text-muted:rgba(224,231,239,.3);
+  --green:#34d399;--green-dim:rgba(52,211,153,.15);
+  --blue:#2563eb;--yellow:#eab308;--orange:#f97316;--red:#ef4444;
+  --radius:14px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
+a{color:var(--green);text-decoration:none}
+
+/* Top bar */
+.topbar{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,22,40,.95);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+/* Hero */
+.hero{text-align:center;padding:32px 24px 24px}
+.hero-icon{font-size:3.5rem;display:block;margin-bottom:12px}
+.hero h2{font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,var(--green),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.hero p{color:var(--text-dim);font-size:.9rem;line-height:1.6;max-width:400px;margin:0 auto}
+.hero-stats{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.hero-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:.75rem;text-align:center}
+.hero-stat strong{display:block;font-size:1.1rem;color:var(--green);margin-bottom:2px}
+
+/* Progress bar */
+.progress-wrap{padding:0 20px;margin-bottom:8px}
+.progress-bar{height:4px;background:var(--surface);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:4px;transition:width .4s ease;width:0%}
+.progress-label{display:flex;justify-content:space-between;font-size:.7rem;color:var(--text-muted);margin-top:6px}
+
+/* Steps */
+.step{display:none;padding:20px;animation:fadeIn .4s ease}
+.step.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.step-header{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;flex-shrink:0}
+.step-header h3{font-size:1.1rem;font-weight:800}
+.step-header p{font-size:.75rem;color:var(--text-dim);margin-top:2px}
+
+/* Form elements */
+.field{margin-bottom:20px}
+.field label{display:block;font-size:.85rem;font-weight:700;margin-bottom:8px;color:var(--text)}
+.field .hint{font-size:.7rem;color:var(--text-muted);margin-top:4px}
+input[type=range]{width:100%;-webkit-appearance:none;background:transparent;margin:8px 0}
+input[type=range]::-webkit-slider-track{height:6px;border-radius:3px;background:rgba(255,255,255,.08)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--green);cursor:pointer;margin-top:-9px;box-shadow:0 2px 8px rgba(52,211,153,.3)}
+input[type=number],select{width:100%;padding:12px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.95rem;font-family:inherit;outline:none;transition:border .2s}
+input[type=number]:focus,select:focus{border-color:var(--green)}
+select{-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2334d399' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L2 5h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+option{background:#1a2744;color:var(--text)}
+.range-val{display:inline-block;background:var(--green-dim);color:var(--green);padding:4px 12px;border-radius:8px;font-weight:800;font-size:.9rem;min-width:60px;text-align:center;margin-left:8px}
+.range-row{display:flex;align-items:center}
+.range-row input[type=range]{flex:1}
+
+/* Choice grid */
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(min-width:520px){.choices.cols-4{grid-template-columns:1fr 1fr 1fr 1fr}}
+.choice{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .25s;user-select:none}
+.choice:hover{border-color:rgba(52,211,153,.3)}
+.choice.selected{border-color:var(--green);background:var(--green-dim)}
+.choice-icon{font-size:1.6rem;display:block;margin-bottom:4px}
+.choice-label{font-size:.8rem;font-weight:700}
+.choice-sub{font-size:.65rem;color:var(--text-muted);margin-top:2px}
+
+/* Buttons */
+.btn-row{display:flex;gap:10px;margin-top:28px}
+.btn{flex:1;padding:14px;border-radius:12px;border:none;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--green),var(--blue));color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(52,211,153,.3)}
+.btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text)}
+.btn-secondary:hover{border-color:var(--green)}
+
+/* Results page */
+.result-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.result-section h3{font-size:1rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
+/* Score circle */
+.score-wrap{text-align:center;padding:20px 0}
+.score-circle{width:180px;height:180px;border-radius:50%;margin:0 auto 16px;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.score-circle svg{position:absolute;top:0;left:0;width:100%;height:100%;transform:rotate(-90deg)}
+.score-circle circle{fill:none;stroke-width:8;stroke-linecap:round}
+.score-bg{stroke:rgba(255,255,255,.06)}
+.score-fg{transition:stroke-dashoffset 1.5s ease,stroke .5s}
+.score-val{font-size:3rem;font-weight:900;line-height:1}
+.score-unit{font-size:.8rem;color:var(--text-dim);margin-top:2px}
+.score-label{font-size:.75rem;font-weight:700;margin-top:4px;padding:4px 12px;border-radius:20px;display:inline-block}
+
+/* Breakdown bars */
+.breakdown-item{margin-bottom:12px}
+.breakdown-header{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:4px}
+.breakdown-header span:first-child{font-weight:700}
+.breakdown-bar{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.breakdown-fill{height:100%;border-radius:4px;transition:width 1s ease}
+
+/* Compare */
+.compare-item{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.compare-icon{font-size:1.4rem;flex-shrink:0}
+.compare-bar-wrap{flex:1}
+.compare-label{display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:3px}
+.compare-bar{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.compare-fill{height:100%;border-radius:3px}
+
+/* Gauge */
+.gauge{height:12px;border-radius:6px;background:linear-gradient(90deg,#34d399 0%,#34d399 22%,#eab308 22%,#eab308 44%,#f97316 44%,#f97316 67%,#ef4444 67%,#ef4444 100%);position:relative;margin:16px 0 8px}
+.gauge-marker{position:absolute;top:-6px;width:4px;height:24px;background:#fff;border-radius:2px;transition:left 1s ease;box-shadow:0 0 8px rgba(255,255,255,.5)}
+.gauge-labels{display:flex;justify-content:space-between;font-size:.6rem;color:var(--text-muted)}
+
+/* Actions list */
+.action-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
+.action-rank{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.75rem;flex-shrink:0}
+.action-content{flex:1}
+.action-title{font-size:.85rem;font-weight:700;margin-bottom:3px}
+.action-impact{font-size:.75rem;color:var(--green);font-weight:700}
+.action-desc{font-size:.7rem;color:var(--text-muted);margin-top:3px;line-height:1.4}
+
+/* Badges */
+.badges-grid{display:flex;flex-wrap:wrap;gap:8px}
+.badge-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;width:80px}
+.badge-item.earned{border-color:var(--green);background:var(--green-dim)}
+.badge-item.locked{opacity:.35}
+.badge-icon{font-size:1.5rem;display:block;margin-bottom:4px}
+.badge-name{font-size:.6rem;font-weight:700;line-height:1.3}
+
+/* Planet score */
+.planet-score{text-align:center;padding:16px 0}
+.planet-big{font-size:4rem;font-weight:900;background:linear-gradient(135deg,var(--green),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.planet-subtitle{font-size:.8rem;color:var(--text-dim);margin-top:4px}
+
+/* History */
+.history-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.history-item:last-child{border:none}
+.history-date{font-size:.8rem;color:var(--text-dim)}
+.history-val{font-weight:800;font-size:.9rem}
+.history-trend{font-size:.75rem;font-weight:700}
+.trend-down{color:var(--green)}
+.trend-up{color:var(--red)}
+.trend-same{color:var(--text-muted)}
+
+/* Share btn */
+.share-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.share-btn{padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s}
+.share-btn:hover{border-color:var(--green)}
+
+/* Responsive */
+@media(min-width:640px){
+  .step,.hero,.result-section{max-width:600px;margin-left:auto;margin-right:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <a href="index.html">← SOS Planet</a>
+  <h1>🌡️ SOS Carbone</h1>
+  <div class="spacer"></div>
+</div>
+
+<!-- Hero / Intro -->
+<div id="intro" class="hero">
+  <span class="hero-icon">🌡️</span>
+  <h2>Votre empreinte carbone</h2>
+  <p>Calculez votre impact en 5 minutes.<br>Donnees ADEME Base Carbone. Gratuit. Sans tracking.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>8.9 t</strong>Moy. France</div>
+    <div class="hero-stat"><strong>4.7 t</strong>Moy. mondiale</div>
+    <div class="hero-stat"><strong>2 t</strong>Objectif 2050</div>
+  </div>
+  <div class="btn-row" style="max-width:320px;margin:20px auto 0">
+    <button class="btn btn-primary" onclick="startQuiz()">Commencer le calcul</button>
+  </div>
+  <div id="history-link" style="display:none;margin-top:12px">
+    <a href="#" onclick="showLastResult();return false" style="font-size:.85rem">Voir mon dernier resultat →</a>
+  </div>
+</div>
+
+<!-- Progress -->
+<div class="progress-wrap" id="progress-wrap" style="display:none">
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="progress-label"><span id="progress-step">Etape 1/5</span><span id="progress-pct">0%</span></div>
+</div>
+
+<!-- ==================== STEP 1: TRANSPORT ==================== -->
+<div class="step" id="step1">
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <div><h3>Transport</h3><p>Vos deplacements quotidiens et voyages</p></div>
+  </div>
+
+  <div class="field">
+    <label>🚗 Avez-vous une voiture ?</label>
+    <div class="choices" id="has-car">
+      <div class="choice" data-val="yes" onclick="selectChoice(this)">
+        <span class="choice-icon">🚗</span>
+        <div class="choice-label">Oui</div>
+      </div>
+      <div class="choice" data-val="no" onclick="selectChoice(this)">
+        <span class="choice-icon">🚶</span>
+        <div class="choice-label">Non</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field" id="car-details" style="display:none">
+    <label>Type de carburant</label>
+    <div class="choices cols-4" id="fuel-type">
+      <div class="choice" data-val="essence" onclick="selectChoice(this)">
+        <span class="choice-icon">⛽</span>
+        <div class="choice-label">Essence</div>
+        <div class="choice-sub">0.193 kg/km</div>
+      </div>
+      <div class="choice" data-val="diesel" onclick="selectChoice(this)">
+        <span class="choice-icon">⛽</span>
+        <div class="choice-label">Diesel</div>
+        <div class="choice-sub">0.158 kg/km</div>
+      </div>
+      <div class="choice" data-val="hybride" onclick="selectChoice(this)">
+        <span class="choice-icon">🔋</span>
+        <div class="choice-label">Hybride</div>
+        <div class="choice-sub">0.110 kg/km</div>
+      </div>
+      <div class="choice" data-val="electrique" onclick="selectChoice(this)">
+        <span class="choice-icon">⚡</span>
+        <div class="choice-label">Electrique</div>
+        <div class="choice-sub">0.020 kg/km</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field" id="car-km-field" style="display:none">
+    <label>Kilometres par an</label>
+    <div class="range-row">
+      <input type="range" id="car-km" min="0" max="50000" step="500" value="12000" oninput="updateRange(this,'car-km-val',' km')">
+      <span class="range-val" id="car-km-val">12 000 km</span>
+    </div>
+    <div class="hint">Moyenne francaise : 12 200 km/an</div>
+  </div>
+
+  <div class="field">
+    <label>✈️ Vols en avion par an</label>
+    <div class="field">
+      <label style="font-size:.8rem;font-weight:600">Vols court-courrier (&lt; 2h, ex: Paris-Lyon)</label>
+      <div class="range-row">
+        <input type="range" id="flights-short" min="0" max="20" step="1" value="0" oninput="updateRange(this,'flights-short-val',' AR')">
+        <span class="range-val" id="flights-short-val">0 AR</span>
+      </div>
+    </div>
+    <div class="field">
+      <label style="font-size:.8rem;font-weight:600">Vols moyen-courrier (2-6h, ex: Paris-Marrakech)</label>
+      <div class="range-row">
+        <input type="range" id="flights-medium" min="0" max="15" step="1" value="0" oninput="updateRange(this,'flights-medium-val',' AR')">
+        <span class="range-val" id="flights-medium-val">0 AR</span>
+      </div>
+    </div>
+    <div class="field">
+      <label style="font-size:.8rem;font-weight:600">Vols long-courrier (&gt; 6h, ex: Paris-New York)</label>
+      <div class="range-row">
+        <input type="range" id="flights-long" min="0" max="10" step="1" value="0" oninput="updateRange(this,'flights-long-val',' AR')">
+        <span class="range-val" id="flights-long-val">0 AR</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>🚇 Transports en commun</label>
+    <div class="choices" id="public-transport">
+      <div class="choice" data-val="daily" onclick="selectChoice(this)">
+        <span class="choice-icon">🚇</span>
+        <div class="choice-label">Quotidien</div>
+      </div>
+      <div class="choice" data-val="weekly" onclick="selectChoice(this)">
+        <span class="choice-icon">🚌</span>
+        <div class="choice-label">Hebdo</div>
+      </div>
+      <div class="choice" data-val="rare" onclick="selectChoice(this)">
+        <span class="choice-icon">🚶</span>
+        <div class="choice-label">Rarement</div>
+      </div>
+      <div class="choice" data-val="never" onclick="selectChoice(this)">
+        <span class="choice-icon">❌</span>
+        <div class="choice-label">Jamais</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="nextStep(2)">Suivant →</button>
+  </div>
+</div>
+
+<!-- ==================== STEP 2: LOGEMENT ==================== -->
+<div class="step" id="step2">
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <div><h3>Logement</h3><p>Votre habitat et consommation d'energie</p></div>
+  </div>
+
+  <div class="field">
+    <label>🏠 Type de logement</label>
+    <div class="choices" id="housing-type">
+      <div class="choice" data-val="appart" onclick="selectChoice(this)">
+        <span class="choice-icon">🏢</span>
+        <div class="choice-label">Appartement</div>
+      </div>
+      <div class="choice" data-val="maison" onclick="selectChoice(this)">
+        <span class="choice-icon">🏠</span>
+        <div class="choice-label">Maison</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Surface (m2)</label>
+    <div class="range-row">
+      <input type="range" id="surface" min="10" max="300" step="5" value="70" oninput="updateRange(this,'surface-val',' m2')">
+      <span class="range-val" id="surface-val">70 m2</span>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>👥 Nombre de personnes dans le foyer</label>
+    <div class="range-row">
+      <input type="range" id="occupants" min="1" max="8" step="1" value="2" oninput="updateRange(this,'occupants-val','')">
+      <span class="range-val" id="occupants-val">2</span>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>🔥 Type de chauffage principal</label>
+    <div class="choices cols-4" id="heating-type">
+      <div class="choice" data-val="gaz" onclick="selectChoice(this)">
+        <span class="choice-icon">🔥</span>
+        <div class="choice-label">Gaz</div>
+        <div class="choice-sub">0.227 kg/kWh</div>
+      </div>
+      <div class="choice" data-val="fioul" onclick="selectChoice(this)">
+        <span class="choice-icon">🛢️</span>
+        <div class="choice-label">Fioul</div>
+        <div class="choice-sub">0.324 kg/kWh</div>
+      </div>
+      <div class="choice" data-val="elec" onclick="selectChoice(this)">
+        <span class="choice-icon">⚡</span>
+        <div class="choice-label">Electrique</div>
+        <div class="choice-sub">0.052 kg/kWh</div>
+      </div>
+      <div class="choice" data-val="bois" onclick="selectChoice(this)">
+        <span class="choice-icon">🪵</span>
+        <div class="choice-label">Bois</div>
+        <div class="choice-sub">0.030 kg/kWh</div>
+      </div>
+      <div class="choice" data-val="pac" onclick="selectChoice(this)">
+        <span class="choice-icon">💨</span>
+        <div class="choice-label">Pompe a chaleur</div>
+        <div class="choice-sub">0.017 kg/kWh</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>🧱 Qualite d'isolation</label>
+    <div class="choices" id="insulation">
+      <div class="choice" data-val="good" onclick="selectChoice(this)">
+        <span class="choice-icon">🏆</span>
+        <div class="choice-label">Bonne</div>
+        <div class="choice-sub">DPE A-C</div>
+      </div>
+      <div class="choice" data-val="average" onclick="selectChoice(this)">
+        <span class="choice-icon">👍</span>
+        <div class="choice-label">Moyenne</div>
+        <div class="choice-sub">DPE D-E</div>
+      </div>
+      <div class="choice" data-val="poor" onclick="selectChoice(this)">
+        <span class="choice-icon">🥶</span>
+        <div class="choice-label">Mauvaise</div>
+        <div class="choice-sub">DPE F-G</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>⚡ Electricite — conso annuelle (kWh)</label>
+    <div class="range-row">
+      <input type="range" id="elec-kwh" min="500" max="20000" step="100" value="4700" oninput="updateRange(this,'elec-kwh-val',' kWh')">
+      <span class="range-val" id="elec-kwh-val">4 700 kWh</span>
+    </div>
+    <div class="hint">Moyenne France : 4 700 kWh/an (hors chauffage elec). Verifiez sur votre facture !</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="nextStep(1)">← Retour</button>
+    <button class="btn btn-primary" onclick="nextStep(3)">Suivant →</button>
+  </div>
+</div>
+
+<!-- ==================== STEP 3: ALIMENTATION ==================== -->
+<div class="step" id="step3">
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <div><h3>Alimentation</h3><p>Ce que vous mangez impacte fortement votre bilan</p></div>
+  </div>
+
+  <div class="field">
+    <label>🍽️ Votre regime alimentaire</label>
+    <div class="choices" id="diet">
+      <div class="choice" data-val="omnivore" onclick="selectChoice(this)">
+        <span class="choice-icon">🥩</span>
+        <div class="choice-label">Omnivore</div>
+        <div class="choice-sub">2 300 kgCO2/an</div>
+      </div>
+      <div class="choice" data-val="flexitarien" onclick="selectChoice(this)">
+        <span class="choice-icon">🥗</span>
+        <div class="choice-label">Flexitarien</div>
+        <div class="choice-sub">1 900 kgCO2/an</div>
+      </div>
+      <div class="choice" data-val="vegetarien" onclick="selectChoice(this)">
+        <span class="choice-icon">🥬</span>
+        <div class="choice-label">Vegetarien</div>
+        <div class="choice-sub">1 700 kgCO2/an</div>
+      </div>
+      <div class="choice" data-val="vegan" onclick="selectChoice(this)">
+        <span class="choice-icon">🌱</span>
+        <div class="choice-label">Vegan</div>
+        <div class="choice-sub">1 100 kgCO2/an</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>🌿 Part de bio dans votre alimentation</label>
+    <div class="range-row">
+      <input type="range" id="bio-pct" min="0" max="100" step="5" value="15" oninput="updateRange(this,'bio-pct-val','%')">
+      <span class="range-val" id="bio-pct-val">15%</span>
+    </div>
+    <div class="hint">Le bio reduit les pesticides mais l'impact CO2 est similaire (~5% de bonus)</div>
+  </div>
+
+  <div class="field">
+    <label>📍 Part de local / circuits courts</label>
+    <div class="range-row">
+      <input type="range" id="local-pct" min="0" max="100" step="5" value="20" oninput="updateRange(this,'local-pct-val','%')">
+      <span class="range-val" id="local-pct-val">20%</span>
+    </div>
+    <div class="hint">Manger local reduit le transport mais attention : une tomate sous serre chauffe plus qu'un import !</div>
+  </div>
+
+  <div class="field">
+    <label>🗑️ Gaspillage alimentaire</label>
+    <div class="choices" id="food-waste">
+      <div class="choice" data-val="low" onclick="selectChoice(this)">
+        <span class="choice-icon">💚</span>
+        <div class="choice-label">Tres peu</div>
+        <div class="choice-sub">&lt; 10%</div>
+      </div>
+      <div class="choice" data-val="average" onclick="selectChoice(this)">
+        <span class="choice-icon">🟡</span>
+        <div class="choice-label">Un peu</div>
+        <div class="choice-sub">~20%</div>
+      </div>
+      <div class="choice" data-val="high" onclick="selectChoice(this)">
+        <span class="choice-icon">🔴</span>
+        <div class="choice-label">Beaucoup</div>
+        <div class="choice-sub">&gt; 30%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="nextStep(2)">← Retour</button>
+    <button class="btn btn-primary" onclick="nextStep(4)">Suivant →</button>
+  </div>
+</div>
+
+<!-- ==================== STEP 4: ACHATS ==================== -->
+<div class="step" id="step4">
+  <div class="step-header">
+    <div class="step-num">4</div>
+    <div><h3>Achats & Consommation</h3><p>Vetements, electronique, meubles</p></div>
+  </div>
+
+  <div class="field">
+    <label>👕 Vetements achetes par an</label>
+    <div class="range-row">
+      <input type="range" id="clothes" min="0" max="60" step="1" value="15" oninput="updateRange(this,'clothes-val',' pieces')">
+      <span class="range-val" id="clothes-val">15 pieces</span>
+    </div>
+    <div class="hint">Moyenne France : 40 pieces/an. Un jean = 25 kgCO2, un t-shirt = 7 kgCO2</div>
+  </div>
+
+  <div class="field">
+    <label>📱 Appareils electroniques achetes par an</label>
+    <div class="choices cols-4" id="electronics">
+      <div class="choice" data-val="low" onclick="selectChoice(this)">
+        <span class="choice-icon">🔋</span>
+        <div class="choice-label">0-1</div>
+        <div class="choice-sub">Sobre</div>
+      </div>
+      <div class="choice" data-val="medium" onclick="selectChoice(this)">
+        <span class="choice-icon">📱</span>
+        <div class="choice-label">2-3</div>
+        <div class="choice-sub">Moyen</div>
+      </div>
+      <div class="choice" data-val="high" onclick="selectChoice(this)">
+        <span class="choice-icon">💻</span>
+        <div class="choice-label">4-6</div>
+        <div class="choice-sub">Eleve</div>
+      </div>
+      <div class="choice" data-val="very-high" onclick="selectChoice(this)">
+        <span class="choice-icon">🖥️</span>
+        <div class="choice-label">7+</div>
+        <div class="choice-sub">Tres eleve</div>
+      </div>
+    </div>
+    <div class="hint">1 smartphone = 70 kgCO2, 1 laptop = 300 kgCO2, 1 TV = 350 kgCO2</div>
+  </div>
+
+  <div class="field">
+    <label>🪑 Meubles achetes par an</label>
+    <div class="range-row">
+      <input type="range" id="furniture" min="0" max="20" step="1" value="2" oninput="updateRange(this,'furniture-val',' meubles')">
+      <span class="range-val" id="furniture-val">2 meubles</span>
+    </div>
+    <div class="hint">1 canape = 200 kgCO2, 1 armoire = 100 kgCO2</div>
+  </div>
+
+  <div class="field">
+    <label>🛒 Achetez-vous principalement neuf ou d'occasion ?</label>
+    <div class="choices" id="secondhand">
+      <div class="choice" data-val="new" onclick="selectChoice(this)">
+        <span class="choice-icon">🆕</span>
+        <div class="choice-label">Neuf</div>
+      </div>
+      <div class="choice" data-val="mix" onclick="selectChoice(this)">
+        <span class="choice-icon">🔄</span>
+        <div class="choice-label">Mix</div>
+      </div>
+      <div class="choice" data-val="secondhand" onclick="selectChoice(this)">
+        <span class="choice-icon">♻️</span>
+        <div class="choice-label">Occasion</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="nextStep(3)">← Retour</button>
+    <button class="btn btn-primary" onclick="nextStep(5)">Suivant →</button>
+  </div>
+</div>
+
+<!-- ==================== STEP 5: NUMERIQUE ==================== -->
+<div class="step" id="step5">
+  <div class="step-header">
+    <div class="step-num">5</div>
+    <div><h3>Numerique</h3><p>L'impact invisible de nos usages digitaux</p></div>
+  </div>
+
+  <div class="field">
+    <label>📧 Emails envoyes par jour</label>
+    <div class="range-row">
+      <input type="range" id="emails" min="0" max="200" step="5" value="30" oninput="updateRange(this,'emails-val',' emails/j')">
+      <span class="range-val" id="emails-val">30 emails/j</span>
+    </div>
+    <div class="hint">1 email = 4 g CO2 (avec piece jointe : 35 g)</div>
+  </div>
+
+  <div class="field">
+    <label>🎬 Streaming video (heures par jour)</label>
+    <div class="range-row">
+      <input type="range" id="streaming" min="0" max="12" step="0.5" value="2" oninput="updateRange(this,'streaming-val','h/j')">
+      <span class="range-val" id="streaming-val">2h/j</span>
+    </div>
+    <div class="hint">1h de streaming HD = 36 g CO2 (Netflix, YouTube, etc.)</div>
+  </div>
+
+  <div class="field">
+    <label>☁️ Stockage cloud (Go utilises)</label>
+    <div class="range-row">
+      <input type="range" id="cloud" min="0" max="2000" step="10" value="50" oninput="updateRange(this,'cloud-val',' Go')">
+      <span class="range-val" id="cloud-val">50 Go</span>
+    </div>
+    <div class="hint">Google Drive, iCloud, Dropbox, OneDrive... 1 Go/an = 7 g CO2</div>
+  </div>
+
+  <div class="field">
+    <label>📱 Temps d'ecran quotidien (heures)</label>
+    <div class="range-row">
+      <input type="range" id="screen-time" min="0" max="16" step="0.5" value="4" oninput="updateRange(this,'screen-time-val','h/j')">
+      <span class="range-val" id="screen-time-val">4h/j</span>
+    </div>
+    <div class="hint">Reseaux sociaux, navigation, jeux (hors streaming deja compte)</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="nextStep(4)">← Retour</button>
+    <button class="btn btn-primary" onclick="calculate()">🌍 Calculer mon empreinte</button>
+  </div>
+</div>
+
+<!-- ==================== RESULTS ==================== -->
+<div class="step" id="results">
+
+  <!-- Score planet -->
+  <div class="result-section">
+    <div class="planet-score">
+      <div>🌍</div>
+      <div class="planet-big" id="planet-score">72</div>
+      <div class="planet-subtitle">Score Planet / 100</div>
+    </div>
+  </div>
+
+  <!-- Score total CO2 -->
+  <div class="result-section">
+    <h3>🌡️ Votre empreinte carbone</h3>
+    <div class="score-wrap">
+      <div class="score-circle" id="score-circle">
+        <svg viewBox="0 0 180 180">
+          <circle class="score-bg" cx="90" cy="90" r="80"/>
+          <circle class="score-fg" id="score-arc" cx="90" cy="90" r="80" stroke-dasharray="502.65" stroke-dashoffset="502.65"/>
+        </svg>
+        <span class="score-val" id="total-co2">--</span>
+        <span class="score-unit">tonnes CO2/an</span>
+      </div>
+      <span class="score-label" id="score-label">--</span>
+    </div>
+    <!-- Gauge -->
+    <div class="gauge">
+      <div class="gauge-marker" id="gauge-marker"></div>
+    </div>
+    <div class="gauge-labels">
+      <span>0 t</span>
+      <span>4 t (objectif)</span>
+      <span>8.9 t (moy. FR)</span>
+      <span>18 t+</span>
+    </div>
+  </div>
+
+  <!-- Breakdown -->
+  <div class="result-section">
+    <h3>📊 Repartition par poste</h3>
+    <div id="breakdown"></div>
+  </div>
+
+  <!-- Comparison -->
+  <div class="result-section">
+    <h3>🌍 Comparaison</h3>
+    <div id="comparison"></div>
+  </div>
+
+  <!-- TOP 10 Actions -->
+  <div class="result-section">
+    <h3>🎯 Vos 10 actions les plus impactantes</h3>
+    <p style="font-size:.75rem;color:var(--text-dim);margin-bottom:12px">Classees par potentiel de reduction CO2</p>
+    <div id="actions"></div>
+  </div>
+
+  <!-- Badges -->
+  <div class="result-section">
+    <h3>🏅 Badges gagnes</h3>
+    <div class="badges-grid" id="badges"></div>
+  </div>
+
+  <!-- History -->
+  <div class="result-section" id="history-section" style="display:none">
+    <h3>📈 Historique</h3>
+    <div id="history"></div>
+  </div>
+
+  <!-- Share / Redo -->
+  <div class="result-section">
+    <h3>📤 Actions</h3>
+    <div class="share-row">
+      <button class="share-btn" onclick="shareResult()">📤 Partager</button>
+      <button class="share-btn" onclick="saveResult()">💾 Sauvegarder</button>
+      <button class="share-btn" onclick="startQuiz()">🔄 Refaire le calcul</button>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-top:20px;padding:0 20px">
+    <a href="index.html" class="btn btn-secondary" style="text-align:center;display:block;text-decoration:none;color:var(--text)">← Retour SOS Planet</a>
+  </div>
+</div>
+
+<script>
+// ====================== STATE ======================
+const state = {};
+const TOTAL_STEPS = 5;
+
+// ====================== ADEME FACTORS ======================
+const FACTORS = {
+  car: { essence: 0.193, diesel: 0.158, hybride: 0.110, electrique: 0.020 },
+  flights: {
+    short: 0.258 * 2000,   // AR 2000km
+    medium: 0.220 * 5000,  // AR 5000km
+    long: 0.187 * 10000    // AR 10000km
+  },
+  publicTransport: { daily: 0.4, weekly: 0.15, rare: 0.05, never: 0 }, // tCO2/an
+  heating: { gaz: 0.227, fioul: 0.324, elec: 0.052, bois: 0.030, pac: 0.017 },
+  insulation: { good: 0.8, average: 1.0, poor: 1.4 }, // multiplier
+  diet: { omnivore: 2300, flexitarien: 1900, vegetarien: 1700, vegan: 1100 },
+  foodWaste: { low: 1.0, average: 1.1, high: 1.25 },
+  clothes: 15, // kgCO2 per item average
+  electronics: { low: 100, medium: 400, 'high': 900, 'very-high': 1600 }, // kgCO2/an
+  furniture: 120, // kgCO2 per piece average
+  secondhand: { 'new': 1.0, mix: 0.7, secondhand: 0.3 },
+  email: 0.004 * 365, // kgCO2/email/day → per year
+  streaming: 0.036 * 365, // kgCO2/h/day → per year
+  cloud: 0.007, // kgCO2/Go/an
+  screenTime: 0.008 * 365, // kgCO2/h/day → general browsing
+  services: 1.5 // tCO2/an incompressible (services publics)
+};
+
+// ====================== HEATING ENERGY ======================
+// Estimated heating kWh/an based on surface, type, insulation
+function heatingKwh(surface, housingType, insulation) {
+  // Base: apartment ~90 kWh/m2, house ~130 kWh/m2 (chauffage seul)
+  const base = housingType === 'appart' ? 90 : 130;
+  const insulMult = FACTORS.insulation[insulation] || 1.0;
+  return surface * base * insulMult;
+}
+
+// ====================== UI HELPERS ======================
+function selectChoice(el) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+
+  const groupId = parent.id;
+  const val = el.dataset.val;
+  state[groupId] = val;
+
+  // Show/hide car details
+  if (groupId === 'has-car') {
+    const show = val === 'yes';
+    document.getElementById('car-details').style.display = show ? 'block' : 'none';
+    document.getElementById('car-km-field').style.display = show ? 'block' : 'none';
+  }
+}
+
+function updateRange(input, valId, suffix) {
+  let v = parseFloat(input.value);
+  let display = v;
+  if (v >= 1000) {
+    display = v.toLocaleString('fr-FR');
+  }
+  document.getElementById(valId).textContent = display + suffix;
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  const pct = Math.round(((n - 1) / TOTAL_STEPS) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-step').textContent = 'Etape ' + n + '/' + TOTAL_STEPS;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep(n) {
+  showStep(n);
+}
+
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'block';
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('results').classList.remove('active');
+  showStep(1);
+}
+
+// ====================== CALCULATION ======================
+function calculate() {
+  // Transport
+  let transport = 0;
+  if (state['has-car'] === 'yes') {
+    const fuel = state['fuel-type'] || 'essence';
+    const km = parseFloat(document.getElementById('car-km').value);
+    transport += (FACTORS.car[fuel] || 0.193) * km / 1000;
+  }
+  const fShort = parseInt(document.getElementById('flights-short').value);
+  const fMedium = parseInt(document.getElementById('flights-medium').value);
+  const fLong = parseInt(document.getElementById('flights-long').value);
+  transport += (fShort * FACTORS.flights.short + fMedium * FACTORS.flights.medium + fLong * FACTORS.flights.long) / 1000;
+
+  const ptKey = state['public-transport'] || 'rare';
+  transport += FACTORS.publicTransport[ptKey];
+
+  // Logement
+  let logement = 0;
+  const hType = state['housing-type'] || 'appart';
+  const surface = parseFloat(document.getElementById('surface').value);
+  const occupants = parseInt(document.getElementById('occupants').value);
+  const heatKey = state['heating-type'] || 'gaz';
+  const insulKey = state['insulation'] || 'average';
+  const heatKwh = heatingKwh(surface, hType, insulKey);
+  logement += (FACTORS.heating[heatKey] * heatKwh) / 1000;
+
+  const elecKwh = parseFloat(document.getElementById('elec-kwh').value);
+  logement += (0.052 * elecKwh) / 1000;
+
+  // Divide by occupants
+  logement = logement / occupants;
+
+  // Alimentation
+  let alimentation = 0;
+  const dietKey = state['diet'] || 'omnivore';
+  alimentation = FACTORS.diet[dietKey] / 1000;
+
+  // Local bonus (up to -10%)
+  const localPct = parseInt(document.getElementById('local-pct').value);
+  alimentation *= (1 - localPct * 0.001);
+
+  // Bio bonus (up to -5%)
+  const bioPct = parseInt(document.getElementById('bio-pct').value);
+  alimentation *= (1 - bioPct * 0.0005);
+
+  // Waste factor
+  const wasteKey = state['food-waste'] || 'average';
+  alimentation *= FACTORS.foodWaste[wasteKey];
+
+  // Achats
+  let achats = 0;
+  const clothes = parseInt(document.getElementById('clothes').value);
+  achats += clothes * FACTORS.clothes;
+
+  const elecKey = state['electronics'] || 'medium';
+  achats += FACTORS.electronics[elecKey] || 400;
+
+  const furniture = parseInt(document.getElementById('furniture').value);
+  achats += furniture * FACTORS.furniture;
+
+  const shKey = state['secondhand'] || 'new';
+  achats *= FACTORS.secondhand[shKey];
+  achats /= 1000;
+
+  // Numerique
+  let numerique = 0;
+  const emails = parseInt(document.getElementById('emails').value);
+  numerique += emails * FACTORS.email;
+
+  const streaming = parseFloat(document.getElementById('streaming').value);
+  numerique += streaming * FACTORS.streaming;
+
+  const cloud = parseInt(document.getElementById('cloud').value);
+  numerique += cloud * FACTORS.cloud;
+
+  const screenTime = parseFloat(document.getElementById('screen-time').value);
+  numerique += screenTime * FACTORS.screenTime;
+
+  numerique /= 1000;
+
+  // Services publics (incompressible)
+  const services = FACTORS.services;
+
+  // TOTAL
+  const total = transport + logement + alimentation + achats + numerique + services;
+
+  const breakdown = {
+    'Transport': transport,
+    'Logement': logement,
+    'Alimentation': alimentation,
+    'Achats': achats,
+    'Numerique': numerique,
+    'Services publics': services
+  };
+
+  showResults(total, breakdown);
+}
+
+// ====================== RESULTS DISPLAY ======================
+function showResults(total, breakdown) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.getElementById('results').classList.add('active');
+
+  const totalRound = Math.round(total * 10) / 10;
+
+  // Score circle
+  const circumference = 2 * Math.PI * 80;
+  const maxT = 18;
+  const ratio = Math.min(total / maxT, 1);
+  const offset = circumference * (1 - ratio);
+  const arc = document.getElementById('score-arc');
+
+  let color;
+  if (total < 4) color = '#34d399';
+  else if (total < 8) color = '#eab308';
+  else if (total < 12) color = '#f97316';
+  else color = '#ef4444';
+
+  setTimeout(() => {
+    arc.style.strokeDashoffset = offset;
+    arc.style.stroke = color;
+  }, 100);
+
+  document.getElementById('total-co2').textContent = totalRound;
+
+  // Label
+  const label = document.getElementById('score-label');
+  if (total < 2) { label.textContent = 'Exemplaire !'; label.style.background = 'rgba(52,211,153,.15)'; label.style.color = '#34d399'; }
+  else if (total < 4) { label.textContent = 'Tres bien'; label.style.background = 'rgba(52,211,153,.15)'; label.style.color = '#34d399'; }
+  else if (total < 6) { label.textContent = 'Sous la moyenne'; label.style.background = 'rgba(234,179,8,.15)'; label.style.color = '#eab308'; }
+  else if (total < 8.9) { label.textContent = 'Proche de la moyenne'; label.style.background = 'rgba(234,179,8,.15)'; label.style.color = '#eab308'; }
+  else if (total < 12) { label.textContent = 'Au-dessus de la moyenne'; label.style.background = 'rgba(249,115,22,.15)'; label.style.color = '#f97316'; }
+  else { label.textContent = 'Empreinte elevee'; label.style.background = 'rgba(239,68,68,.15)'; label.style.color = '#ef4444'; }
+
+  // Gauge marker
+  const markerPct = Math.min(total / 18, 1) * 100;
+  document.getElementById('gauge-marker').style.left = markerPct + '%';
+
+  // Planet score (0-100, 100 = 0 tCO2, 0 = 18+ tCO2)
+  const planetScore = Math.max(0, Math.round(100 - (total / 18) * 100));
+  document.getElementById('planet-score').textContent = planetScore;
+
+  // Breakdown
+  const breakdownEl = document.getElementById('breakdown');
+  breakdownEl.innerHTML = '';
+  const colors = {
+    'Transport': '#3b82f6', 'Logement': '#f97316', 'Alimentation': '#34d399',
+    'Achats': '#a855f7', 'Numerique': '#06b6d4', 'Services publics': '#6b7280'
+  };
+  const icons = {
+    'Transport': '🚗', 'Logement': '🏠', 'Alimentation': '🍽️',
+    'Achats': '🛒', 'Numerique': '📱', 'Services publics': '🏛️'
+  };
+
+  for (const [key, val] of Object.entries(breakdown)) {
+    const pct = total > 0 ? (val / total * 100) : 0;
+    breakdownEl.innerHTML += `
+      <div class="breakdown-item">
+        <div class="breakdown-header">
+          <span>${icons[key]} ${key}</span>
+          <span>${(Math.round(val * 10) / 10)} t (${Math.round(pct)}%)</span>
+        </div>
+        <div class="breakdown-bar">
+          <div class="breakdown-fill" style="width:${pct}%;background:${colors[key]}"></div>
+        </div>
+      </div>`;
+  }
+
+  // Comparison
+  const compEl = document.getElementById('comparison');
+  const comparisons = [
+    { icon: '👤', label: 'Vous', val: totalRound, color: color },
+    { icon: '🇫🇷', label: 'Moyenne France', val: 8.9, color: '#f97316' },
+    { icon: '🌍', label: 'Moyenne mondiale', val: 4.7, color: '#eab308' },
+    { icon: '🎯', label: 'Objectif 2050', val: 2.0, color: '#34d399' }
+  ];
+  const maxComp = Math.max(totalRound, 12);
+  compEl.innerHTML = comparisons.map(c => `
+    <div class="compare-item">
+      <div class="compare-icon">${c.icon}</div>
+      <div class="compare-bar-wrap">
+        <div class="compare-label"><span>${c.label}</span><span style="font-weight:800">${c.val} t</span></div>
+        <div class="compare-bar"><div class="compare-fill" style="width:${c.val/maxComp*100}%;background:${c.color}"></div></div>
+      </div>
+    </div>`).join('');
+
+  // TOP 10 Actions
+  generateActions(total, breakdown);
+
+  // Badges
+  generateBadges(total, breakdown);
+
+  // History
+  showHistory();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ====================== TOP 10 ACTIONS ======================
+function generateActions(total, breakdown) {
+  const actionsEl = document.getElementById('actions');
+
+  // Build personalized action list based on user inputs
+  const allActions = [];
+
+  // Transport actions
+  if (state['has-car'] === 'yes') {
+    const fuel = state['fuel-type'] || 'essence';
+    const km = parseFloat(document.getElementById('car-km').value);
+    if (fuel !== 'electrique' && km > 5000) {
+      allActions.push({
+        title: 'Passer au velo/transports en commun pour les trajets < 5km',
+        impact: km * 0.15 * (FACTORS.car[fuel] || 0.193) / 1000,
+        desc: 'Les trajets courts representent 40% des km parcourus mais une surconsommation de carburant.'
+      });
+    }
+    if (fuel === 'essence' || fuel === 'diesel') {
+      allActions.push({
+        title: 'Passer au vehicule electrique',
+        impact: km * ((FACTORS.car[fuel] || 0.193) - 0.020) / 1000,
+        desc: 'En France, grace au mix electrique bas-carbone, un VE emet 5 a 10x moins de CO2.'
+      });
+      allActions.push({
+        title: 'Pratiquer l\'ecoconduite (reduire de 20%)',
+        impact: km * (FACTORS.car[fuel] || 0.193) * 0.20 / 1000,
+        desc: 'Accelerations douces, anticipation, vitesse reduite de 10 km/h sur autoroute.'
+      });
+    }
+    if (km > 10000) {
+      allActions.push({
+        title: 'Covoiturer pour les trajets domicile-travail',
+        impact: breakdown['Transport'] * 0.25,
+        desc: 'Diviser les emissions par 2 a 3 en partageant le trajet.'
+      });
+    }
+  }
+
+  // Flight actions
+  const fShort = parseInt(document.getElementById('flights-short').value);
+  const fMedium = parseInt(document.getElementById('flights-medium').value);
+  const fLong = parseInt(document.getElementById('flights-long').value);
+  if (fShort > 0) {
+    allActions.push({
+      title: 'Remplacer les vols court-courrier par le train',
+      impact: fShort * FACTORS.flights.short / 1000 * 0.9,
+      desc: 'Le TGV emet 50x moins de CO2 que l\'avion. Paris-Lyon en 2h.'
+    });
+  }
+  if (fMedium + fLong > 2) {
+    allActions.push({
+      title: 'Reduire de moitie les vols moyen/long-courrier',
+      impact: (fMedium * FACTORS.flights.medium + fLong * FACTORS.flights.long) / 1000 * 0.5,
+      desc: 'Un seul aller-retour Paris-New York = 1.87 tCO2 (21% de l\'objectif 2050 !).'
+    });
+  }
+
+  // Housing actions
+  const heatKey = state['heating-type'] || 'gaz';
+  const insulKey = state['insulation'] || 'average';
+  if (insulKey !== 'good') {
+    allActions.push({
+      title: 'Ameliorer l\'isolation du logement',
+      impact: breakdown['Logement'] * (insulKey === 'poor' ? 0.35 : 0.20),
+      desc: 'Combles, fenetres, murs : jusqu\'a 40% d\'economies d\'energie. Aides MaPrimeRenov disponibles.'
+    });
+  }
+  if (heatKey === 'gaz' || heatKey === 'fioul') {
+    allActions.push({
+      title: 'Installer une pompe a chaleur',
+      impact: breakdown['Logement'] * 0.6,
+      desc: 'Une PAC divise par 3 a 4 les emissions de chauffage. Aides jusqu\'a 5 000 EUR.'
+    });
+  }
+  allActions.push({
+    title: 'Baisser le chauffage de 1 degre C',
+    impact: breakdown['Logement'] * 0.07,
+    desc: 'Chaque degre en moins = 7% d\'economies d\'energie. 19 degres C est la temperature recommandee.'
+  });
+
+  // Food actions
+  const dietKey = state['diet'] || 'omnivore';
+  if (dietKey === 'omnivore') {
+    allActions.push({
+      title: 'Devenir flexitarien (viande 2-3x/semaine)',
+      impact: (FACTORS.diet.omnivore - FACTORS.diet.flexitarien) / 1000,
+      desc: 'Reduire la viande rouge au profit de legumineuses, volaille et poisson.'
+    });
+  }
+  if (dietKey === 'omnivore' || dietKey === 'flexitarien') {
+    allActions.push({
+      title: 'Reduire la viande rouge a 1x/semaine max',
+      impact: 0.4,
+      desc: '1 kg de boeuf = 27 kgCO2 vs 0.9 kgCO2 pour des lentilles. Impact x30.'
+    });
+  }
+
+  const wasteKey = state['food-waste'] || 'average';
+  if (wasteKey !== 'low') {
+    allActions.push({
+      title: 'Diviser par 2 le gaspillage alimentaire',
+      impact: breakdown['Alimentation'] * 0.08,
+      desc: 'Planifier les repas, listes de courses, ranger le frigo. 150 EUR/an d\'economies en prime !'
+    });
+  }
+
+  allActions.push({
+    title: 'Manger local et de saison',
+    impact: breakdown['Alimentation'] * 0.08,
+    desc: 'Reduire les kilometres alimentaires. Une tomate d\'hiver emet 4x plus qu\'une tomate d\'ete.'
+  });
+
+  // Shopping actions
+  const shKey = state['secondhand'] || 'new';
+  if (shKey === 'new') {
+    allActions.push({
+      title: 'Acheter 50% d\'occasion (vetements, electronique)',
+      impact: breakdown['Achats'] * 0.35,
+      desc: 'Vinted, Leboncoin, Back Market : meme usage, 70% d\'impact en moins.'
+    });
+  }
+  const clothes = parseInt(document.getElementById('clothes').value);
+  if (clothes > 20) {
+    allActions.push({
+      title: 'Reduire les achats textiles a 15 pieces/an',
+      impact: (clothes - 15) * FACTORS.clothes / 1000,
+      desc: 'Privilegier la qualite. Un vetement durable porte 2x plus = 2x moins d\'impact.'
+    });
+  }
+
+  // Digital actions
+  const streaming = parseFloat(document.getElementById('streaming').value);
+  if (streaming > 2) {
+    allActions.push({
+      title: 'Reduire le streaming video (baisser la qualite ou duree)',
+      impact: (streaming - 1) * FACTORS.streaming / 1000 * 0.3,
+      desc: 'Passer en SD au lieu de 4K divise par 4 l\'impact. Telecharger au lieu de streamer.'
+    });
+  }
+
+  allActions.push({
+    title: 'Nettoyer sa boite mail et desabonner les newsletters',
+    impact: 0.02,
+    desc: 'Moins anecdotique qu\'il n\'y parait : les data centers consomment 1% de l\'electricite mondiale.'
+  });
+
+  // Always relevant
+  allActions.push({
+    title: 'Choisir un fournisseur d\'electricite verte',
+    impact: 0.1,
+    desc: 'Un fournisseur qui investit dans le renouvelable. Comparez sur energie-info.fr.'
+  });
+
+  // Sort by impact
+  allActions.sort((a, b) => b.impact - a.impact);
+
+  // Take top 10
+  const top10 = allActions.slice(0, 10);
+
+  actionsEl.innerHTML = top10.map((a, i) => `
+    <div class="action-card">
+      <div class="action-rank">${i + 1}</div>
+      <div class="action-content">
+        <div class="action-title">${a.title}</div>
+        <div class="action-impact">-${(Math.round(a.impact * 100) / 100)} tCO2/an</div>
+        <div class="action-desc">${a.desc}</div>
+      </div>
+    </div>`).join('');
+
+  // Total potential
+  const totalPotential = top10.reduce((s, a) => s + a.impact, 0);
+  actionsEl.innerHTML += `
+    <div style="text-align:center;padding:16px;background:rgba(52,211,153,.08);border-radius:12px;margin-top:12px">
+      <div style="font-size:1.2rem;font-weight:900;color:#34d399">
+        Potentiel total : -${Math.round(totalPotential * 10) / 10} tCO2/an
+      </div>
+      <div style="font-size:.8rem;color:var(--text-dim);margin-top:4px">
+        Vous passeriez de ${document.getElementById('total-co2').textContent} t a ${Math.max(0.5, Math.round((parseFloat(document.getElementById('total-co2').textContent) - totalPotential) * 10) / 10)} t !
+      </div>
+    </div>`;
+}
+
+// ====================== BADGES ======================
+function generateBadges(total, breakdown) {
+  const badgesEl = document.getElementById('badges');
+
+  const allBadges = [
+    { icon: '🌱', name: 'Eco-debutant', cond: true },
+    { icon: '🌿', name: 'Sous la moyenne', cond: total < 8.9 },
+    { icon: '🌳', name: 'Eco-citoyen', cond: total < 6 },
+    { icon: '🏆', name: 'Objectif 2050', cond: total < 2 },
+    { icon: '🚲', name: 'Sans voiture', cond: state['has-car'] !== 'yes' },
+    { icon: '✈️', name: 'Zero avion', cond: parseInt(document.getElementById('flights-short').value) + parseInt(document.getElementById('flights-medium').value) + parseInt(document.getElementById('flights-long').value) === 0 },
+    { icon: '🥬', name: 'Veggie', cond: state['diet'] === 'vegetarien' || state['diet'] === 'vegan' },
+    { icon: '🌱', name: 'Vegan power', cond: state['diet'] === 'vegan' },
+    { icon: '♻️', name: 'Seconde main', cond: state['secondhand'] === 'secondhand' },
+    { icon: '💚', name: 'Anti-gaspi', cond: state['food-waste'] === 'low' },
+    { icon: '📵', name: 'Digital sobre', cond: parseFloat(document.getElementById('streaming').value) <= 1 },
+    { icon: '🏠', name: 'Bien isole', cond: state['insulation'] === 'good' },
+  ];
+
+  badgesEl.innerHTML = allBadges.map(b => `
+    <div class="badge-item ${b.cond ? 'earned' : 'locked'}">
+      <span class="badge-icon">${b.icon}</span>
+      <div class="badge-name">${b.name}</div>
+    </div>`).join('');
+}
+
+// ====================== HISTORY ======================
+function saveResult() {
+  const total = parseFloat(document.getElementById('total-co2').textContent);
+  const history = JSON.parse(localStorage.getItem('sos-carbone-history') || '[]');
+  history.push({ date: new Date().toISOString().split('T')[0], total: total });
+  // Keep last 24
+  if (history.length > 24) history.shift();
+  localStorage.setItem('sos-carbone-history', JSON.stringify(history));
+  alert('Resultat sauvegarde ! Refaites le calcul dans 1 mois pour voir votre evolution.');
+  showHistory();
+}
+
+function showHistory() {
+  const history = JSON.parse(localStorage.getItem('sos-carbone-history') || '[]');
+  if (history.length === 0) {
+    document.getElementById('history-section').style.display = 'none';
+    return;
+  }
+  document.getElementById('history-section').style.display = 'block';
+  const histEl = document.getElementById('history');
+  histEl.innerHTML = history.slice().reverse().map((h, i, arr) => {
+    const prev = arr[i + 1];
+    let trend = '';
+    if (prev) {
+      const diff = h.total - prev.total;
+      if (diff < -0.1) trend = `<span class="history-trend trend-down">▼ ${Math.abs(Math.round(diff * 10) / 10)} t</span>`;
+      else if (diff > 0.1) trend = `<span class="history-trend trend-up">▲ +${Math.round(diff * 10) / 10} t</span>`;
+      else trend = `<span class="history-trend trend-same">= stable</span>`;
+    }
+    return `<div class="history-item">
+      <span class="history-date">${h.date}</span>
+      <span class="history-val">${h.total} t</span>
+      ${trend}
+    </div>`;
+  }).join('');
+}
+
+function showLastResult() {
+  const history = JSON.parse(localStorage.getItem('sos-carbone-history') || '[]');
+  if (history.length > 0) {
+    const last = history[history.length - 1];
+    alert('Dernier resultat (' + last.date + ') : ' + last.total + ' tCO2/an\n\nRefaites le calcul pour comparer !');
+  }
+}
+
+// ====================== SHARE ======================
+function shareResult() {
+  const total = document.getElementById('total-co2').textContent;
+  const score = document.getElementById('planet-score').textContent;
+  const text = `🌍 Mon empreinte carbone : ${total} tCO2/an (Score Planet : ${score}/100)\nMoyenne France : 8.9t | Objectif 2050 : 2t\nCalculez la votre sur SOS Planet !\n${window.location.href}`;
+
+  if (navigator.share) {
+    navigator.share({ title: 'SOS Carbone — Mon empreinte', text: text, url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Copie dans le presse-papier !');
+    }).catch(() => {
+      prompt('Copiez ce texte :', text);
+    });
+  }
+}
+
+// ====================== INIT ======================
+document.addEventListener('DOMContentLoaded', () => {
+  const history = JSON.parse(localStorage.getItem('sos-carbone-history') || '[]');
+  if (history.length > 0) {
+    document.getElementById('history-link').style.display = 'block';
+  }
+  // Init range displays
+  document.querySelectorAll('input[type=range]').forEach(r => {
+    r.dispatchEvent(new Event('input'));
+  });
+});
+</script>
+</body>
+</html>
