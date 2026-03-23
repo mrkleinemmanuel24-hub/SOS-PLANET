@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Planet — Alertes geolocalisation</title>
+<meta name="description" content="60 types d'alertes environnementales geolocalises : meteo, pollution, PFAS, pollens, especes invasives, risques naturels.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.geo-bar{background:#f0fdf4;border-bottom:1px solid #bbf7d0;padding:12px 20px;display:flex;align-items:center;gap:8px;font-size:.85rem}
+.geo-bar svg{width:18px;height:18px;color:#059669;flex-shrink:0}
+.geo-bar .city{font-weight:700;color:#059669}
+.geo-bar .note{font-size:.7rem;color:#666;margin-left:auto}
+
+.cat-tabs{display:flex;gap:4px;padding:12px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid #e5e5e0}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{padding:6px 14px;border-radius:20px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;border:1px solid #e5e5e0;background:#fff;color:#666;transition:all .2s;user-select:none}
+.cat-tab.active{background:#1A1A2E;color:#fff;border-color:#1A1A2E}
+
+.alerts-list{padding:12px 16px}
+.alert-card{background:#fff;border-radius:12px;padding:16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
+.alert-card.info{border-left:4px solid #2563EB}
+.alert-card.attention{border-left:4px solid #eab308}
+.alert-card.alerte{border-left:4px solid #f97316}
+.alert-card.danger{border-left:4px solid #DC2626}
+.alert-severity{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:6px}
+.alert-severity.info{background:#eff6ff;color:#2563EB}
+.alert-severity.attention{background:#fefce8;color:#a16207}
+.alert-severity.alerte{background:#fff7ed;color:#c2410c}
+.alert-severity.danger{background:#fef2f2;color:#DC2626}
+.alert-content{flex:1}
+.alert-title{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.alert-desc{font-size:.8rem;color:#555;line-height:1.5}
+.alert-meta{display:flex;gap:8px;margin-top:6px;font-size:.65rem;color:#999}
+.alert-meta .source{font-weight:600}
+
+.empty{text-align:center;padding:40px 20px;color:#999}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a.active{color:#059669}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>Alertes</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="geo-bar" id="geo-bar">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+  <span>Localisation : <span class="city" id="city-name">chargement...</span></span>
+  <span class="note" id="geo-note"></span>
+</div>
+
+<div class="cat-tabs" id="cat-tabs">
+  <div class="cat-tab active" data-cat="all" onclick="filterCat('all')">Toutes</div>
+  <div class="cat-tab" data-cat="meteo" onclick="filterCat('meteo')">Meteo</div>
+  <div class="cat-tab" data-cat="environnement" onclick="filterCat('environnement')">Environnement</div>
+  <div class="cat-tab" data-cat="pollution" onclick="filterCat('pollution')">Pollution</div>
+  <div class="cat-tab" data-cat="nature" onclick="filterCat('nature')">Nature</div>
+  <div class="cat-tab" data-cat="risques" onclick="filterCat('risques')">Risques</div>
+  <div class="cat-tab" data-cat="saison" onclick="filterCat('saison')">Saison</div>
+</div>
+
+<div class="alerts-list" id="alerts-list">
+  <div class="empty">Chargement des alertes...</div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+
+<script src="js/planet-alerts.js"></script>
+<script src="js/cgu-gate.js"></script>
+<script>
+(function() {
+  var currentCat = 'all';
+  var alerts = [];
+
+  function renderAlerts(filtered) {
+    var list = document.getElementById('alerts-list');
+    if (!filtered || filtered.length === 0) {
+      list.innerHTML = '<div class="empty">Aucune alerte pour cette categorie.</div>';
+      return;
+    }
+    list.innerHTML = '';
+    var sorted = PlanetAlerts.sortBySeverity(filtered);
+    sorted.forEach(function(a) {
+      var card = document.createElement('div');
+      card.className = 'alert-card ' + a.severity;
+      card.innerHTML = '<div class="alert-content">'
+        + '<span class="alert-severity ' + a.severity + '">' + a.severity + '</span>'
+        + '<div class="alert-title">' + a.title + '</div>'
+        + '<div class="alert-desc">' + a.desc + '</div>'
+        + '<div class="alert-meta"><span class="source">' + a.source + '</span><span>' + a.date + '</span></div>'
+        + '</div>';
+      list.appendChild(card);
+    });
+  }
+
+  window.filterCat = function(cat) {
+    currentCat = cat;
+    document.querySelectorAll('.cat-tab').forEach(function(t) {
+      t.classList.toggle('active', t.dataset.cat === cat);
+    });
+    var filtered = cat === 'all' ? alerts : alerts.filter(function(a) { return a.cat === cat; });
+    renderAlerts(filtered);
+  };
+
+  // Request geolocation
+  PlanetAlerts.requestGeolocation(function(geo, err) {
+    var cityName = PlanetAlerts.getCityName(geo.lat, geo.lng);
+    document.getElementById('city-name').textContent = cityName;
+    if (err) {
+      document.getElementById('geo-note').textContent = err;
+    }
+    alerts = PlanetAlerts.getAlertsForPosition(geo.lat, geo.lng);
+    renderAlerts(alerts);
+  });
+})();
+</script>
+</body>
+</html>

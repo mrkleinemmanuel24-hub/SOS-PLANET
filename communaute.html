@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Planet — Communaute</title>
+<meta name="description" content="Rejoignez la communaute SOS Planet. Defis collectifs, groupes thematiques, actions partagees.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+.section{padding:24px 20px;max-width:720px;margin:0 auto}
+.section h3{font-size:1.15rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section h3::after{content:'';flex:1;height:1px;background:#e5e5e0}
+
+/* Rules */
+.rules-box{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:16px;margin-bottom:20px;font-size:.85rem;line-height:1.6}
+.rules-box strong{color:#c2410c}
+
+/* Challenge */
+.challenge{background:linear-gradient(135deg,#059669,#2563EB);color:#fff;border-radius:16px;padding:24px;margin-bottom:24px;text-align:center}
+.challenge h4{font-size:1.1rem;font-weight:800;margin-bottom:8px}
+.challenge p{font-size:.85rem;opacity:.9;margin-bottom:12px}
+.challenge-progress{background:rgba(255,255,255,.2);border-radius:8px;height:12px;overflow:hidden;max-width:400px;margin:0 auto}
+.challenge-fill{height:100%;background:#fff;border-radius:8px;transition:width 1s}
+.challenge-labels{display:flex;justify-content:space-between;font-size:.7rem;opacity:.7;margin-top:4px;max-width:400px;margin-left:auto;margin-right:auto}
+.challenge-stats{display:flex;gap:20px;justify-content:center;margin-top:14px;font-size:.85rem;font-weight:600}
+
+/* Groups */
+.groups-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+@media(min-width:640px){.groups-grid{grid-template-columns:repeat(3,1fr)}}
+.group-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .2s}
+.group-card:hover{border-color:#059669;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.group-icon{font-size:1.8rem;margin-bottom:6px;display:block}
+.group-name{font-size:.85rem;font-weight:700}
+.group-members{font-size:.7rem;color:#999;margin-top:2px}
+
+/* Action feed */
+.action-feed{margin-bottom:20px}
+.action-card{display:flex;gap:10px;padding:12px;background:#fff;border:1px solid #e5e5e0;border-radius:10px;margin-bottom:8px;align-items:flex-start}
+.action-avatar{width:36px;height:36px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:800;color:#059669;flex-shrink:0;border:2px solid #bbf7d0}
+.action-content{flex:1}
+.action-user{font-size:.8rem;font-weight:700}
+.action-text{font-size:.82rem;color:#555;margin-top:2px}
+.action-time{font-size:.65rem;color:#999;margin-top:4px}
+
+/* Post action */
+.post-action{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;margin-bottom:20px;display:flex;gap:10px}
+.post-action input{flex:1;padding:10px 14px;border:1px solid #e5e5e0;border-radius:8px;font-size:.9rem;font-family:inherit}
+.post-action input:focus{outline:none;border-color:#059669}
+.post-action button{padding:10px 18px;background:#059669;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>Communaute</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="section">
+  <div class="rules-box">
+    <strong>Regles de la communaute</strong> : Pas de politique. Que de la science et de l'action. Bienveillance obligatoire. Contenus inappropries = exclusion immediate.
+  </div>
+</div>
+
+<!-- Weekly challenge -->
+<div class="section">
+  <h3>Defi de la semaine</h3>
+  <div class="challenge">
+    <h4>10 000 douches courtes cette semaine</h4>
+    <p>Objectif collectif : 10 000 douches de 5 minutes max. Chaque douche economise 60L d'eau.</p>
+    <div class="challenge-progress"><div class="challenge-fill" style="width:67%"></div></div>
+    <div class="challenge-labels"><span>0</span><span>6 700 / 10 000</span></div>
+    <div class="challenge-stats">
+      <span>600 000 L d'eau economises</span>
+    </div>
+  </div>
+</div>
+
+<!-- Groups -->
+<div class="section">
+  <h3>Groupes thematiques</h3>
+  <div class="groups-grid">
+    <div class="group-card"><span class="group-icon">&#9851;</span><div class="group-name">Zero dechet</div><div class="group-members">12 400 membres</div></div>
+    <div class="group-card"><span class="group-icon">&#128690;</span><div class="group-name">Velo au quotidien</div><div class="group-members">8 700 membres</div></div>
+    <div class="group-card"><span class="group-icon">&#127793;</span><div class="group-name">Potager urbain</div><div class="group-members">9 200 membres</div></div>
+    <div class="group-card"><span class="group-icon">&#9889;</span><div class="group-name">Energie citoyenne</div><div class="group-members">5 100 membres</div></div>
+    <div class="group-card"><span class="group-icon">&#128167;</span><div class="group-name">Eau propre</div><div class="group-members">6 300 membres</div></div>
+    <div class="group-card"><span class="group-icon">&#9888;&#65039;</span><div class="group-name">Stop PFAS</div><div class="group-members">14 800 membres</div></div>
+    <div class="group-card"><span class="group-icon">&#127795;</span><div class="group-name">Biodiversite locale</div><div class="group-members">7 600 membres</div></div>
+    <div class="group-card"><span class="group-icon">&#127860;</span><div class="group-name">Anti-gaspi</div><div class="group-members">11 300 membres</div></div>
+    <div class="group-card"><span class="group-icon">&#128295;</span><div class="group-name">Repair Cafe</div><div class="group-members">4 900 membres</div></div>
+    <div class="group-card"><span class="group-icon">&#129309;</span><div class="group-name">Entraide</div><div class="group-members">15 200 membres</div></div>
+  </div>
+</div>
+
+<!-- Post action -->
+<div class="section">
+  <h3>J'ai fait un geste aujourd'hui</h3>
+  <div class="post-action">
+    <input type="text" id="action-input" placeholder="Ex: J'ai pris le velo pour aller au travail" maxlength="200">
+    <button onclick="postAction()">Publier</button>
+  </div>
+</div>
+
+<!-- Action feed -->
+<div class="section">
+  <h3>Fil d'actions recentes</h3>
+  <div class="action-feed" id="action-feed"></div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-moderation.js"></script>
+<script src="js/cgu-gate.js"></script>
+<script>
+(function() {
+  var FAKE_ACTIONS = [
+    {user:'Marie L.',initial:'M',text:'J\'ai pris le velo pour aller au bureau aujourd\'hui. 12 km aller-retour!',time:'il y a 15 min'},
+    {user:'Thomas R.',initial:'T',text:'Premier jour de compostage dans l\'immeuble. 5 voisins ont participe.',time:'il y a 32 min'},
+    {user:'Sophie D.',initial:'S',text:'Repas 100% vegetal et local ce soir pour toute la famille.',time:'il y a 1h'},
+    {user:'Jean-Marc P.',initial:'J',text:'J\'ai repare ma machine a laver grace au Repair Cafe du 15e. 3h de boulot, 0 EUR depense.',time:'il y a 1h30'},
+    {user:'Camille F.',initial:'C',text:'Installe un hotel a insectes dans le jardin. Premiere abeille solitaire reperee!',time:'il y a 2h'},
+    {user:'Pierre G.',initial:'P',text:'Douche de 4 minutes chrono. Defi de la semaine releve.',time:'il y a 2h30'},
+    {user:'Leila B.',initial:'L',text:'Donne 2 sacs de vetements enfants a Emmaüs. Place gagnee a la maison!',time:'il y a 3h'},
+    {user:'Nicolas V.',initial:'N',text:'Covoiturage avec 3 collegues ce matin. 3 voitures de moins sur la route.',time:'il y a 3h30'},
+    {user:'Romain K.',initial:'R',text:'J\'ai calcule mon empreinte carbone : 6.2t. Objectif : passer sous 5t en 6 mois.',time:'il y a 4h'},
+    {user:'Agnes M.',initial:'A',text:'Fabrique mon produit vaisselle maison : savon noir + bicarbonate + vinaigre.',time:'il y a 5h'},
+    {user:'David S.',initial:'D',text:'Premier mois sans acheter de vetements neufs. C\'est possible!',time:'il y a 6h'},
+    {user:'Elsa N.',initial:'E',text:'Refuse le sac plastique a la pharmacie pour la 100e fois. Ils commencent a me connaitre.',time:'il y a 7h'},
+    {user:'Sarah W.',initial:'S',text:'Plante 3 pieds de lavande pour les pollinisateurs. Le balcon sent divinement bon.',time:'il y a 8h'},
+    {user:'Manon J.',initial:'M',text:'Eteint la box internet ce soir. On lit des livres a la place.',time:'il y a 9h'},
+    {user:'Yohan D.',initial:'Y',text:'Aide un voisin de 82 ans a installer des mousseurs sur ses robinets. 30% d\'eau economisee.',time:'il y a 10h'}
+  ];
+
+  var userActions = [];
+  try { userActions = JSON.parse(localStorage.getItem('planet_community_actions')) || []; } catch(e) {}
+
+  function renderFeed() {
+    var feed = document.getElementById('action-feed');
+    feed.innerHTML = '';
+    var all = userActions.concat(FAKE_ACTIONS);
+    all.forEach(function(a) {
+      var card = document.createElement('div');
+      card.className = 'action-card';
+      card.innerHTML = '<div class="action-avatar">' + a.initial + '</div>'
+        + '<div class="action-content">'
+        + '<div class="action-user">' + a.user + '</div>'
+        + '<div class="action-text">' + a.text + '</div>'
+        + '<div class="action-time">' + a.time + '</div>'
+        + '</div>';
+      feed.appendChild(card);
+    });
+  }
+
+  window.postAction = function() {
+    var input = document.getElementById('action-input');
+    var text = input.value.trim();
+    if (!text) return;
+    var check = PlanetModeration.moderateContent(text);
+    if (check.blocked) { alert(check.reason); return; }
+    var action = { user:'Moi', initial:'M', text:text, time:'a l\'instant' };
+    userActions.unshift(action);
+    try { localStorage.setItem('planet_community_actions', JSON.stringify(userActions)); } catch(e) {}
+    PlanetEngine.incrementGlobalCounter(1);
+    input.value = '';
+    renderFeed();
+  };
+
+  renderFeed();
+})();
+</script>
+</body>
+</html>

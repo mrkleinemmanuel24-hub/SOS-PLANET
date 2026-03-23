@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Planet — Bourse d'echanges solidaires</title>
+<meta name="description" content="640 types d'echanges solidaires entre citoyens. Donnez, pretez, echangez, proposez vos services. Gratuit.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.hero{text-align:center;padding:24px 20px;border-bottom:1px solid #e5e5e0}
+.hero h2{font-size:1.6rem;font-weight:900;margin-bottom:6px}
+.hero p{color:#666;font-size:.85rem;max-width:460px;margin:0 auto}
+
+/* Type pills */
+.type-bar{display:flex;gap:6px;padding:12px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid #e5e5e0}
+.type-bar::-webkit-scrollbar{display:none}
+.type-pill{padding:6px 14px;border-radius:20px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;border:1px solid #e5e5e0;background:#fff;color:#666;transition:all .2s;user-select:none}
+.type-pill.active{color:#fff}
+.type-pill[data-type="donne"].active{background:#059669;border-color:#059669}
+.type-pill[data-type="cherche"].active{background:#2563EB;border-color:#2563EB}
+.type-pill[data-type="prete"].active{background:#7c3aed;border-color:#7c3aed}
+.type-pill[data-type="service"].active{background:#f97316;border-color:#f97316}
+.type-pill[data-type="echange"].active{background:#DC2626;border-color:#DC2626}
+.type-pill[data-type="all"].active{background:#1A1A2E;border-color:#1A1A2E}
+
+/* Category pills */
+.cat-bar{display:flex;gap:4px;padding:8px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap}
+.cat-bar::-webkit-scrollbar{display:none}
+.cat-pill{padding:4px 10px;border-radius:14px;font-size:.65rem;font-weight:600;cursor:pointer;white-space:nowrap;border:1px solid #e5e5e0;background:#fff;color:#999}
+.cat-pill.active{background:#f0fdf4;border-color:#059669;color:#059669}
+
+/* Post form */
+.post-form{margin:16px;background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;display:none}
+.post-form.visible{display:block}
+.post-form h3{font-size:1rem;font-weight:700;margin-bottom:12px}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:.8rem;font-weight:600;margin-bottom:4px;color:#555}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 14px;border:1px solid #e5e5e0;border-radius:8px;font-size:.9rem;font-family:inherit}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#059669}
+.form-group textarea{height:80px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-submit{padding:12px 24px;background:#059669;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem;width:100%}
+.btn-submit:hover{background:#047857}
+.btn-toggle-form{display:block;margin:16px auto 0;padding:10px 24px;background:#059669;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem}
+.mod-error{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px;font-size:.8rem;color:#DC2626;margin-bottom:12px;display:none}
+
+/* Feed */
+.feed{padding:12px 16px}
+.feed-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;margin-bottom:10px;position:relative}
+.feed-card.hidden{display:none}
+.feed-type{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:8px;color:#fff;margin-bottom:6px}
+.feed-type.donne{background:#059669}
+.feed-type.cherche{background:#2563EB}
+.feed-type.prete{background:#7c3aed}
+.feed-type.service{background:#f97316}
+.feed-type.echange{background:#DC2626}
+.feed-cat{font-size:.65rem;color:#999;margin-left:6px}
+.feed-title{font-size:.95rem;font-weight:700;margin-bottom:4px}
+.feed-desc{font-size:.82rem;color:#555;line-height:1.5}
+.feed-meta{display:flex;gap:8px;margin-top:8px;font-size:.7rem;color:#999;align-items:center}
+.feed-loc{display:flex;align-items:center;gap:3px}
+.feed-report{position:absolute;top:12px;right:12px;font-size:.65rem;color:#999;cursor:pointer;padding:4px 8px;border:1px solid #e5e5e0;border-radius:6px;background:#fff}
+.feed-report:hover{color:#DC2626;border-color:#DC2626}
+.empty-state{text-align:center;padding:40px 20px;color:#999;font-size:.9rem}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a.active{color:#059669}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>Echanges solidaires</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <h2>Bourse d'echanges</h2>
+  <p>Donnez, pretez, echangez, proposez. 640 types d'echanges possibles entre citoyens.</p>
+</div>
+
+<!-- Type filter -->
+<div class="type-bar">
+  <div class="type-pill active" data-type="all" onclick="filterType('all')">Tous</div>
+  <div class="type-pill" data-type="donne" onclick="filterType('donne')">Je donne</div>
+  <div class="type-pill" data-type="cherche" onclick="filterType('cherche')">Je cherche</div>
+  <div class="type-pill" data-type="prete" onclick="filterType('prete')">Je prete</div>
+  <div class="type-pill" data-type="service" onclick="filterType('service')">Je propose un service</div>
+  <div class="type-pill" data-type="echange" onclick="filterType('echange')">J'echange</div>
+</div>
+
+<!-- Category filter -->
+<div class="cat-bar" id="cat-bar"></div>
+
+<button class="btn-toggle-form" onclick="toggleForm()">+ Publier une annonce</button>
+
+<!-- Post form -->
+<div class="post-form" id="post-form">
+  <h3>Publier une annonce</h3>
+  <div class="mod-error" id="mod-error"></div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Type</label>
+      <select id="f-type"><option value="donne">Je donne</option><option value="cherche">Je cherche</option><option value="prete">Je prete</option><option value="service">Je propose un service</option><option value="echange">J'echange</option></select>
+    </div>
+    <div class="form-group">
+      <label>Categorie</label>
+      <select id="f-cat"></select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Titre</label>
+    <input type="text" id="f-title" placeholder="Ex: Donne velo enfant 24 pouces" maxlength="80">
+  </div>
+  <div class="form-group">
+    <label>Description</label>
+    <textarea id="f-desc" placeholder="Decrivez votre annonce..." maxlength="500"></textarea>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Code postal</label>
+      <input type="text" id="f-zip" placeholder="75001" maxlength="5">
+    </div>
+    <div class="form-group">
+      <label>Photo (facultatif)</label>
+      <input type="file" id="f-photo" accept="image/*" disabled style="opacity:.5">
+    </div>
+  </div>
+  <button class="btn-submit" onclick="submitPost()">Publier</button>
+</div>
+
+<!-- Feed -->
+<div class="feed" id="feed"></div>
+
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+
+<script src="js/planet-moderation.js"></script>
+<script src="js/cgu-gate.js"></script>
+<script>
+(function() {
+  var CATEGORIES = ['Logement','Objets','Alimentation','Transport','Services','Competences','Temps','Animaux','Jardin','Culture','Sante','Evenements','Solidarite','Pro','Numerique','Enfants','Ecologie','Vetements','Meubles','Autre'];
+  var TYPE_LABELS = {donne:'Je donne',cherche:'Je cherche',prete:'Je prete',service:'Service',echange:'Echange'};
+  var currentType = 'all';
+  var currentCat = 'all';
+
+  // Build category bar
+  var catBar = document.getElementById('cat-bar');
+  var allPill = document.createElement('div');
+  allPill.className = 'cat-pill active';
+  allPill.textContent = 'Toutes';
+  allPill.onclick = function() { filterCat('all'); };
+  catBar.appendChild(allPill);
+  CATEGORIES.forEach(function(c) {
+    var pill = document.createElement('div');
+    pill.className = 'cat-pill';
+    pill.textContent = c;
+    pill.onclick = function() { filterCat(c); };
+    catBar.appendChild(pill);
+  });
+
+  // Build category select in form
+  var catSelect = document.getElementById('f-cat');
+  CATEGORIES.forEach(function(c) {
+    var opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    catSelect.appendChild(opt);
+  });
+
+  // 20 fake posts
+  var FAKE_POSTS = [
+    {type:'donne',cat:'Meubles',title:'Canape 3 places gris',desc:'Bon etat, quelques traces d\'usure. A venir chercher sur place. Rez-de-chaussee.',zip:'75011',date:'23/03/2026',user:'Marie L.'},
+    {type:'donne',cat:'Vetements',title:'Lot vetements garcon 4-6 ans',desc:'2 sacs de vetements en bon etat. Pantalons, t-shirts, pulls. Lavés et plies.',zip:'92100',date:'23/03/2026',user:'Sophie D.'},
+    {type:'cherche',cat:'Jardin',title:'Cherche composteur de quartier',desc:'Nouveau dans le quartier, je cherche un composteur collectif ou des voisins pour en installer un.',zip:'75020',date:'23/03/2026',user:'Thomas R.'},
+    {type:'prete',cat:'Objets',title:'Prete perceuse Bosch + forêts',desc:'Disponible ce week-end. Perceuse a percussion + jeu de forêts beton/bois/metal.',zip:'69003',date:'22/03/2026',user:'Jean-Marc P.'},
+    {type:'service',cat:'Competences',title:'Cours de compostage gratuit',desc:'Je suis maitre-composteur. Je propose une initiation gratuite (1h) pour les debutants.',zip:'75015',date:'22/03/2026',user:'Camille F.'},
+    {type:'echange',cat:'Alimentation',title:'Echange confitures maison contre oeufs',desc:'J\'ai des confitures de figues et de mirabelles. Cherche oeufs de poules en plein air.',zip:'33000',date:'22/03/2026',user:'Pierre G.'},
+    {type:'donne',cat:'Enfants',title:'Poussette Chicco Trio',desc:'Fonctionnelle mais roues un peu usees. Avec cosy et hamac. Gratuit.',zip:'13001',date:'22/03/2026',user:'Leila B.'},
+    {type:'service',cat:'Transport',title:'Covoiturage Paris-Lyon vendredi 28/03',desc:'Depart Bercy 7h30, arrivee Part-Dieu vers 11h. 2 places dispo. Participation frais.',zip:'75012',date:'22/03/2026',user:'Nicolas V.'},
+    {type:'cherche',cat:'Logement',title:'Cherche colocation solidaire',desc:'Etudiant en ecologie, cherche chambre en coloc eco-responsable. Budget 400-500 EUR max.',zip:'31000',date:'21/03/2026',user:'Romain K.'},
+    {type:'prete',cat:'Objets',title:'Prete machine a coudre Singer',desc:'Machine a coudre electrique en tres bon etat. Pret pour 1 semaine max.',zip:'44000',date:'21/03/2026',user:'Agnes M.'},
+    {type:'donne',cat:'Numerique',title:'Ecran 22 pouces HP',desc:'Ecran LCD 22 pouces, resolution 1080p. Fonctionne parfaitement. Cable VGA inclus.',zip:'75017',date:'21/03/2026',user:'Christophe H.'},
+    {type:'echange',cat:'Jardin',title:'Echange boutures de menthe et basilic',desc:'J\'ai de la menthe poivree et du basilic en surplus. Cherche plants de tomates ou courgettes.',zip:'69007',date:'21/03/2026',user:'Isabelle C.'},
+    {type:'service',cat:'Services',title:'Aide montage meubles IKEA',desc:'Bricoleur experimente, je vous aide a monter vos meubles. Gratuit, juste un cafe!',zip:'92300',date:'20/03/2026',user:'Yohan D.'},
+    {type:'donne',cat:'Culture',title:'Lot de 30 livres roman policier',desc:'Collection de polars (Connelly, Thilliez, Vargas). Bon etat. A venir chercher.',zip:'75005',date:'20/03/2026',user:'Francoise T.'},
+    {type:'cherche',cat:'Ecologie',title:'Partenaire pour defi zero dechet',desc:'Qui veut relever le defi 30 jours zero dechet avec moi ? Motivation a deux!',zip:'75010',date:'20/03/2026',user:'Elsa N.'},
+    {type:'prete',cat:'Transport',title:'Prete velo cargo Babboe',desc:'Velo cargo electrique. Parfait pour courses ou transport enfants. Pret week-end.',zip:'75018',date:'19/03/2026',user:'David S.'},
+    {type:'donne',cat:'Animaux',title:'Donne nourriture chat (Royal Canin)',desc:'Mon chat est decede. 3 paquets de croquettes et 20 sachets fraicheur a donner.',zip:'93100',date:'19/03/2026',user:'Patricia L.'},
+    {type:'service',cat:'Sante',title:'Cours de yoga gratuit en plein air',desc:'Yoga doux tous les samedis 10h au Parc Monceau. Apportez votre tapis. Tous niveaux.',zip:'75008',date:'19/03/2026',user:'Anne-Sophie R.'},
+    {type:'echange',cat:'Competences',title:'Echange cours anglais contre cours cuisine',desc:'Bilingue anglais, je cherche quelqu\'un pour m\'apprendre la patisserie française.',zip:'75004',date:'18/03/2026',user:'Sarah W.'},
+    {type:'donne',cat:'Ecologie',title:'Kit de demarrage zero dechet',desc:'Bee wraps, sacs vrac, brosse vaisselle, savon solide. Pour quelqu\'un qui debute!',zip:'75003',date:'18/03/2026',user:'Manon J.'}
+  ];
+
+  var userPosts = [];
+  try { userPosts = JSON.parse(localStorage.getItem('planet_exchanges')) || []; } catch(e) { userPosts = []; }
+  var allPosts = userPosts.concat(FAKE_POSTS);
+
+  function renderFeed() {
+    var feed = document.getElementById('feed');
+    feed.innerHTML = '';
+    var filtered = allPosts.filter(function(p) {
+      if (currentType !== 'all' && p.type !== currentType) return false;
+      if (currentCat !== 'all' && p.cat !== currentCat) return false;
+      return true;
+    });
+    if (filtered.length === 0) {
+      feed.innerHTML = '<div class="empty-state">Aucune annonce pour ce filtre.</div>';
+      return;
+    }
+    filtered.forEach(function(p, i) {
+      var hidden = PlanetModeration.isHidden('post-' + i);
+      var card = document.createElement('div');
+      card.className = 'feed-card' + (hidden ? ' hidden' : '');
+      card.innerHTML = '<span class="feed-type ' + p.type + '">' + (TYPE_LABELS[p.type] || p.type) + '</span>'
+        + '<span class="feed-cat">' + p.cat + '</span>'
+        + '<div class="feed-title">' + p.title + '</div>'
+        + '<div class="feed-desc">' + p.desc + '</div>'
+        + '<div class="feed-meta">'
+        + '<span class="feed-loc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> ' + p.zip + '</span>'
+        + '<span>' + (p.user || 'Anonyme') + '</span>'
+        + '<span>' + (p.date || '') + '</span>'
+        + '</div>'
+        + '<div class="feed-report" data-idx="' + i + '" onclick="reportPost(this)">Signaler</div>';
+      feed.appendChild(card);
+    });
+  }
+
+  window.filterType = function(type) {
+    currentType = type;
+    document.querySelectorAll('.type-pill').forEach(function(p) {
+      p.classList.toggle('active', p.dataset.type === type);
+    });
+    renderFeed();
+  };
+
+  window.filterCat = function(cat) {
+    currentCat = cat;
+    document.querySelectorAll('.cat-pill').forEach(function(p) {
+      p.classList.toggle('active', p.textContent === cat || (cat === 'all' && p.textContent === 'Toutes'));
+    });
+    renderFeed();
+  };
+
+  window.toggleForm = function() {
+    document.getElementById('post-form').classList.toggle('visible');
+  };
+
+  window.submitPost = function() {
+    var title = document.getElementById('f-title').value.trim();
+    var desc = document.getElementById('f-desc').value.trim();
+    var type = document.getElementById('f-type').value;
+    var cat = document.getElementById('f-cat').value;
+    var zip = document.getElementById('f-zip').value.trim();
+    var errEl = document.getElementById('mod-error');
+    errEl.style.display = 'none';
+
+    if (!title || !desc || !zip) {
+      errEl.textContent = 'Remplissez tous les champs obligatoires.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    var check = PlanetModeration.moderateContent(title + ' ' + desc);
+    if (check.blocked) {
+      errEl.textContent = check.reason;
+      errEl.style.display = 'block';
+      return;
+    }
+
+    var post = { type:type, cat:cat, title:title, desc:desc, zip:zip, date:new Date().toLocaleDateString('fr-FR'), user:'Moi' };
+    userPosts.unshift(post);
+    allPosts = userPosts.concat(FAKE_POSTS);
+    try { localStorage.setItem('planet_exchanges', JSON.stringify(userPosts)); } catch(e) {}
+
+    document.getElementById('f-title').value = '';
+    document.getElementById('f-desc').value = '';
+    document.getElementById('post-form').classList.remove('visible');
+    renderFeed();
+  };
+
+  window.reportPost = function(el) {
+    var idx = el.dataset.idx;
+    var count = PlanetModeration.reportPost('post-' + idx);
+    if (count >= 3) {
+      el.closest('.feed-card').classList.add('hidden');
+    }
+    el.textContent = 'Signale (' + count + '/3)';
+    el.style.color = '#DC2626';
+  };
+
+  renderFeed();
+})();
+</script>
+</body>
+</html>

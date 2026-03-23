@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Planet — Mon Impact</title>
+<meta name="description" content="Dashboard d'impact personnel et global. CO2, eau, dechets, compteurs planetaires.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+.section{padding:24px 20px;max-width:720px;margin:0 auto}
+.section h3{font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section h3::after{content:'';flex:1;height:1px;background:#e5e5e0}
+
+/* Level card */
+.level-card{background:linear-gradient(135deg,#059669,#2563EB);color:#fff;border-radius:16px;padding:28px;text-align:center;margin-bottom:24px}
+.level-icon{font-size:3rem;margin-bottom:8px;display:block}
+.level-name{font-size:1.5rem;font-weight:900}
+.level-subtitle{font-size:.85rem;opacity:.85;margin-top:4px}
+.level-bar{background:rgba(255,255,255,.2);border-radius:8px;height:8px;margin:16px auto 0;max-width:300px;overflow:hidden}
+.level-fill{height:100%;background:#fff;border-radius:8px}
+.level-labels{display:flex;justify-content:space-between;font-size:.65rem;opacity:.6;margin-top:4px;max-width:300px;margin-left:auto;margin-right:auto}
+
+/* Counter grid */
+.counter-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+@media(max-width:480px){.counter-grid{grid-template-columns:1fr 1fr}}
+.counter-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center}
+.counter-val{font-size:1.6rem;font-weight:900;color:#059669}
+.counter-val.blue{color:#2563EB}
+.counter-val.gold{color:#C9A84C}
+.counter-unit{font-size:.7rem;color:#999;margin-top:2px}
+.counter-label{font-size:.75rem;font-weight:600;margin-top:6px}
+
+/* Badges */
+.badges-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.badge-card{background:#fff;border:1px solid #e5e5e0;border-radius:10px;padding:12px;text-align:center;min-width:80px;flex:1}
+.badge-card.earned{border-color:#C9A84C;background:#fffbeb}
+.badge-card.locked{opacity:.35}
+.badge-name{font-size:.65rem;font-weight:700;line-height:1.3;margin-top:4px}
+
+/* Global counters */
+.global-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.global-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center}
+.global-val{font-size:1.4rem;font-weight:900;color:#1A1A2E;font-variant-numeric:tabular-nums}
+.global-label{font-size:.75rem;color:#666;margin-top:4px}
+.global-sub{font-size:.6rem;color:#999;margin-top:2px}
+
+/* Planet data */
+.planet-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.planet-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px}
+.planet-val{font-size:1.3rem;font-weight:900;color:#DC2626}
+.planet-label{font-size:.8rem;font-weight:600;margin-top:4px}
+.planet-source{font-size:.6rem;color:#999;margin-top:2px}
+.planet-update{font-size:.6rem;color:#999;font-style:italic}
+
+/* Equivalences */
+.equiv-list{list-style:none;margin-bottom:20px}
+.equiv-item{display:flex;gap:10px;align-items:center;padding:10px;background:#fff;border:1px solid #e5e5e0;border-radius:10px;margin-bottom:6px}
+.equiv-icon{font-size:1.2rem;flex-shrink:0}
+.equiv-text{font-size:.85rem;flex:1}
+.equiv-val{font-size:.8rem;font-weight:700;color:#059669}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a.active{color:#059669}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>Mon Impact</h1>
+  <div class="spacer"></div>
+</div>
+
+<!-- Level -->
+<div class="section">
+  <div class="level-card" id="level-card">
+    <span class="level-icon" id="level-icon">&#127793;</span>
+    <div class="level-name" id="level-name">Graine</div>
+    <div class="level-subtitle" id="level-sub">0 kg CO2 economises</div>
+    <div class="level-bar"><div class="level-fill" id="level-fill" style="width:0%"></div></div>
+    <div class="level-labels"><span id="level-min">0 kg</span><span id="level-next">Prochain : Pousse (50 kg)</span></div>
+  </div>
+</div>
+
+<!-- Personal counters -->
+<div class="section">
+  <h3>Compteurs personnels</h3>
+  <div class="counter-grid">
+    <div class="counter-card"><div class="counter-val" id="c-co2">0</div><div class="counter-unit">kg CO2</div><div class="counter-label">CO2 evite</div></div>
+    <div class="counter-card"><div class="counter-val blue" id="c-water">0</div><div class="counter-unit">litres</div><div class="counter-label">Eau economisee</div></div>
+    <div class="counter-card"><div class="counter-val" id="c-trees">0</div><div class="counter-unit">arbres eq.</div><div class="counter-label">Equivalent arbres</div></div>
+    <div class="counter-card"><div class="counter-val gold" id="c-streak">0</div><div class="counter-unit">jours</div><div class="counter-label">Serie active</div></div>
+    <div class="counter-card"><div class="counter-val" id="c-eng">0</div><div class="counter-unit">engagements</div><div class="counter-label">Actions prises</div></div>
+    <div class="counter-card"><div class="counter-val" id="c-score">0</div><div class="counter-unit">points</div><div class="counter-label">Score global</div></div>
+  </div>
+</div>
+
+<!-- Badges -->
+<div class="section">
+  <h3>Badges</h3>
+  <div class="badges-grid" id="badges-grid"></div>
+</div>
+
+<!-- Global counters -->
+<div class="section">
+  <h3>Compteurs globaux</h3>
+  <div class="global-grid">
+    <div class="global-card"><div class="global-val" id="g-co2">17 432 891</div><div class="global-label">kg CO2 evites (communaute)</div></div>
+    <div class="global-card"><div class="global-val">2 400 000</div><div class="global-label">Participants actifs</div></div>
+    <div class="global-card"><div class="global-val">47</div><div class="global-label">Pays representes</div></div>
+    <div class="global-card"><div class="global-val">84 291</div><div class="global-label">Record quotidien (kg CO2)</div></div>
+  </div>
+</div>
+
+<!-- Planet counters -->
+<div class="section">
+  <h3>Compteurs planetaires</h3>
+  <div class="planet-grid">
+    <div class="planet-card">
+      <div class="planet-val">424 ppm</div>
+      <div class="planet-label">CO2 atmospherique</div>
+      <div class="planet-source">NOAA / Mauna Loa Observatory</div>
+      <div class="planet-update">Mise a jour : mensuelle</div>
+    </div>
+    <div class="planet-card">
+      <div class="planet-val">+1.2 C</div>
+      <div class="planet-label">Anomalie de temperature</div>
+      <div class="planet-source">NASA GISS / GIEC AR6</div>
+      <div class="planet-update">Ref. : 1850-1900</div>
+    </div>
+    <div class="planet-card">
+      <div class="planet-val">4.7 M km2</div>
+      <div class="planet-label">Banquise arctique (sept.)</div>
+      <div class="planet-source">NSIDC</div>
+      <div class="planet-update">Record bas : 3.4M km2 (2012)</div>
+    </div>
+    <div class="planet-card">
+      <div class="planet-val">+21 cm</div>
+      <div class="planet-label">Niveau de la mer</div>
+      <div class="planet-source">NASA Sea Level</div>
+      <div class="planet-update">Depuis 1900, acceleration x3</div>
+    </div>
+  </div>
+</div>
+
+<!-- Equivalences -->
+<div class="section">
+  <h3>Equivalences</h3>
+  <ul class="equiv-list">
+    <li class="equiv-item"><span class="equiv-icon">&#9992;&#65039;</span><div class="equiv-text">1 vol Paris-Marseille</div><div class="equiv-val">= 500 kg CO2</div></li>
+    <li class="equiv-item"><span class="equiv-icon">&#128704;</span><div class="equiv-text">100 bains</div><div class="equiv-val">= 15 000 L eau</div></li>
+    <li class="equiv-item"><span class="equiv-icon">&#127795;</span><div class="equiv-text">1 arbre absorbe/an</div><div class="equiv-val">= 22 kg CO2</div></li>
+    <li class="equiv-item"><span class="equiv-icon">&#128663;</span><div class="equiv-text">10 000 km en voiture</div><div class="equiv-val">= 1 930 kg CO2</div></li>
+    <li class="equiv-item"><span class="equiv-icon">&#127830;</span><div class="equiv-text">1 steak de boeuf (200g)</div><div class="equiv-val">= 6 kg CO2</div></li>
+    <li class="equiv-item"><span class="equiv-icon">&#128241;</span><div class="equiv-text">1 smartphone neuf</div><div class="equiv-val">= 80 kg CO2</div></li>
+    <li class="equiv-item"><span class="equiv-icon">&#128085;</span><div class="equiv-text">1 jean neuf</div><div class="equiv-val">= 23 kg CO2 + 8 000 L eau</div></li>
+  </ul>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/cgu-gate.js"></script>
+<script>
+(function() {
+  var c = PlanetEngine.getPersonalCounters();
+  var ICONS = {graine:'&#127793;',pousse:'&#127807;',arbre:'&#127795;',foret:'&#127794;',planete:'&#127758;'};
+  var ICON_KEYS = ['seed','sprout','tree','forest','planet'];
+  var level = c.level;
+
+  // Level card
+  var iconKey = level.icon || 'seed';
+  var iconMap = {seed:'&#127793;',sprout:'&#127807;',tree:'&#127795;',forest:'&#127794;',planet:'&#127758;'};
+  document.getElementById('level-icon').innerHTML = iconMap[iconKey] || '&#127793;';
+  document.getElementById('level-name').textContent = level.name;
+  document.getElementById('level-sub').textContent = PlanetEngine.formatCO2(c.co2) + ' economises';
+  var progress = level.max === Infinity ? 100 : Math.min(100, ((c.co2 - level.min) / (level.max - level.min)) * 100);
+  document.getElementById('level-fill').style.width = progress + '%';
+  document.getElementById('level-min').textContent = level.min + ' kg';
+  var nextLevel = PlanetEngine.LEVELS.find(function(l) { return l.min > level.min; });
+  document.getElementById('level-next').textContent = nextLevel ? 'Prochain : ' + nextLevel.name + ' (' + nextLevel.min + ' kg)' : 'Niveau max!';
+
+  // Personal counters
+  document.getElementById('c-co2').textContent = PlanetEngine.formatNumber(c.co2);
+  document.getElementById('c-water').textContent = PlanetEngine.formatNumber(c.water);
+  document.getElementById('c-trees').textContent = c.trees;
+  document.getElementById('c-streak').textContent = c.streak;
+  document.getElementById('c-eng').textContent = c.engagements;
+  document.getElementById('c-score').textContent = PlanetEngine.formatNumber(c.score);
+
+  // Badges
+  var badgesGrid = document.getElementById('badges-grid');
+  PlanetEngine.BADGE_DEFS.forEach(function(b) {
+    var earned = c.badges.indexOf(b.id) !== -1;
+    var card = document.createElement('div');
+    card.className = 'badge-card ' + (earned ? 'earned' : 'locked');
+    card.innerHTML = '<div class="badge-name">' + b.name + '</div>';
+    badgesGrid.appendChild(card);
+  });
+
+  // Global counter animation
+  var gCO2 = document.getElementById('g-co2');
+  var count = PlanetEngine.getGlobalCounter();
+  gCO2.textContent = count.toLocaleString('fr-FR');
+  setInterval(function() {
+    count++;
+    gCO2.textContent = count.toLocaleString('fr-FR');
+  }, 3000);
+})();
+</script>
+</body>
+</html>

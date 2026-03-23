@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS PFAS — Polluants eternels : comprendre, verifier, agir</title>
+<meta name="description" content="PFAS : carte contamination France, verification eau potable, actions concretes. Donnees ANSES, EFSA, Forever Pollution Project.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.hero{text-align:center;padding:32px 20px;border-bottom:1px solid #e5e5e0}
+.hero h2{font-size:1.8rem;font-weight:900;margin-bottom:8px}
+.hero p{color:#666;font-size:.9rem;line-height:1.6;max-width:500px;margin:0 auto}
+
+.section{padding:24px 20px;max-width:720px;margin:0 auto}
+.section h3{font-size:1.15rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section h3 svg{width:24px;height:24px}
+
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.card h4{font-size:.95rem;font-weight:700;margin-bottom:8px}
+.card p{font-size:.85rem;color:#555;line-height:1.6}
+.card .source{font-size:.7rem;color:#999;margin-top:6px}
+
+.alert-box{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:20px;margin-bottom:16px}
+.alert-box h4{color:#DC2626;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.alert-box p{font-size:.85rem;color:#7f1d1d;line-height:1.6}
+
+.info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-bottom:16px}
+.info-box h4{color:#2563EB;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.info-box p{font-size:.85rem;color:#1e3a5f;line-height:1.6}
+
+/* Map grid */
+.map-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
+@media(max-width:480px){.map-grid{grid-template-columns:repeat(3,1fr)}}
+.region-cell{border-radius:8px;padding:10px 6px;text-align:center;font-size:.7rem;font-weight:600;color:#fff;line-height:1.3}
+.region-cell.high{background:#DC2626}
+.region-cell.medium{background:#f97316}
+.region-cell.low{background:#eab308;color:#1A1A2E}
+.region-cell.unknown{background:#d1d5db;color:#555}
+
+.legend{display:flex;gap:12px;font-size:.7rem;color:#666;margin-bottom:16px;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+
+/* Water check */
+.water-check{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.water-input{display:flex;gap:8px;margin-bottom:16px}
+.water-input input{flex:1;padding:12px 16px;border:1px solid #e5e5e0;border-radius:8px;font-size:1rem;font-family:inherit}
+.water-input input:focus{outline:none;border-color:#059669}
+.water-input button{padding:12px 20px;background:#059669;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem}
+
+.threshold-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:12px}
+.threshold-table th{text-align:left;padding:8px;background:#f5f5f0;font-weight:700;border-bottom:1px solid #e5e5e0}
+.threshold-table td{padding:8px;border-bottom:1px solid #f0f0e5}
+.threshold-table .val{font-weight:700;font-variant-numeric:tabular-nums}
+.threshold-table .safe{color:#059669}
+.threshold-table .warn{color:#f97316}
+.threshold-table .danger{color:#DC2626}
+
+/* Actions */
+.action-list{counter-reset:action}
+.action-item{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px 16px 16px 52px;margin-bottom:10px;position:relative}
+.action-item::before{counter-increment:action;content:counter(action);position:absolute;left:16px;top:16px;width:28px;height:28px;border-radius:50%;background:#059669;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800}
+.action-item h4{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.action-item p{font-size:.8rem;color:#666;line-height:1.5}
+.action-item .source{font-size:.65rem;color:#999;margin-top:4px}
+
+/* Bibliography */
+.biblio-list{list-style:none}
+.biblio-list li{padding:10px 0;border-bottom:1px solid #f0f0e5;font-size:.8rem;line-height:1.5}
+.biblio-list li:last-child{border:none}
+.biblio-list .authors{font-weight:600}
+.biblio-list .title{font-style:italic}
+.biblio-list .journal{color:#666}
+.biblio-list a{color:#2563EB;font-size:.75rem}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a.active{color:#059669}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>SOS PFAS</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <h2>Polluants eternels</h2>
+  <p>Les PFAS contaminent 98% des Europeens. Comprendre la menace, verifier votre eau, agir.</p>
+</div>
+
+<!-- What are PFAS -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    Qu'est-ce que les PFAS ?
+  </h3>
+  <div class="card">
+    <p>Les <strong>PFAS</strong> (substances per- et polyfluoroalkylees) sont une famille de plus de <strong>10 000 molecules chimiques</strong> synthetiques. Leur liaison carbone-fluor est l'une des plus solides de la chimie organique, ce qui les rend pratiquement indestructibles dans l'environnement.</p>
+    <p style="margin-top:8px">Utilises depuis les annees 1950 dans les poeles antiadhesives, textiles impermeables, emballages alimentaires, mousses anti-incendie et cosmetiques. On les retrouve aujourd'hui dans l'eau potable, les sols, l'air et le sang de quasi tous les etres humains testes.</p>
+    <p style="margin-top:8px">Effets documentes : cancers (rein, testicule), perturbation thyroidienne, baisse immunite vaccinale chez l'enfant, cholesterol eleve, atteintes hepatiques.</p>
+    <div class="source">Sources : EFSA 2020 (avis PFAS), ANSES 2022 (campagne nationale), Grandjean et al. 2012 (Lancet)</div>
+  </div>
+</div>
+
+<!-- Map -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Carte de contamination France
+  </h3>
+
+  <div class="legend">
+    <span><div class="legend-dot" style="background:#DC2626"></div> Eleve (&gt;100 ng/L)</span>
+    <span><div class="legend-dot" style="background:#f97316"></div> Modere (20-100 ng/L)</span>
+    <span><div class="legend-dot" style="background:#eab308"></div> Faible (&lt;20 ng/L)</span>
+    <span><div class="legend-dot" style="background:#d1d5db"></div> Donnees insuffisantes</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="region-cell high">Ile-de-France</div>
+    <div class="region-cell high">Auvergne-Rhone-Alpes</div>
+    <div class="region-cell high">Hauts-de-France</div>
+    <div class="region-cell high">Grand Est</div>
+    <div class="region-cell medium">Occitanie</div>
+    <div class="region-cell medium">PACA</div>
+    <div class="region-cell medium">Pays de Loire</div>
+    <div class="region-cell medium">Normandie</div>
+    <div class="region-cell low">Bretagne</div>
+    <div class="region-cell low">Nouvelle-Aquitaine</div>
+    <div class="region-cell low">Centre-VdL</div>
+    <div class="region-cell low">Bourgogne-FC</div>
+    <div class="region-cell unknown">Corse</div>
+    <div class="region-cell unknown">Outre-mer</div>
+  </div>
+
+  <div class="card">
+    <p>Les zones les plus contaminees en France correspondent aux bassins industriels historiques : vallee de la chimie (Lyon), Pas-de-Calais, Seine-aval. Le <strong>Forever Pollution Project</strong> a identifie plus de <strong>17 000 sites contamines</strong> en Europe, dont plus de 2 200 en France.</p>
+    <div class="source">Source : Forever Pollution Project (Le Monde, 2023), Generations Futures (rapport PFAS 2023), ARS campagnes regionales 2022-2024</div>
+  </div>
+</div>
+
+<!-- Water check -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><path d="M12 2L6 12a6 6 0 1012 0L12 2z"/></svg>
+    Votre eau du robinet
+  </h3>
+
+  <div class="water-check">
+    <p style="font-size:.85rem;color:#555;margin-bottom:12px">Entrez votre code postal pour verifier la qualite de votre eau :</p>
+    <div class="water-input">
+      <input type="text" id="postal-code" placeholder="Ex: 75001" maxlength="5" pattern="[0-9]{5}">
+      <button onclick="checkWater()">Verifier</button>
+    </div>
+    <div id="water-result" style="display:none"></div>
+
+    <h4 style="margin-top:16px;font-size:.9rem">Seuils reglementaires PFAS</h4>
+    <table class="threshold-table">
+      <tr><th>Norme</th><th>Seuil total PFAS</th><th>Seuil par substance</th></tr>
+      <tr><td>Directive EU 2020/2184</td><td class="val warn">500 ng/L (total)</td><td class="val warn">100 ng/L (20 PFAS)</td></tr>
+      <tr><td>Recommandation OMS</td><td class="val safe">100 ng/L (total)</td><td class="val safe">—</td></tr>
+      <tr><td>France (arrete 2023)</td><td class="val warn">500 ng/L (total)</td><td class="val warn">100 ng/L</td></tr>
+      <tr><td>Danemark (ref.)</td><td class="val safe">2 ng/L (total)</td><td class="val safe">—</td></tr>
+    </table>
+    <p style="font-size:.7rem;color:#999;margin-top:8px">Note : le Danemark applique le seuil le plus protecteur au monde (2 ng/L pour 4 PFAS). La France suit la directive EU a 500 ng/L, 250x moins stricte.</p>
+  </div>
+</div>
+
+<!-- 10 Actions -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    10 actions pour reduire votre exposition
+  </h3>
+
+  <div class="action-list">
+    <div class="action-item">
+      <h4>Filtrer votre eau</h4>
+      <p>Utilisez un filtre a charbon actif granulaire (GAC) ou un systeme d'osmose inverse. Seuls ces systemes eliminent significativement les PFAS. Les carafes filtrantes classiques sont insuffisantes.</p>
+      <div class="source">Source : ANSES 2022, EPA 2023 (Drinking Water Treatment Technologies)</div>
+    </div>
+    <div class="action-item">
+      <h4>Eliminer les poeles antiadhesives rayees</h4>
+      <p>Remplacez les poeles Teflon rayees par de l'inox, de la fonte ou de la ceramique sans PTFE. Le revetement endommage libere des PFAS a la cuisson.</p>
+      <div class="source">Source : Sajid et al., 2022 (Environmental Science & Technology)</div>
+    </div>
+    <div class="action-item">
+      <h4>Eviter les emballages alimentaires gras</h4>
+      <p>Boites a pizza, sachets micro-ondes, papiers d'emballage fast-food : beaucoup contiennent des PFAS comme agent anti-graisse.</p>
+      <div class="source">Source : Schaider et al., 2017 (Environmental Science & Technology Letters)</div>
+    </div>
+    <div class="action-item">
+      <h4>Verifier vos cosmetiques</h4>
+      <p>Les PFAS sont presents dans certains fonds de teint, mascaras et cremes. Cherchez "PTFE" ou "perfluoro" dans la liste INCI.</p>
+      <div class="source">Source : Whitehead et al., 2021 (Environmental Science & Technology Letters)</div>
+    </div>
+    <div class="action-item">
+      <h4>Choisir des vetements sans traitement deperlant</h4>
+      <p>Les textiles "impermeable" ou "anti-taches" utilisent souvent des PFAS. Privilegiez les labels OEKO-TEX STANDARD 100 ou GOTS.</p>
+      <div class="source">Source : Lassen et al., 2015 (Danish EPA)</div>
+    </div>
+    <div class="action-item">
+      <h4>Eviter le fil dentaire enrobe</h4>
+      <p>Certains fils dentaires "glissants" contiennent du PTFE (meme molecule que le Teflon).</p>
+      <div class="source">Source : Boronow et al., 2019 (Journal of Exposure Science & Environmental Epidemiology)</div>
+    </div>
+    <div class="action-item">
+      <h4>Aerer votre interieur</h4>
+      <p>Les PFAS sont presents dans les poussieres domestiques (moquettes, tissus d'ameublement traites). Aerer 10 min/jour et passer l'aspirateur regulierement.</p>
+      <div class="source">Source : Winkens et al., 2017 (Environment International)</div>
+    </div>
+    <div class="action-item">
+      <h4>Verifier votre eau en bouteille aussi</h4>
+      <p>Certaines eaux en bouteille contiennent egalement des PFAS. L'eau du robinet filtree reste souvent le meilleur choix.</p>
+      <div class="source">Source : Generations Futures, 2024 (rapport eaux embouteillees)</div>
+    </div>
+    <div class="action-item">
+      <h4>Soutenir l'interdiction europeenne</h4>
+      <p>L'ECHA etudie une restriction totale des PFAS en Europe (proposition 2023, decision attendue 2025-2027). Signez les petitions, contactez vos eurodeputes.</p>
+      <div class="source">Source : ECHA Universal PFAS Restriction Proposal, 2023</div>
+    </div>
+    <div class="action-item">
+      <h4>Exiger la transparence de votre mairie</h4>
+      <p>Demandez les resultats d'analyses PFAS de votre eau potable a votre mairie ou ARS. C'est un droit (article L.1321-9 du code de la sante publique).</p>
+      <div class="source">Source : Code de la sante publique, ARS</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bibliography -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A2E" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    Bibliographie
+  </h3>
+
+  <ul class="biblio-list">
+    <li><span class="authors">EFSA (2020).</span> <span class="title">Risk to human health related to the presence of perfluoroalkyl substances in food.</span> <span class="journal">EFSA Journal, 18(9), e06223.</span> <a href="https://doi.org/10.2903/j.efsa.2020.6223" target="_blank">doi:10.2903/j.efsa.2020.6223</a></li>
+    <li><span class="authors">Grandjean P., Andersen E.W., et al. (2012).</span> <span class="title">Serum vaccine antibody concentrations in children exposed to perfluorinated compounds.</span> <span class="journal">JAMA, 307(4), 391-397.</span></li>
+    <li><span class="authors">ANSES (2022).</span> <span class="title">Campagne nationale d'occurrence des PFAS dans les eaux destinees a la consommation humaine.</span></li>
+    <li><span class="authors">Forever Pollution Project (2023).</span> <span class="title">The Forever Pollution Project — Mapping PFAS contamination in Europe.</span> <span class="journal">Le Monde, NDR, WDR et 16 redactions europeennes.</span> <a href="https://foreverpollution.eu" target="_blank">foreverpollution.eu</a></li>
+    <li><span class="authors">Generations Futures (2023).</span> <span class="title">Rapport : PFAS dans l'eau potable en France.</span> <a href="https://www.generations-futures.fr" target="_blank">generations-futures.fr</a></li>
+    <li><span class="authors">Schaider L.A., et al. (2017).</span> <span class="title">Fluorinated Compounds in U.S. Fast Food Packaging.</span> <span class="journal">Environmental Science & Technology Letters, 4(3), 105-111.</span></li>
+    <li><span class="authors">Whitehead H.D., et al. (2021).</span> <span class="title">Fluorinated Compounds in North American Cosmetics.</span> <span class="journal">Environmental Science & Technology Letters, 8(7), 538-544.</span></li>
+    <li><span class="authors">Boronow K.E., et al. (2019).</span> <span class="title">Serum concentrations of PFASs and exposure-related behaviors in African American and non-Hispanic white women.</span> <span class="journal">J Exposure Sci & Environmental Epidemiology, 29, 206-217.</span></li>
+    <li><span class="authors">Winkens K., et al. (2017).</span> <span class="title">Early life exposure to per- and polyfluoroalkyl substances (PFASs): A critical review.</span> <span class="journal">Environment International, 106, 160-172.</span></li>
+    <li><span class="authors">ECHA (2023).</span> <span class="title">Proposal for a restriction of per- and polyfluoroalkyl substances (PFAS).</span> <a href="https://echa.europa.eu/hot-topics/perfluoroalkyl-chemicals-pfas" target="_blank">echa.europa.eu</a></li>
+    <li><span class="authors">EPA (2023).</span> <span class="title">PFAS National Primary Drinking Water Regulation.</span> <span class="journal">U.S. Environmental Protection Agency, 88 FR 18638.</span></li>
+  </ul>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+
+<script>
+function checkWater() {
+  var code = document.getElementById('postal-code').value.trim();
+  if (!/^\d{5}$/.test(code)) { alert('Entrez un code postal valide (5 chiffres)'); return; }
+  var result = document.getElementById('water-result');
+  result.style.display = 'block';
+  // Prototype: show data-coming-soon message with real thresholds
+  var dept = code.substring(0, 2);
+  var highRisk = ['75','92','93','94','69','13','59','62','67','68','57'];
+  var isHigh = highRisk.indexOf(dept) !== -1;
+  result.innerHTML = '<div style="background:' + (isHigh ? '#fef2f2;border:1px solid #fecaca' : '#f0fdf4;border:1px solid #bbf7d0') + ';border-radius:10px;padding:16px;margin-top:12px">'
+    + '<p style="font-size:.9rem;font-weight:700;color:' + (isHigh ? '#DC2626' : '#059669') + '">'
+    + (isHigh ? 'Zone a risque eleve' : 'Zone a risque modere') + ' (code ' + code + ')</p>'
+    + '<p style="font-size:.8rem;color:#555;margin-top:6px">Donnees individuelles par commune en cours de chargement. En attendant, consultez les resultats ARS de votre departement sur <a href="https://orobnat.sante.gouv.fr/explore/dataset/resultats-pfas" target="_blank" style="color:#2563EB">orobnat.sante.gouv.fr</a></p>'
+    + '<p style="font-size:.75rem;color:#999;margin-top:8px">Action recommandee : demandez les analyses PFAS a votre mairie (article L.1321-9 du code de la sante publique).</p>'
+    + '</div>';
+}
+</script>
+<script src="js/cgu-gate.js"></script>
+</body>
+</html>

@@ -6,21 +6,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOS Carbone — Calculez votre empreinte carbone</title>
 <meta name="description" content="Calculateur d'empreinte carbone personnelle base sur les facteurs ADEME Base Carbone. Gratuit, sans tracking.">
-<meta name="theme-color" content="#0a1628">
+<meta name="theme-color" content="#059669">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0a1628;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
-  --text:#e0e7ef;--text-dim:rgba(224,231,239,.5);--text-muted:rgba(224,231,239,.3);
-  --green:#34d399;--green-dim:rgba(52,211,153,.15);
+  --bg:#FAFAF8;--surface:rgba(0,0,0,.02);--border:rgba(0,0,0,.08);
+  --text:#1A1A2E;--text-dim:rgba(26,26,46,.55);--text-muted:rgba(26,26,46,.35);
+  --green:#059669;--green-dim:rgba(5,150,105,.1);
   --blue:#2563eb;--yellow:#eab308;--orange:#f97316;--red:#ef4444;
   --radius:14px;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
 a{color:var(--green);text-decoration:none}
+/* Light theme overrides */
+.choice{background:#fff}
+input[type=number],select{background:#fff;color:var(--text)}
+option{background:#fff;color:var(--text)}
+.result-section{background:#fff}
+.action-card{background:#fff;border-color:var(--border)}
+.badge-item{background:#fff}
+.badge-item.earned{background:var(--green-dim)}
+.score-circle circle.score-bg{stroke:rgba(0,0,0,.06)}
+.share-btn{background:#fff}
+/* Bottom nav for carbone */
+.carbone-bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.carbone-bnav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.carbone-bnav a svg{width:22px;height:22px}
 
 /* Top bar */
-.topbar{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,22,40,.95);backdrop-filter:blur(12px);z-index:100}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
 .topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
 .topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
 .topbar .spacer{width:80px}
@@ -1262,6 +1276,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+<script src="js/planet-engine.js"></script>
 <script src="js/cgu-gate.js"></script>
+
+<nav class="carbone-bnav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
 </body>
 </html>

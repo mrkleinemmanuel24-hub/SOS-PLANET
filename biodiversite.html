@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Biodiversite — -69% vertebres sauvages en 50 ans</title>
+<meta name="description" content="Etat de la biodiversite, especes menacees, actions concretes. Donnees IPBES, UICN, INPN.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+.hero{text-align:center;padding:32px 20px;border-bottom:1px solid #e5e5e0}
+.hero h2{font-size:1.8rem;font-weight:900;margin-bottom:8px}
+.hero p{color:#666;font-size:.9rem;line-height:1.6;max-width:500px;margin:0 auto}
+.section{padding:24px 20px;max-width:720px;margin:0 auto}
+.section h3{font-size:1.15rem;font-weight:800;margin-bottom:16px}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.card h4{font-size:.95rem;font-weight:700;margin-bottom:6px}
+.card p{font-size:.85rem;color:#555;line-height:1.6}
+.card .source{font-size:.7rem;color:#999;margin-top:6px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(min-width:640px){.stat-grid{grid-template-columns:1fr 1fr 1fr}}
+.stat-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center}
+.stat-val{font-size:1.8rem;font-weight:900;color:#DC2626}
+.stat-label{font-size:.75rem;color:#666;margin-top:4px;line-height:1.3}
+.stat-src{font-size:.6rem;color:#999;margin-top:4px}
+
+.threat-list{list-style:none}
+.threat-list li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0e5;align-items:flex-start}
+.threat-list li:last-child{border:none}
+.threat-rank{width:32px;height:32px;border-radius:50%;background:#DC2626;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;flex-shrink:0}
+.threat-content{flex:1}
+.threat-title{font-size:.9rem;font-weight:700}
+.threat-desc{font-size:.8rem;color:#666;line-height:1.4;margin-top:2px}
+
+.species-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:480px){.species-grid{grid-template-columns:1fr 1fr}}
+.species-card{background:#fff;border:1px solid #e5e5e0;border-radius:10px;padding:14px;text-align:center}
+.species-status{font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:8px;display:inline-block;margin-bottom:6px}
+.species-status.cr{background:#fef2f2;color:#DC2626}
+.species-status.en{background:#fff7ed;color:#f97316}
+.species-status.vu{background:#fefce8;color:#a16207}
+.species-name{font-size:.85rem;font-weight:700}
+.species-latin{font-size:.7rem;color:#999;font-style:italic}
+
+.action-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.action-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;display:flex;gap:12px}
+.action-num{width:28px;height:28px;border-radius:50%;background:#059669;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;flex-shrink:0}
+.action-content{flex:1}
+.action-title{font-size:.9rem;font-weight:700;margin-bottom:2px}
+.action-desc{font-size:.8rem;color:#666;line-height:1.4}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>SOS Biodiversite</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <h2>La 6e extinction de masse</h2>
+  <p>-69% des populations de vertebres sauvages en 50 ans. Le vivant s'effondre en silence.</p>
+</div>
+
+<div class="section">
+  <h3>L'etat du vivant en chiffres</h3>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val">-69%</div><div class="stat-label">Vertebres sauvages depuis 1970</div><div class="stat-src">WWF Living Planet 2022</div></div>
+    <div class="stat-card"><div class="stat-val">1M</div><div class="stat-label">Especes menacees d'extinction</div><div class="stat-src">IPBES 2019</div></div>
+    <div class="stat-card"><div class="stat-val">-75%</div><div class="stat-label">Insectes volants en Europe</div><div class="stat-src">Hallmann et al. 2017</div></div>
+    <div class="stat-card"><div class="stat-val">421</div><div class="stat-label">Especes menacees en France metropolitaine</div><div class="stat-src">UICN France / INPN 2024</div></div>
+    <div class="stat-card"><div class="stat-val">-30%</div><div class="stat-label">Oiseaux communs en France</div><div class="stat-src">MNHN/LPO STOC 2023</div></div>
+    <div class="stat-card"><div class="stat-val">150</div><div class="stat-label">Especes disparaissent chaque jour</div><div class="stat-src">IPBES estimation</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Les 5 causes majeures</h3>
+  <ol class="threat-list">
+    <li><div class="threat-rank">1</div><div class="threat-content"><div class="threat-title">Destruction des habitats</div><div class="threat-desc">Agriculture intensive, urbanisation, deforestation. 75% des terres emergees significativement alterees (IPBES).</div></div></li>
+    <li><div class="threat-rank">2</div><div class="threat-content"><div class="threat-title">Surexploitation</div><div class="threat-desc">Peche excessive, braconnage, surexploitation forestiere. 33% des stocks halieutiques surexploites (FAO).</div></div></li>
+    <li><div class="threat-rank">3</div><div class="threat-content"><div class="threat-title">Changement climatique</div><div class="threat-desc">Modification des aires de repartition, desynchronisation des cycles, evenements extremes.</div></div></li>
+    <li><div class="threat-rank">4</div><div class="threat-content"><div class="threat-title">Pollution</div><div class="threat-desc">Pesticides, plastiques, PFAS, nitrates. Les neonicotinoides deciment les pollinisateurs.</div></div></li>
+    <li><div class="threat-rank">5</div><div class="threat-content"><div class="threat-title">Especes invasives</div><div class="threat-desc">Frelon asiatique, ecrevisse de Louisiane, renouee du Japon. Cout estime : 12 Mds EUR/an en Europe (IPBES).</div></div></li>
+  </ol>
+</div>
+
+<div class="section">
+  <h3>Especes menacees en France</h3>
+  <div class="species-grid">
+    <div class="species-card"><span class="species-status cr">En danger critique</span><div class="species-name">Ange de mer</div><div class="species-latin">Squatina squatina</div></div>
+    <div class="species-card"><span class="species-status cr">En danger critique</span><div class="species-name">Vison d'Europe</div><div class="species-latin">Mustela lutreola</div></div>
+    <div class="species-card"><span class="species-status en">En danger</span><div class="species-name">Hamster d'Alsace</div><div class="species-latin">Cricetus cricetus</div></div>
+    <div class="species-card"><span class="species-status en">En danger</span><div class="species-name">Gypaete barbu</div><div class="species-latin">Gypaetus barbatus</div></div>
+    <div class="species-card"><span class="species-status vu">Vulnerable</span><div class="species-name">Loutre d'Europe</div><div class="species-latin">Lutra lutra</div></div>
+    <div class="species-card"><span class="species-status vu">Vulnerable</span><div class="species-name">Tortue d'Hermann</div><div class="species-latin">Testudo hermanni</div></div>
+  </div>
+  <div class="card">
+    <p>La France, grace a ses territoires d'outre-mer, est le <strong>6e pays au monde pour le nombre d'especes menacees</strong>. Elle heberge 10% des recifs coralliens mondiaux et une faune endemique unique.</p>
+    <div class="source">Source : UICN France, INPN (Inventaire National du Patrimoine Naturel), 2024</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>10 actions concretes</h3>
+  <div class="action-grid">
+    <div class="action-card"><div class="action-num">1</div><div class="action-content"><div class="action-title">Observer et signaler</div><div class="action-desc">Installez l'app iNaturalist ou INPN Especes. Chaque observation compte pour la science.</div></div></div>
+    <div class="action-card"><div class="action-num">2</div><div class="action-content"><div class="action-title">Planter des haies melangees</div><div class="action-desc">Cornouillers, charmes, noisetiers : corridors ecologiques essentiels pour la faune.</div></div></div>
+    <div class="action-card"><div class="action-num">3</div><div class="action-content"><div class="action-title">Installer nichoirs et mangeoires</div><div class="action-desc">1 nichoir = 1 couple de mesanges = 9 000 chenilles/an consommees.</div></div></div>
+    <div class="action-card"><div class="action-num">4</div><div class="action-content"><div class="action-title">Laisser un coin sauvage</div><div class="action-desc">10% de votre jardin en friche : herbes hautes, bois mort, tas de pierres. Refuge vital.</div></div></div>
+    <div class="action-card"><div class="action-num">5</div><div class="action-content"><div class="action-title">Zero pesticide au jardin</div><div class="action-desc">Purins d'ortie, coccinelles, paillage. Depuis 2019, les pesticides chimiques sont interdits aux particuliers.</div></div></div>
+    <div class="action-card"><div class="action-num">6</div><div class="action-content"><div class="action-title">Manger moins de viande</div><div class="action-desc">L'elevage intensif = 1ere cause de deforestation mondiale. -50% viande = -30% pression sur les habitats.</div></div></div>
+    <div class="action-card"><div class="action-num">7</div><div class="action-content"><div class="action-title">Soutenir une association</div><div class="action-desc">LPO, ASPAS, FNE, WWF France : adhesion des 10 EUR/an. Force de frappe juridique et terrain.</div></div></div>
+    <div class="action-card"><div class="action-num">8</div><div class="action-content"><div class="action-title">Eteindre les lumieres la nuit</div><div class="action-desc">La pollution lumineuse desoriante les insectes et oiseaux migrateurs. Eteignez apres 23h.</div></div></div>
+    <div class="action-card"><div class="action-num">9</div><div class="action-content"><div class="action-title">Choisir poisson durable</div><div class="action-desc">Consultez le guide Mr Goodfish. Evitez thon rouge, espadon, anguille.</div></div></div>
+    <div class="action-card"><div class="action-num">10</div><div class="action-content"><div class="action-title">Voter pour le vivant</div><div class="action-desc">Municipales, europeennes : evaluez les programmes environnementaux des candidats.</div></div></div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+<script src="js/cgu-gate.js"></script>
+</body>
+</html>
