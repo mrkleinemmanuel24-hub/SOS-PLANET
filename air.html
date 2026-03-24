@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Air — 4.2 millions de morts par an dans le monde</title>
+<meta name="description" content="Qualite de l'air : chiffres, indice ATMO, actions concretes. Donnees OMS, ATMO France, EEA.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+.hero{text-align:center;padding:32px 20px;border-bottom:1px solid #e5e5e0}
+.hero h2{font-size:1.8rem;font-weight:900;margin-bottom:8px}
+.hero p{color:#666;font-size:.9rem;line-height:1.6;max-width:500px;margin:0 auto}
+.section{padding:24px 20px;max-width:720px;margin:0 auto}
+.section h3{font-size:1.15rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section h3 svg{width:24px;height:24px}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.card h4{font-size:.95rem;font-weight:700;margin-bottom:8px}
+.card p{font-size:.85rem;color:#555;line-height:1.6}
+.card .source{font-size:.7rem;color:#999;margin-top:6px}
+.alert-box{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:20px;margin-bottom:16px}
+.alert-box h4{color:#DC2626;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.alert-box p{font-size:.85rem;color:#7f1d1d;line-height:1.6}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(min-width:640px){.stat-grid{grid-template-columns:1fr 1fr 1fr}}
+.stat-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center}
+.stat-val{font-size:1.8rem;font-weight:900;color:#DC2626}
+.stat-label{font-size:.75rem;color:#666;margin-top:4px;line-height:1.3}
+.stat-src{font-size:.6rem;color:#999;margin-top:4px}
+/* ATMO widget */
+.atmo-widget{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.atmo-input{display:flex;gap:8px;margin-bottom:16px}
+.atmo-input select{flex:1;padding:12px 16px;border:1px solid #e5e5e0;border-radius:8px;font-size:1rem;font-family:inherit;background:#fff}
+.atmo-input select:focus{outline:none;border-color:#059669}
+.atmo-input button{padding:12px 20px;background:#059669;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem}
+.atmo-result{display:none;border-radius:10px;padding:16px;margin-top:12px;text-align:center}
+.atmo-index{font-size:3rem;font-weight:900;margin-bottom:4px}
+.atmo-label{font-size:1rem;font-weight:700;margin-bottom:4px}
+.atmo-detail{font-size:.8rem;color:#555;line-height:1.5}
+.atmo-scale{display:flex;gap:4px;margin-top:16px}
+.atmo-scale div{flex:1;height:8px;border-radius:4px}
+.action-list{counter-reset:action}
+.action-item{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px 16px 16px 52px;margin-bottom:10px;position:relative}
+.action-item::before{counter-increment:action;content:counter(action);position:absolute;left:16px;top:16px;width:28px;height:28px;border-radius:50%;background:#059669;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800}
+.action-item h4{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.action-item p{font-size:.8rem;color:#666;line-height:1.5}
+.action-item .impact{font-size:.75rem;color:#059669;font-weight:600;margin-top:4px}
+.action-item .source{font-size:.65rem;color:#999;margin-top:4px}
+.biblio-list{list-style:none}
+.biblio-list li{padding:10px 0;border-bottom:1px solid #f0f0e5;font-size:.8rem;line-height:1.5}
+.biblio-list li:last-child{border:none}
+.biblio-list .authors{font-weight:600}
+.biblio-list .title{font-style:italic}
+.biblio-list .journal{color:#666}
+.biblio-list a{color:#2563EB;font-size:.75rem}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>SOS Air</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <h2>Qualite de l'Air</h2>
+  <p>90% de la population mondiale respire un air pollue. En France, la pollution de l'air tue plus que les accidents de la route.</p>
+</div>
+
+<!-- Stats -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    Les chiffres qui etouffent
+  </h3>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val">4.2M</div><div class="stat-label">morts/an dans le monde (pollution air exterieur)</div><div class="stat-src">OMS 2024</div></div>
+    <div class="stat-card"><div class="stat-val">48 000</div><div class="stat-label">morts/an en France</div><div class="stat-src">Sante publique France 2021</div></div>
+    <div class="stat-card"><div class="stat-val">90%</div><div class="stat-label">de la population mondiale respire un air pollue</div><div class="stat-src">OMS 2022</div></div>
+    <div class="stat-card"><div class="stat-val">-2 ans</div><div class="stat-label">d'esperance de vie dans les zones les plus polluees</div><div class="stat-src">AQLI 2023</div></div>
+    <div class="stat-card"><div class="stat-val">100 Mds</div><div class="stat-label">EUR/an : cout sanitaire en France</div><div class="stat-src">Senat, commission d'enquete 2015</div></div>
+  </div>
+</div>
+
+<!-- Pourquoi c'est grave -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    Pourquoi c'est grave
+  </h3>
+  <div class="alert-box">
+    <h4>Un tueur invisible et silencieux</h4>
+    <p>Les particules fines PM2.5 (inferieures a 2,5 micrometres) penetrent les poumons, passent dans le sang et atteignent tous les organes : coeur, cerveau, foetus. Elles causent cancers du poumon, AVC, maladies cardiaques et asthme.</p>
+    <p style="margin-top:8px">Le dioxyde d'azote (NO2), principalement emis par les vehicules diesel, provoque inflammation des voies respiratoires et aggrave l'asthme. 40 000 enfants en France developpent de l'asthme chaque annee a cause de la pollution.</p>
+    <p style="margin-top:8px">La pollution de l'air <strong>ne connait pas de seuil sans danger</strong> : meme en dessous des normes, elle affecte la sante. L'OMS a abaisse ses seuils en 2021 pour cette raison.</p>
+  </div>
+</div>
+
+<!-- Interactive ATMO -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><path d="M12 2L6 12a6 6 0 1012 0L12 2z"/></svg>
+    Indice ATMO de votre ville
+  </h3>
+  <div class="atmo-widget">
+    <p style="font-size:.85rem;color:#555;margin-bottom:12px">Selectionnez votre ville pour voir la qualite de l'air :</p>
+    <div class="atmo-input">
+      <select id="atmo-city">
+        <option value="">Choisir une ville...</option>
+        <option value="paris">Paris</option>
+        <option value="lyon">Lyon</option>
+        <option value="marseille">Marseille</option>
+        <option value="toulouse">Toulouse</option>
+        <option value="bordeaux">Bordeaux</option>
+        <option value="lille">Lille</option>
+        <option value="strasbourg">Strasbourg</option>
+        <option value="nantes">Nantes</option>
+        <option value="nice">Nice</option>
+        <option value="rennes">Rennes</option>
+        <option value="grenoble">Grenoble</option>
+        <option value="rouen">Rouen</option>
+      </select>
+      <button onclick="checkATMO()">Verifier</button>
+    </div>
+    <div id="atmo-result" class="atmo-result"></div>
+    <div class="atmo-scale">
+      <div style="background:#50f0e6" title="Bon"></div>
+      <div style="background:#50ccaa" title="Moyen"></div>
+      <div style="background:#f0e641" title="Degrade"></div>
+      <div style="background:#ff5050" title="Mauvais"></div>
+      <div style="background:#960032" title="Tres mauvais"></div>
+      <div style="background:#7d2181" title="Extremement mauvais"></div>
+    </div>
+    <p style="font-size:.7rem;color:#999;margin-top:8px;text-align:center">Echelle : Bon → Moyen → Degrade → Mauvais → Tres mauvais → Extremement mauvais</p>
+    <p style="font-size:.7rem;color:#999;margin-top:4px">Donnees simulees a titre indicatif. Pour les donnees en temps reel : <a href="https://atmo-france.org" target="_blank" style="color:#2563EB">atmo-france.org</a></p>
+  </div>
+</div>
+
+<!-- 10 Actions -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    10 actions pour mieux respirer
+  </h3>
+  <div class="action-list">
+    <div class="action-item">
+      <h4>Privilegier le velo et la marche</h4>
+      <p>40% des trajets en voiture font moins de 3 km. A velo, zero emission et meilleure sante.</p>
+      <div class="impact">Impact : -500 kg CO2/an pour 5 km/jour de velo au lieu de la voiture</div>
+      <div class="source">Source : ADEME, FUB (Federation des Usagers de la Bicyclette)</div>
+    </div>
+    <div class="action-item">
+      <h4>Prendre les transports en commun</h4>
+      <p>Un bus transporte 50 personnes. Un metro emet 3g CO2/km par passager vs 120g pour une voiture.</p>
+      <div class="impact">Impact : -97% d'emissions par km vs voiture individuelle</div>
+      <div class="source">Source : ADEME Base Carbone, RATP 2023</div>
+    </div>
+    <div class="action-item">
+      <h4>Abandonner le diesel</h4>
+      <p>Les moteurs diesel emettent 4x plus de NOx et 20x plus de particules que l'essence. Les ZFE les interdisent progressivement.</p>
+      <div class="impact">Impact : -80% de particules fines si passage a l'electrique</div>
+      <div class="source">Source : ADEME, ANSES 2019</div>
+    </div>
+    <div class="action-item">
+      <h4>Ne pas bruler de bois dans un foyer ouvert</h4>
+      <p>Les cheminees a foyer ouvert emettent autant de particules qu'un camion diesel. Investissez dans un poele labellise Flamme Verte 7 etoiles.</p>
+      <div class="impact">Impact : -90% de particules vs foyer ouvert</div>
+      <div class="source">Source : ADEME, Label Flamme Verte</div>
+    </div>
+    <div class="action-item">
+      <h4>Aerer 10 minutes/jour meme en ville</h4>
+      <p>L'air interieur est 5 a 10 fois plus pollue que l'air exterieur (COV, formaldehyde, radon). Aerer tot le matin ou tard le soir.</p>
+      <div class="impact">Impact : divise par 5 la concentration de polluants interieurs</div>
+      <div class="source">Source : OQAI (Observatoire de la Qualite de l'Air Interieur)</div>
+    </div>
+    <div class="action-item">
+      <h4>Installer des plantes depolluantes</h4>
+      <p>Spathiphyllum, ficus, pothos : certaines plantes absorbent formaldehyde, benzene et trichloroethylene.</p>
+      <div class="impact">Impact : reduction mesurable des COV dans les pieces fermees</div>
+      <div class="source">Source : Wolverton (NASA Clean Air Study, 1989)</div>
+    </div>
+    <div class="action-item">
+      <h4>Eviter l'encens, les bougies parfumees et les sprays</h4>
+      <p>Ils emettent benzene, formaldehyde et particules fines dans un espace confine.</p>
+      <div class="impact">Impact : 1 batonnet d'encens = 100 cigarettes en particules fines</div>
+      <div class="source">Source : ANSES 2020, 60 Millions de Consommateurs</div>
+    </div>
+    <div class="action-item">
+      <h4>Couper le moteur a l'arret</h4>
+      <p>10 secondes d'arret moteur suffisent pour economiser du carburant. C'est obligatoire en France depuis 2015 devant les ecoles.</p>
+      <div class="impact">Impact : -10% consommation en ville si systematique</div>
+      <div class="source">Source : Code de la route, ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Verifier l'indice ATMO avant de faire du sport</h4>
+      <p>Pendant un pic de pollution, l'effort physique multiplie par 5 la dose de polluants inhales. Evitez le sport exterieur les jours rouges.</p>
+      <div class="impact">Impact : protection directe des poumons et du coeur</div>
+      <div class="source">Source : ATMO France, InVS</div>
+    </div>
+    <div class="action-item">
+      <h4>Soutenir les ZFE et les zones pietonnes</h4>
+      <p>Les Zones a Faibles Emissions ont reduit le NO2 de -30% a Londres. Paris vise -40% de circulation d'ici 2030.</p>
+      <div class="impact">Impact : -30% NO2, -15% PM2.5 dans les centres-villes</div>
+      <div class="source">Source : Greater London Authority 2023, Ville de Paris</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bibliography -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A2E" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    Bibliographie
+  </h3>
+  <ul class="biblio-list">
+    <li><span class="authors">OMS (2022).</span> <span class="title">Ambient (outdoor) air pollution.</span> <a href="https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health" target="_blank">who.int</a></li>
+    <li><span class="authors">Sante publique France (2021).</span> <span class="title">Impact de la pollution de l'air ambiant sur la mortalite en France.</span> <span class="journal">BEH, 2021.</span></li>
+    <li><span class="authors">EEA (2023).</span> <span class="title">Air quality in Europe 2023.</span> <span class="journal">European Environment Agency, Report 05/2023.</span> <a href="https://www.eea.europa.eu/publications/air-quality-in-europe-2023" target="_blank">eea.europa.eu</a></li>
+    <li><span class="authors">AQLI (2023).</span> <span class="title">Air Quality Life Index.</span> <span class="journal">Energy Policy Institute at the University of Chicago.</span> <a href="https://aqli.epic.uchicago.edu" target="_blank">aqli.epic.uchicago.edu</a></li>
+    <li><span class="authors">Senat (2015).</span> <span class="title">Rapport de la commission d'enquete sur le cout economique et financier de la pollution de l'air.</span></li>
+    <li><span class="authors">Wolverton B.C. et al. (1989).</span> <span class="title">Interior Landscape Plants for Indoor Air Pollution Abatement.</span> <span class="journal">NASA Technical Report.</span></li>
+    <li><span class="authors">ADEME (2023).</span> <span class="title">Base Carbone — Facteurs d'emission transport.</span> <a href="https://base-empreinte.ademe.fr" target="_blank">base-empreinte.ademe.fr</a></li>
+  </ul>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+
+<script>
+function checkATMO() {
+  var city = document.getElementById('atmo-city').value;
+  if (!city) { alert('Selectionnez une ville'); return; }
+  var data = {
+    paris: { index: 3, label: 'Degrade', color: '#f0e641', textColor: '#1A1A2E', pm25: 18, no2: 32, o3: 45 },
+    lyon: { index: 3, label: 'Degrade', color: '#f0e641', textColor: '#1A1A2E', pm25: 20, no2: 28, o3: 50 },
+    marseille: { index: 2, label: 'Moyen', color: '#50ccaa', textColor: '#fff', pm25: 14, no2: 22, o3: 55 },
+    toulouse: { index: 2, label: 'Moyen', color: '#50ccaa', textColor: '#fff', pm25: 12, no2: 20, o3: 48 },
+    bordeaux: { index: 2, label: 'Moyen', color: '#50ccaa', textColor: '#fff', pm25: 13, no2: 18, o3: 42 },
+    lille: { index: 3, label: 'Degrade', color: '#f0e641', textColor: '#1A1A2E', pm25: 22, no2: 35, o3: 38 },
+    strasbourg: { index: 3, label: 'Degrade', color: '#f0e641', textColor: '#1A1A2E', pm25: 19, no2: 30, o3: 44 },
+    nantes: { index: 1, label: 'Bon', color: '#50f0e6', textColor: '#1A1A2E', pm25: 8, no2: 14, o3: 35 },
+    nice: { index: 2, label: 'Moyen', color: '#50ccaa', textColor: '#fff', pm25: 15, no2: 25, o3: 60 },
+    rennes: { index: 1, label: 'Bon', color: '#50f0e6', textColor: '#1A1A2E', pm25: 7, no2: 12, o3: 32 },
+    grenoble: { index: 4, label: 'Mauvais', color: '#ff5050', textColor: '#fff', pm25: 28, no2: 38, o3: 42 },
+    rouen: { index: 3, label: 'Degrade', color: '#f0e641', textColor: '#1A1A2E', pm25: 17, no2: 26, o3: 40 }
+  };
+  var d = data[city];
+  var r = document.getElementById('atmo-result');
+  r.style.display = 'block';
+  r.style.background = d.color;
+  r.style.color = d.textColor;
+  r.innerHTML = '<div class="atmo-index">' + d.index + '</div>' +
+    '<div class="atmo-label">' + d.label + '</div>' +
+    '<div class="atmo-detail" style="color:' + d.textColor + '">' +
+    'PM2.5 : ' + d.pm25 + ' ug/m3 | NO2 : ' + d.no2 + ' ug/m3 | O3 : ' + d.o3 + ' ug/m3' +
+    '</div>' +
+    '<p style="font-size:.7rem;margin-top:8px;color:' + d.textColor + ';opacity:.7">Donnees simulees — Consultez atmo-france.org pour le temps reel</p>';
+}
+</script>
+<script src="js/cgu-gate.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Oceans — 150 millions de tonnes de plastique dans les mers</title>
+<meta name="description" content="Oceans et pollution plastique : chiffres, consequences, actions concretes. Donnees IUCN, NOAA, Ocean Conservancy.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+.hero{text-align:center;padding:32px 20px;border-bottom:1px solid #e5e5e0}
+.hero h2{font-size:1.8rem;font-weight:900;margin-bottom:8px}
+.hero p{color:#666;font-size:.9rem;line-height:1.6;max-width:500px;margin:0 auto}
+.section{padding:24px 20px;max-width:720px;margin:0 auto}
+.section h3{font-size:1.15rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section h3 svg{width:24px;height:24px}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.card h4{font-size:.95rem;font-weight:700;margin-bottom:8px}
+.card p{font-size:.85rem;color:#555;line-height:1.6}
+.card .source{font-size:.7rem;color:#999;margin-top:6px}
+.alert-box{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:20px;margin-bottom:16px}
+.alert-box h4{color:#DC2626;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.alert-box p{font-size:.85rem;color:#7f1d1d;line-height:1.6}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(min-width:640px){.stat-grid{grid-template-columns:1fr 1fr 1fr}}
+.stat-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center}
+.stat-val{font-size:1.8rem;font-weight:900;color:#DC2626}
+.stat-val.blue{color:#2563EB}
+.stat-label{font-size:.75rem;color:#666;margin-top:4px;line-height:1.3}
+.stat-src{font-size:.6rem;color:#999;margin-top:4px}
+.action-list{counter-reset:action}
+.action-item{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px 16px 16px 52px;margin-bottom:10px;position:relative}
+.action-item::before{counter-increment:action;content:counter(action);position:absolute;left:16px;top:16px;width:28px;height:28px;border-radius:50%;background:#059669;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800}
+.action-item h4{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.action-item p{font-size:.8rem;color:#666;line-height:1.5}
+.action-item .impact{font-size:.75rem;color:#059669;font-weight:600;margin-top:4px}
+.action-item .source{font-size:.65rem;color:#999;margin-top:4px}
+.biblio-list{list-style:none}
+.biblio-list li{padding:10px 0;border-bottom:1px solid #f0f0e5;font-size:.8rem;line-height:1.5}
+.biblio-list li:last-child{border:none}
+.biblio-list .authors{font-weight:600}
+.biblio-list .title{font-style:italic}
+.biblio-list .journal{color:#666}
+.biblio-list a{color:#2563EB;font-size:.75rem}
+/* Interactive checklist */
+.checklist{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.checklist h4{font-size:.95rem;font-weight:700;margin-bottom:12px}
+.check-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f5f5f0;cursor:pointer;user-select:none}
+.check-item:last-child{border:none}
+.check-box{width:24px;height:24px;border-radius:6px;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:.8rem}
+.check-item.done .check-box{background:#059669;border-color:#059669;color:#fff}
+.check-text{font-size:.85rem;flex:1}
+.check-item.done .check-text{text-decoration:line-through;color:#999}
+.check-score{text-align:center;margin-top:12px;font-size:.9rem;font-weight:700;color:#059669}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a.active{color:#059669}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>SOS Oceans</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <h2>Oceans &amp; Plastique</h2>
+  <p>70% de l'oxygene que nous respirons vient des oceans. Ils absorbent 30% du CO2. Et nous les etouffons de plastique.</p>
+</div>
+
+<!-- Stats -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    L'etat des oceans en chiffres
+  </h3>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val">150M</div><div class="stat-label">tonnes de plastique dans les oceans</div><div class="stat-src">IUCN 2024</div></div>
+    <div class="stat-card"><div class="stat-val">+8M</div><div class="stat-label">tonnes ajoutees chaque annee</div><div class="stat-src">Jambeck et al. 2015</div></div>
+    <div class="stat-card"><div class="stat-val">70%</div><div class="stat-label blue">de notre oxygene vient des oceans</div><div class="stat-src">NOAA</div></div>
+    <div class="stat-card"><div class="stat-val">+26%</div><div class="stat-label">d'acidification depuis 1850</div><div class="stat-src">IPCC AR6 2021</div></div>
+    <div class="stat-card"><div class="stat-val">5</div><div class="stat-label">"continents" de plastique flottants</div><div class="stat-src">Ocean Cleanup</div></div>
+    <div class="stat-card"><div class="stat-val">100K</div><div class="stat-label">animaux marins tues/an par le plastique</div><div class="stat-src">UNESCO</div></div>
+  </div>
+</div>
+
+<!-- Pourquoi c'est grave -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    Pourquoi c'est grave
+  </h3>
+  <div class="alert-box">
+    <h4>Les oceans sont le thermostat et les poumons de la Terre</h4>
+    <p>Sans les oceans, la temperature moyenne de la planete serait de <strong>+36 degres C</strong>. Ils absorbent 93% de la chaleur excedentaire du changement climatique et produisent plus d'oxygene que toutes les forets reunies via le phytoplancton.</p>
+    <p style="margin-top:8px">L'acidification (pH passe de 8.2 a 8.1 depuis l'ere preindustrielle — une augmentation de 26% de l'acidite) menace les coraux, les coquillages et toute la chaine alimentaire marine. Un ocean acide ne peut plus absorber autant de CO2.</p>
+    <p style="margin-top:8px">Les microplastiques sont desormais presents dans <strong>le placenta humain, le sang, les poumons et le cerveau</strong>. Nous ingerons l'equivalent d'une carte de credit par semaine (5g de plastique).</p>
+  </div>
+  <div class="card">
+    <p>A rythme actuel, il y aura <strong>plus de plastique que de poissons</strong> (en poids) dans les oceans d'ici 2050. Les microplastiques ont ete retrouves dans la fosse des Mariannes (-11 km) comme au sommet de l'Everest.</p>
+    <div class="source">Sources : Ellen MacArthur Foundation 2016, WWF/Dalberg 2019, Leslie et al. 2022 (Environment International)</div>
+  </div>
+</div>
+
+<!-- Interactive checklist -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    Mon engagement oceans
+  </h3>
+  <div class="checklist">
+    <h4>Cochez ce que vous faites deja :</h4>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">J'utilise une gourde reutilisable</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">J'evite les sacs plastiques</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Je n'utilise pas de paille jetable</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Je choisis du poisson certifie MSC</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">J'utilise de la creme solaire reef-safe</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Je ramasse les dechets sur la plage</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">J'evite les cosmetiques avec microbilles</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Je reduis mes achats suremballes</div></div>
+    <div class="check-score" id="check-score">0 / 8 — Faites le premier pas !</div>
+  </div>
+</div>
+
+<!-- 10 Actions -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    10 actions pour sauver les oceans
+  </h3>
+  <div class="action-list">
+    <div class="action-item">
+      <h4>Eliminer le plastique a usage unique</h4>
+      <p>Gourde, sac reutilisable, couverts en inox, bee wraps. 50% du plastique est utilise une seule fois.</p>
+      <div class="impact">Impact : -20 kg plastique/an/personne</div>
+      <div class="source">Source : UNEP Single-Use Plastics Report, 2018</div>
+    </div>
+    <div class="action-item">
+      <h4>Choisir une creme solaire reef-safe</h4>
+      <p>L'oxybenzone et l'octinoxate blanchissent les coraux. Choisissez des filtres mineraux (oxyde de zinc, dioxyde de titane).</p>
+      <div class="impact">Impact : 14 000 tonnes de creme solaire finissent dans les coraux/an</div>
+      <div class="source">Source : Downs et al. 2016 (Archives of Environmental Contamination)</div>
+    </div>
+    <div class="action-item">
+      <h4>Manger du poisson certifie MSC</h4>
+      <p>34% des stocks de poissons sont surexploites. Le label MSC garantit une peche durable avec des stocks reconstitues.</p>
+      <div class="impact">Impact : soutient 15% des prises mondiales certifiees durables</div>
+      <div class="source">Source : FAO SOFIA 2022, MSC Annual Report 2023</div>
+    </div>
+    <div class="action-item">
+      <h4>Ramasser 3 dechets a chaque visite en bord de mer</h4>
+      <p>80% des dechets marins viennent de la terre. Chaque dechet ramasse = un animal sauve potentiellement.</p>
+      <div class="impact">Impact : 1 megot = 500 litres d'eau polluee evites</div>
+      <div class="source">Source : Surfrider Foundation Europe</div>
+    </div>
+    <div class="action-item">
+      <h4>Installer un filtre a microplastiques sur la machine a laver</h4>
+      <p>Un cycle de lavage libere 700 000 microfibres plastiques. Les filtres en captent 90%.</p>
+      <div class="impact">Impact : -6 kg microfibres/an/foyer</div>
+      <div class="source">Source : De Falco et al. 2019 (Environmental Science & Technology)</div>
+    </div>
+    <div class="action-item">
+      <h4>Eviter les cosmetiques avec microbilles</h4>
+      <p>Un tube de gommage peut contenir 330 000 microbilles plastiques. Cherchez "polyethylene" sur l'etiquette.</p>
+      <div class="impact">Impact : 8 000 milliards de microbilles/jour dans les oceans</div>
+      <div class="source">Source : Napper et al. 2015 (Marine Pollution Bulletin)</div>
+    </div>
+    <div class="action-item">
+      <h4>Soutenir les aires marines protegees</h4>
+      <p>Seulement 8% des oceans sont proteges. L'objectif 30x30 vise 30% d'ici 2030.</p>
+      <div class="impact">Impact : les AMP augmentent la biomasse de +670% en moyenne</div>
+      <div class="source">Source : Lester et al. 2009, Traite Haute Mer ONU 2023</div>
+    </div>
+    <div class="action-item">
+      <h4>Reduire sa consommation de fast fashion</h4>
+      <p>L'industrie textile rejette 500 000 tonnes de microfibres/an dans l'ocean — l'equivalent de 50 milliards de bouteilles.</p>
+      <div class="impact">Impact : 1 jean = 7 500 litres d'eau</div>
+      <div class="source">Source : Ellen MacArthur Foundation 2017</div>
+    </div>
+    <div class="action-item">
+      <h4>Participer a un nettoyage de plage</h4>
+      <p>Rejoignez les operations Surfrider, Ocean Conservancy (International Coastal Cleanup) ou initiez le votre.</p>
+      <div class="impact">Impact : en 2023, 18 million de kg ramasses par 560 000 volontaires</div>
+      <div class="source">Source : Ocean Conservancy ICC Report 2023</div>
+    </div>
+    <div class="action-item">
+      <h4>Voter et signer pour l'interdiction du plastique</h4>
+      <p>Le Traite mondial sur le plastique (UNEA) est en negociation. Soutenez une interdiction contraignante de la production de plastique vierge.</p>
+      <div class="impact">Impact : -80% de pollution plastique d'ici 2040 si traite ambitieux</div>
+      <div class="source">Source : UNEP 2022, INC Plastic Pollution</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bibliography -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A2E" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    Bibliographie
+  </h3>
+  <ul class="biblio-list">
+    <li><span class="authors">Jambeck J.R. et al. (2015).</span> <span class="title">Plastic waste inputs from land into the ocean.</span> <span class="journal">Science, 347(6223), 768-771.</span> <a href="https://doi.org/10.1126/science.1260352" target="_blank">doi:10.1126/science.1260352</a></li>
+    <li><span class="authors">IUCN (2024).</span> <span class="title">Marine Plastic Pollution.</span> <span class="journal">Issues Brief.</span> <a href="https://www.iucn.org/resources/issues-brief/marine-plastic-pollution" target="_blank">iucn.org</a></li>
+    <li><span class="authors">Ellen MacArthur Foundation (2016).</span> <span class="title">The New Plastics Economy: Rethinking the future of plastics.</span></li>
+    <li><span class="authors">Downs C.A. et al. (2016).</span> <span class="title">Toxicopathological Effects of the Sunscreen UV Filter, Oxybenzone, on Coral Planulae.</span> <span class="journal">Archives of Environmental Contamination and Toxicology, 70, 265-288.</span></li>
+    <li><span class="authors">Leslie H.A. et al. (2022).</span> <span class="title">Discovery and quantification of plastic particle pollution in human blood.</span> <span class="journal">Environment International, 163, 107199.</span></li>
+    <li><span class="authors">FAO (2022).</span> <span class="title">The State of World Fisheries and Aquaculture (SOFIA).</span> <a href="https://www.fao.org/3/cc0461en/cc0461en.pdf" target="_blank">fao.org</a></li>
+    <li><span class="authors">NOAA (2024).</span> <span class="title">How much oxygen comes from the ocean?</span> <span class="journal">National Ocean Service.</span> <a href="https://oceanservice.noaa.gov/facts/ocean-oxygen.html" target="_blank">oceanservice.noaa.gov</a></li>
+    <li><span class="authors">Ocean Conservancy (2023).</span> <span class="title">International Coastal Cleanup Report.</span> <a href="https://oceanconservancy.org/trash-free-seas/international-coastal-cleanup/" target="_blank">oceanconservancy.org</a></li>
+  </ul>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+
+<script>
+function toggleCheck(el) {
+  el.classList.toggle('done');
+  var box = el.querySelector('.check-box');
+  box.textContent = el.classList.contains('done') ? '✓' : '';
+  updateScore();
+}
+function updateScore() {
+  var done = document.querySelectorAll('.check-item.done').length;
+  var total = document.querySelectorAll('.check-item').length;
+  var msg = done === 0 ? 'Faites le premier pas !' : done < 4 ? 'Bon debut !' : done < 7 ? 'Bravo, vous etes sur la bonne voie !' : 'Champion des oceans !';
+  document.getElementById('check-score').textContent = done + ' / ' + total + ' — ' + msg;
+}
+</script>
+<script src="js/cgu-gate.js"></script>
+</body>
+</html>

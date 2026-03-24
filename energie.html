@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Energie — 80% de l'energie mondiale est fossile</title>
+<meta name="description" content="Energie et climat : mix energetique, renouvelables, actions concretes. Donnees AIE/IEA, RTE, Electricity Maps.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+.hero{text-align:center;padding:32px 20px;border-bottom:1px solid #e5e5e0}
+.hero h2{font-size:1.8rem;font-weight:900;margin-bottom:8px}
+.hero p{color:#666;font-size:.9rem;line-height:1.6;max-width:500px;margin:0 auto}
+.section{padding:24px 20px;max-width:720px;margin:0 auto}
+.section h3{font-size:1.15rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section h3 svg{width:24px;height:24px}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.card p{font-size:.85rem;color:#555;line-height:1.6}
+.card .source{font-size:.7rem;color:#999;margin-top:6px}
+.alert-box{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:20px;margin-bottom:16px}
+.alert-box h4{color:#DC2626;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.alert-box p{font-size:.85rem;color:#7f1d1d;line-height:1.6}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(min-width:640px){.stat-grid{grid-template-columns:1fr 1fr 1fr}}
+.stat-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center}
+.stat-val{font-size:1.8rem;font-weight:900;color:#DC2626}
+.stat-val.green{color:#059669}
+.stat-val.blue{color:#2563EB}
+.stat-label{font-size:.75rem;color:#666;margin-top:4px;line-height:1.3}
+.stat-src{font-size:.6rem;color:#999;margin-top:4px}
+/* Mix widget */
+.mix-widget{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.mix-widget h4{font-size:.95rem;font-weight:700;margin-bottom:16px;text-align:center}
+.mix-bar-wrap{display:flex;border-radius:8px;overflow:hidden;height:40px;margin-bottom:12px}
+.mix-segment{display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;transition:width .5s}
+.mix-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}
+.mix-legend-item{display:flex;align-items:center;gap:4px;font-size:.7rem;color:#666}
+.mix-legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.mix-co2{text-align:center;padding:12px;background:#f0fdf4;border-radius:8px;margin-top:12px}
+.mix-co2 .val{font-size:1.5rem;font-weight:900;color:#059669}
+.mix-co2 .label{font-size:.75rem;color:#666;margin-top:2px}
+.mix-note{font-size:.7rem;color:#999;margin-top:8px;text-align:center}
+.action-list{counter-reset:action}
+.action-item{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px 16px 16px 52px;margin-bottom:10px;position:relative}
+.action-item::before{counter-increment:action;content:counter(action);position:absolute;left:16px;top:16px;width:28px;height:28px;border-radius:50%;background:#059669;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800}
+.action-item h4{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.action-item p{font-size:.8rem;color:#666;line-height:1.5}
+.action-item .impact{font-size:.75rem;color:#059669;font-weight:600;margin-top:4px}
+.action-item .source{font-size:.65rem;color:#999;margin-top:4px}
+.biblio-list{list-style:none}
+.biblio-list li{padding:10px 0;border-bottom:1px solid #f0f0e5;font-size:.8rem;line-height:1.5}
+.biblio-list li:last-child{border:none}
+.biblio-list .authors{font-weight:600}
+.biblio-list .title{font-style:italic}
+.biblio-list .journal{color:#666}
+.biblio-list a{color:#2563EB;font-size:.75rem}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>SOS Energie</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <h2>Energie &amp; Climat</h2>
+  <p>80% de l'energie mondiale provient encore des combustibles fossiles. La transition energetique est la cle du climat.</p>
+</div>
+
+<!-- Stats -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    L'energie en chiffres
+  </h3>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val">80%</div><div class="stat-label">de l'energie mondiale est fossile (petrole, gaz, charbon)</div><div class="stat-src">AIE/IEA 2023</div></div>
+    <div class="stat-card"><div class="stat-val">36.8 Gt</div><div class="stat-label">CO2 emis en 2023 (record)</div><div class="stat-src">Global Carbon Project</div></div>
+    <div class="stat-card"><div class="stat-val blue">67%</div><div class="stat-label">d'electricite nucleaire en France (bas carbone)</div><div class="stat-src">RTE Bilan 2023</div></div>
+    <div class="stat-card"><div class="stat-val green">30%</div><div class="stat-label">d'electricite renouvelable mondiale</div><div class="stat-src">AIE/IEA 2024</div></div>
+    <div class="stat-card"><div class="stat-val green">56 g</div><div class="stat-label">CO2/kWh en France (vs 385g mondial)</div><div class="stat-src">Electricity Maps 2024</div></div>
+  </div>
+</div>
+
+<!-- Pourquoi c'est grave -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    Pourquoi c'est grave
+  </h3>
+  <div class="alert-box">
+    <h4>Les fossiles chauffent la planete a un rythme intenable</h4>
+    <p>La combustion de petrole, gaz et charbon est responsable de <strong>75% des emissions de gaz a effet de serre</strong>. Nous avons deja +1.2 degres C de rechauffement. Au rythme actuel, nous atteindrons +2.7 degres C d'ici 2100 — bien au-dela de la limite de +1.5 degres C de l'Accord de Paris.</p>
+    <p style="margin-top:8px">Chaque 0.1 degres C supplementaire = 140 millions de personnes exposees aux vagues de chaleur extremes, montee des eaux acceleree, biodiversite decimee.</p>
+    <p style="margin-top:8px">Bonne nouvelle : la France a l'une des electricites les moins carbonees au monde grace au nucleaire (56g CO2/kWh vs 385g en moyenne mondiale). Mais le chauffage, le transport et l'industrie restent massivement fossiles.</p>
+  </div>
+</div>
+
+<!-- Mix energetique interactif -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    Mix electrique de la France
+  </h3>
+  <div class="mix-widget">
+    <h4>Production electrique en temps reel (simule)</h4>
+    <div class="mix-bar-wrap">
+      <div class="mix-segment" style="width:67%;background:#f59e0b" title="Nucleaire">67%</div>
+      <div class="mix-segment" style="width:12%;background:#3b82f6" title="Hydraulique">12%</div>
+      <div class="mix-segment" style="width:9%;background:#10b981" title="Eolien">9%</div>
+      <div class="mix-segment" style="width:4%;background:#fbbf24" title="Solaire">4%</div>
+      <div class="mix-segment" style="width:6%;background:#6b7280" title="Gaz">6%</div>
+      <div class="mix-segment" style="width:2%;background:#1f2937" title="Charbon">2%</div>
+    </div>
+    <div class="mix-legend">
+      <div class="mix-legend-item"><div class="mix-legend-dot" style="background:#f59e0b"></div>Nucleaire 67%</div>
+      <div class="mix-legend-item"><div class="mix-legend-dot" style="background:#3b82f6"></div>Hydraulique 12%</div>
+      <div class="mix-legend-item"><div class="mix-legend-dot" style="background:#10b981"></div>Eolien 9%</div>
+      <div class="mix-legend-item"><div class="mix-legend-dot" style="background:#fbbf24"></div>Solaire 4%</div>
+      <div class="mix-legend-item"><div class="mix-legend-dot" style="background:#6b7280"></div>Gaz 6%</div>
+      <div class="mix-legend-item"><div class="mix-legend-dot" style="background:#1f2937"></div>Charbon 2%</div>
+    </div>
+    <div class="mix-co2">
+      <div class="val">56 g CO2/kWh</div>
+      <div class="label">Intensite carbone de l'electricite francaise (7x mieux que l'Allemagne)</div>
+    </div>
+    <div class="mix-note">Donnees simulees d'apres RTE Bilan 2023. Pour le temps reel : <a href="https://www.rte-france.com/eco2mix" target="_blank" style="color:#2563EB">RTE eco2mix</a> ou <a href="https://app.electricitymaps.com/zone/FR" target="_blank" style="color:#2563EB">Electricity Maps</a></div>
+  </div>
+</div>
+
+<!-- 10 Actions -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    10 actions pour la transition energetique
+  </h3>
+  <div class="action-list">
+    <div class="action-item">
+      <h4>Isoler son logement (murs, toit, fenetres)</h4>
+      <p>Le chauffage = 67% de l'energie d'un logement. L'isolation est le geste #1 : divise par 2 la consommation et les factures.</p>
+      <div class="impact">Impact : -50% consommation, -2 tonnes CO2/an</div>
+      <div class="source">Source : ADEME, MaPrimeRenov'</div>
+    </div>
+    <div class="action-item">
+      <h4>Passer aux LED partout</h4>
+      <p>Les LED consomment 80% de moins que les ampoules a incandescence et durent 25 000 heures.</p>
+      <div class="impact">Impact : -80% d'electricite pour l'eclairage</div>
+      <div class="source">Source : ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Eteindre les appareils en veille</h4>
+      <p>Les veilles representent 11% de la facture d'electricite d'un menage — 80 EUR/an en moyenne. Utilisez des multiprises avec interrupteur.</p>
+      <div class="impact">Impact : -300 kWh/an = -80 EUR/an</div>
+      <div class="source">Source : ADEME, RTE</div>
+    </div>
+    <div class="action-item">
+      <h4>Choisir un fournisseur d'electricite verte</h4>
+      <p>Enercoop, Ilek, Planete OUI : des cooperatives qui investissent dans les renouvelables locales.</p>
+      <div class="impact">Impact : finance directement la transition energetique</div>
+      <div class="source">Source : Label VertVolt ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Installer des panneaux solaires</h4>
+      <p>3 kWc en autoconsommation = 3 000 kWh/an, amortissement en 8-10 ans. Aides MaPrimeRenov' + prime autoconso.</p>
+      <div class="impact">Impact : -1,5 tonne CO2/an (mix moyen), rentable en 8 ans</div>
+      <div class="source">Source : ADEME, CRE</div>
+    </div>
+    <div class="action-item">
+      <h4>Baisser le chauffage de 1 degre C</h4>
+      <p>19 degres C au lieu de 20 degres C = -7% de consommation. Mettez un pull ! En France, chaque degre = 1 reacteur nucleaire.</p>
+      <div class="impact">Impact : -7% consommation, -300 kg CO2/an</div>
+      <div class="source">Source : ADEME, RTE</div>
+    </div>
+    <div class="action-item">
+      <h4>Remplacer la chaudiere fioul/gaz par une pompe a chaleur</h4>
+      <p>Une PAC consomme 3x moins qu'une chaudiere gaz. Aides MaPrimeRenov' jusqu'a 5 000 EUR.</p>
+      <div class="impact">Impact : -60% de consommation de chauffage</div>
+      <div class="source">Source : ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Secher le linge a l'air libre</h4>
+      <p>Un seche-linge consomme 350 kWh/an — autant qu'un refrigerateur. L'air libre est gratuit et sans CO2.</p>
+      <div class="impact">Impact : -350 kWh/an = -90 EUR/an</div>
+      <div class="source">Source : ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Cuisiner avec un couvercle</h4>
+      <p>Un couvercle sur la casserole divise par 4 l'energie necessaire pour faire bouillir l'eau. Simple et efficace.</p>
+      <div class="impact">Impact : -75% d'energie de cuisson</div>
+      <div class="source">Source : ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Voter pour la transition energetique</h4>
+      <p>Soutenez les candidats et politiques qui investissent dans les renouvelables, l'efficacite energetique et la sobriete. Le choix politique est le levier le plus puissant.</p>
+      <div class="impact">Impact systemique : conditionne tout le reste</div>
+      <div class="source">Source : GIEC AR6, AIE Net Zero 2050</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bibliography -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A2E" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    Bibliographie
+  </h3>
+  <ul class="biblio-list">
+    <li><span class="authors">AIE/IEA (2023).</span> <span class="title">World Energy Outlook 2023.</span> <a href="https://www.iea.org/reports/world-energy-outlook-2023" target="_blank">iea.org</a></li>
+    <li><span class="authors">RTE (2024).</span> <span class="title">Bilan electrique 2023 — France.</span> <a href="https://www.rte-france.com/analyses-tendances-et-prospectives/bilan-electrique" target="_blank">rte-france.com</a></li>
+    <li><span class="authors">Global Carbon Project (2023).</span> <span class="title">Global Carbon Budget 2023.</span> <span class="journal">Earth System Science Data, 15.</span> <a href="https://globalcarbonproject.org" target="_blank">globalcarbonproject.org</a></li>
+    <li><span class="authors">Electricity Maps (2024).</span> <span class="title">France Carbon Intensity — Real-time data.</span> <a href="https://app.electricitymaps.com/zone/FR" target="_blank">electricitymaps.com</a></li>
+    <li><span class="authors">ADEME (2023).</span> <span class="title">Guide pratique — Reduire sa facture d'electricite.</span> <a href="https://www.ademe.fr" target="_blank">ademe.fr</a></li>
+    <li><span class="authors">AIE/IEA (2021).</span> <span class="title">Net Zero by 2050 — A Roadmap for the Global Energy Sector.</span> <a href="https://www.iea.org/reports/net-zero-by-2050" target="_blank">iea.org</a></li>
+  </ul>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+<script src="js/cgu-gate.js"></script>
+</body>
+</html>

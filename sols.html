@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Sols — 33% des sols mondiaux degrades</title>
+<meta name="description" content="Sols et agriculture : degradation, erosion, actions concretes. Donnees FAO, INRAE.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+.hero{text-align:center;padding:32px 20px;border-bottom:1px solid #e5e5e0}
+.hero h2{font-size:1.8rem;font-weight:900;margin-bottom:8px}
+.hero p{color:#666;font-size:.9rem;line-height:1.6;max-width:500px;margin:0 auto}
+.section{padding:24px 20px;max-width:720px;margin:0 auto}
+.section h3{font-size:1.15rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section h3 svg{width:24px;height:24px}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.card p{font-size:.85rem;color:#555;line-height:1.6}
+.card .source{font-size:.7rem;color:#999;margin-top:6px}
+.alert-box{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:20px;margin-bottom:16px}
+.alert-box h4{color:#DC2626;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.alert-box p{font-size:.85rem;color:#7f1d1d;line-height:1.6}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(min-width:640px){.stat-grid{grid-template-columns:1fr 1fr 1fr}}
+.stat-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center}
+.stat-val{font-size:1.8rem;font-weight:900;color:#DC2626}
+.stat-val.green{color:#059669}
+.stat-label{font-size:.75rem;color:#666;margin-top:4px;line-height:1.3}
+.stat-src{font-size:.6rem;color:#999;margin-top:4px}
+.info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-bottom:16px}
+.info-box h4{color:#2563EB;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.info-box p{font-size:.85rem;color:#1e3a5f;line-height:1.6}
+.action-list{counter-reset:action}
+.action-item{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px 16px 16px 52px;margin-bottom:10px;position:relative}
+.action-item::before{counter-increment:action;content:counter(action);position:absolute;left:16px;top:16px;width:28px;height:28px;border-radius:50%;background:#059669;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800}
+.action-item h4{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.action-item p{font-size:.8rem;color:#666;line-height:1.5}
+.action-item .impact{font-size:.75rem;color:#059669;font-weight:600;margin-top:4px}
+.action-item .source{font-size:.65rem;color:#999;margin-top:4px}
+.biblio-list{list-style:none}
+.biblio-list li{padding:10px 0;border-bottom:1px solid #f0f0e5;font-size:.8rem;line-height:1.5}
+.biblio-list li:last-child{border:none}
+.biblio-list .authors{font-weight:600}
+.biblio-list .title{font-style:italic}
+.biblio-list .journal{color:#666}
+.biblio-list a{color:#2563EB;font-size:.75rem}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>SOS Sols</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <h2>Sols &amp; Agriculture</h2>
+  <p>Il faut 1 000 ans pour former 1 cm de sol. Nous en perdons 24 milliards de tonnes chaque annee.</p>
+</div>
+
+<!-- Stats -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    Le sol en chiffres
+  </h3>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val">33%</div><div class="stat-label">des sols mondiaux degrades</div><div class="stat-src">FAO 2015</div></div>
+    <div class="stat-card"><div class="stat-val">24 Mds</div><div class="stat-label">tonnes de sol fertile perdues/an</div><div class="stat-src">UNCCD 2022</div></div>
+    <div class="stat-card"><div class="stat-val">2e</div><div class="stat-label">stock de carbone mondial (apres les oceans)</div><div class="stat-src">IPCC AR6</div></div>
+    <div class="stat-card"><div class="stat-val">95%</div><div class="stat-label">de notre alimentation depend du sol</div><div class="stat-src">FAO 2015</div></div>
+    <div class="stat-card"><div class="stat-val">60</div><div class="stat-label">recoltes restantes si degradation continue</div><div class="stat-src">FAO / Sheffield University</div></div>
+  </div>
+</div>
+
+<!-- Pourquoi c'est grave -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    Pourquoi c'est grave
+  </h3>
+  <div class="alert-box">
+    <h4>Le sol est un ecosysteme vivant que nous detruisons</h4>
+    <p>Une poignee de sol sain contient <strong>plus de micro-organismes que d'etres humains sur Terre</strong> (7 milliards). Ces organismes decomposent la matiere organique, fixent l'azote, filtrent l'eau et stockent le carbone.</p>
+    <p style="margin-top:8px">L'agriculture intensive (labour profond, pesticides, monoculture) tue cette vie souterraine. Un sol mort ne retient plus l'eau (inondations), ne stocke plus le carbone (rechauffement), ne nourrit plus les plantes (engrais chimiques en spirale).</p>
+    <p style="margin-top:8px">L'artificialisation avale <strong>20 000 hectares/an en France</strong> — l'equivalent d'un departement tous les 30 ans. Un sol betonne est un sol perdu pour des siecles.</p>
+  </div>
+  <div class="info-box">
+    <h4>Le sol : allie oublie du climat</h4>
+    <p>Les sols stockent <strong>2 400 milliards de tonnes de carbone</strong> — 3 fois plus que l'atmosphere. Augmenter de 0,4% par an le stock de carbone des sols agricoles (initiative "4 pour 1000") compenserait les emissions mondiales de CO2.</p>
+  </div>
+</div>
+
+<!-- 10 Actions -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    10 actions pour sauver les sols
+  </h3>
+  <div class="action-list">
+    <div class="action-item">
+      <h4>Composter ses dechets organiques</h4>
+      <p>Obligatoire depuis janvier 2024 en France. Le compost nourrit le sol et evite l'enfouissement/incineration.</p>
+      <div class="impact">Impact : -80 kg de dechets/an/personne detournes de la poubelle</div>
+      <div class="source">Source : ADEME, Loi AGEC 2020</div>
+    </div>
+    <div class="action-item">
+      <h4>Zero pesticide au jardin</h4>
+      <p>Les pesticides tuent les vers de terre (1 tonne/ha dans un sol sain), les champignons mycorhiziens et les bacteries benefiques.</p>
+      <div class="impact">Impact : 1 ver de terre = 1 kg de terre brasse/an</div>
+      <div class="source">Source : INRAE, Pelosi et al. 2014</div>
+    </div>
+    <div class="action-item">
+      <h4>Acheter bio et local</h4>
+      <p>L'agriculture biologique maintient 50% de vers de terre en plus. Les circuits courts reduisent l'artificialisation.</p>
+      <div class="impact">Impact : +30% de matiere organique dans les sols bio vs conventionnel</div>
+      <div class="source">Source : Lori et al. 2017 (Global Change Biology)</div>
+    </div>
+    <div class="action-item">
+      <h4>Pratiquer le BRF (Bois Rameal Fragmente)</h4>
+      <p>Broyer les branches de taille et les etaler en couche de 3-5 cm. Nourrit les champignons, cree de l'humus.</p>
+      <div class="impact">Impact : +200% d'activite biologique du sol en 2 ans</div>
+      <div class="source">Source : Lemieux, Universite Laval</div>
+    </div>
+    <div class="action-item">
+      <h4>Ne jamais laisser un sol nu</h4>
+      <p>Paillis, engrais verts, couverts vegetaux : un sol nu s'erode, se desseche et perd son carbone.</p>
+      <div class="impact">Impact : -95% d'erosion avec un couvert permanent</div>
+      <div class="source">Source : INRAE, FAO</div>
+    </div>
+    <div class="action-item">
+      <h4>Pratiquer la rotation des cultures</h4>
+      <p>Alterner legumineuses, cereales et legumes rompt les cycles parasitaires et enrichit le sol en azote naturel.</p>
+      <div class="impact">Impact : -30% de besoin en engrais azotes</div>
+      <div class="source">Source : INRAE, Chambre d'Agriculture</div>
+    </div>
+    <div class="action-item">
+      <h4>Limiter le labour</h4>
+      <p>Le semis direct ou le travail superficiel preserve la structure du sol et les galeries de vers de terre.</p>
+      <div class="impact">Impact : +10% de carbone stocke en semis direct vs labour</div>
+      <div class="source">Source : Six et al. 2004 (Agriculture, Ecosystems & Environment)</div>
+    </div>
+    <div class="action-item">
+      <h4>Soutenir l'initiative "4 pour 1000"</h4>
+      <p>Augmenter de 0,4%/an le carbone des sols agricoles = compenser toutes les emissions mondiales de CO2. Signez, partagez.</p>
+      <div class="impact">Impact potentiel : neutralite carbone mondiale</div>
+      <div class="source">Source : Initiative 4 pour 1000, COP21</div>
+    </div>
+    <div class="action-item">
+      <h4>S'opposer a l'artificialisation des terres</h4>
+      <p>Loi Climat : objectif Zero Artificialisation Nette (ZAN) d'ici 2050. Vigilance sur les PLU et permis de construire.</p>
+      <div class="impact">Impact : preserver les 30 000 ha/an menaces</div>
+      <div class="source">Source : Loi Climat et Resilience 2021, CEREMA</div>
+    </div>
+    <div class="action-item">
+      <h4>Installer un jardin en permaculture</h4>
+      <p>Principes : ne pas retourner le sol, diversifier, couvrir, associer. Rendements superieurs a l'agriculture conventionnelle en maraichage.</p>
+      <div class="impact">Impact : rendement 2 a 4x superieur sur petite surface</div>
+      <div class="source">Source : Etude INRAE Bec Hellouin (Leger et al. 2019)</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bibliography -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A2E" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    Bibliographie
+  </h3>
+  <ul class="biblio-list">
+    <li><span class="authors">FAO & ITPS (2015).</span> <span class="title">Status of the World's Soil Resources — Main Report.</span> <a href="https://www.fao.org/3/i5199e/i5199e.pdf" target="_blank">fao.org</a></li>
+    <li><span class="authors">UNCCD (2022).</span> <span class="title">Global Land Outlook 2.</span> <span class="journal">UN Convention to Combat Desertification.</span></li>
+    <li><span class="authors">IPCC (2019).</span> <span class="title">Climate Change and Land — Special Report.</span> <a href="https://www.ipcc.ch/srccl/" target="_blank">ipcc.ch</a></li>
+    <li><span class="authors">Lori M. et al. (2017).</span> <span class="title">Organic farming enhances soil microbial abundance and activity.</span> <span class="journal">PLOS ONE, 12(7).</span></li>
+    <li><span class="authors">Leger F. et al. (2019).</span> <span class="title">La ferme du Bec Hellouin — Etude de viabilite economique.</span> <span class="journal">INRAE / AgroParisTech.</span></li>
+    <li><span class="authors">Initiative 4 pour 1000 (2015).</span> <span class="title">Les sols pour la securite alimentaire et le climat.</span> <a href="https://4p1000.org" target="_blank">4p1000.org</a></li>
+    <li><span class="authors">CEREMA (2023).</span> <span class="title">Artificialisation des sols en France — Bilan et perspectives ZAN.</span> <a href="https://www.cerema.fr" target="_blank">cerema.fr</a></li>
+  </ul>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+<script src="js/cgu-gate.js"></script>
+</body>
+</html>

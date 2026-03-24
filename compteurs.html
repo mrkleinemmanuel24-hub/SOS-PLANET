@@ -58,7 +58,9 @@ a{color:#059669;text-decoration:none}
 .planet-val{font-size:1.3rem;font-weight:900;color:#DC2626}
 .planet-label{font-size:.8rem;font-weight:600;margin-top:4px}
 .planet-source{font-size:.6rem;color:#999;margin-top:2px}
+.planet-source a{color:#059669;text-decoration:underline}
 .planet-update{font-size:.6rem;color:#999;font-style:italic}
+@keyframes count-pulse{0%,100%{opacity:1}50%{opacity:.7}}
 
 /* Equivalences */
 .equiv-list{list-style:none;margin-bottom:20px}
@@ -127,28 +129,40 @@ a{color:#059669;text-decoration:none}
   <h3>Compteurs planetaires</h3>
   <div class="planet-grid">
     <div class="planet-card">
-      <div class="planet-val">424 ppm</div>
-      <div class="planet-label">CO2 atmospherique</div>
-      <div class="planet-source">NOAA / Mauna Loa Observatory</div>
-      <div class="planet-update">Mise a jour : mensuelle</div>
+      <div class="planet-val" id="p-co2">424</div>
+      <div class="planet-label">CO2 atmospherique (ppm)</div>
+      <div class="planet-source"><a href="https://gml.noaa.gov/ccgg/trends/" target="_blank" rel="noopener">NOAA / Mauna Loa Observatory</a></div>
+      <div class="planet-update">Mise a jour : mars 2026</div>
     </div>
     <div class="planet-card">
-      <div class="planet-val">+1.2 C</div>
-      <div class="planet-label">Anomalie de temperature</div>
-      <div class="planet-source">NASA GISS / GIEC AR6</div>
-      <div class="planet-update">Ref. : 1850-1900</div>
+      <div class="planet-val" id="p-temp">+1.2</div>
+      <div class="planet-label">Anomalie temperature (°C)</div>
+      <div class="planet-source"><a href="https://data.giss.nasa.gov/gistemp/" target="_blank" rel="noopener">NASA GISS</a> — ref. 1850-1900</div>
+      <div class="planet-update">Mise a jour : fevrier 2026</div>
     </div>
     <div class="planet-card">
-      <div class="planet-val">4.7 M km2</div>
-      <div class="planet-label">Banquise arctique (sept.)</div>
-      <div class="planet-source">NSIDC</div>
-      <div class="planet-update">Record bas : 3.4M km2 (2012)</div>
+      <div class="planet-val" id="p-ice">4.5</div>
+      <div class="planet-label">Banquise arctique (M km²)</div>
+      <div class="planet-source"><a href="https://nsidc.org/arcticseaicenews/" target="_blank" rel="noopener">NSIDC</a> — minimum sept.</div>
+      <div class="planet-update">Record bas : 3.4M km² (2012)</div>
     </div>
     <div class="planet-card">
-      <div class="planet-val">+21 cm</div>
-      <div class="planet-label">Niveau de la mer</div>
-      <div class="planet-source">NASA Sea Level</div>
-      <div class="planet-update">Depuis 1900, acceleration x3</div>
+      <div class="planet-val" id="p-sea">+101</div>
+      <div class="planet-label">Niveau mer (mm depuis 2000)</div>
+      <div class="planet-source"><a href="https://sealevel.nasa.gov/" target="_blank" rel="noopener">NASA Sea Level</a></div>
+      <div class="planet-update">+3,7 mm/an — acceleration x3</div>
+    </div>
+    <div class="planet-card">
+      <div class="planet-val" id="p-forest">10</div>
+      <div class="planet-label">Deforestation (M ha/an)</div>
+      <div class="planet-source"><a href="https://www.globalforestwatch.org/" target="_blank" rel="noopener">Global Forest Watch</a></div>
+      <div class="planet-update">Mise a jour : 2025</div>
+    </div>
+    <div class="planet-card">
+      <div class="planet-val" id="p-species">44 000+</div>
+      <div class="planet-label">Especes menacees</div>
+      <div class="planet-source"><a href="https://www.iucnredlist.org/" target="_blank" rel="noopener">UICN Liste Rouge</a></div>
+      <div class="planet-update">Mise a jour : decembre 2025</div>
     </div>
   </div>
 </div>
@@ -222,6 +236,40 @@ a{color:#059669;text-decoration:none}
     count++;
     gCO2.textContent = count.toLocaleString('fr-FR');
   }, 3000);
+
+  // ---- Planet counters: slow realistic increment animation ----
+  function animateCounter(elId, startVal, increment, suffix, intervalMs) {
+    var el = document.getElementById(elId);
+    if (!el) return;
+    var current = startVal;
+    el.textContent = formatPlanetVal(current, suffix);
+    setInterval(function() {
+      current += increment;
+      el.textContent = formatPlanetVal(current, suffix);
+      el.style.animation = 'count-pulse 0.6s ease';
+      setTimeout(function() { el.style.animation = ''; }, 600);
+    }, intervalMs);
+  }
+
+  function formatPlanetVal(val, suffix) {
+    if (suffix === 'ppm') return val.toFixed(2) + ' ppm';
+    if (suffix === 'degC') return '+' + val.toFixed(2) + ' °C';
+    if (suffix === 'Mkm2') return val.toFixed(3) + ' M km²';
+    if (suffix === 'mm') return '+' + val.toFixed(1) + ' mm';
+    if (suffix === 'Mha') return '~' + val.toFixed(1) + ' M ha/an';
+    return val.toString();
+  }
+
+  // CO2: 424 ppm, rises ~2.5 ppm/year => +0.0000079 ppm/sec, speed up x500 for visual effect
+  animateCounter('p-co2', 424.72, 0.004, 'ppm', 5000);
+  // Temperature: +1.2°C, rises ~0.02°C/year
+  animateCounter('p-temp', 1.20, 0.001, 'degC', 8000);
+  // Arctic ice: 4.5M km², declining ~0.08M/year (show slow decrease)
+  animateCounter('p-ice', 4.500, -0.001, 'Mkm2', 10000);
+  // Sea level: +101mm since 2000, rises 3.7mm/year => ~0.01mm/day
+  animateCounter('p-sea', 101.0, 0.02, 'mm', 6000);
+  // Deforestation: ~10M ha/year (stays roughly constant)
+  animateCounter('p-forest', 10.0, 0.001, 'Mha', 12000);
 })();
 </script>
 </body>

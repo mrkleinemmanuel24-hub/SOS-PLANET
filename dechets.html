@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Dechets — 2 milliards de tonnes de dechets par an dans le monde</title>
+<meta name="description" content="Dechets et economie circulaire : chiffres, quiz tri, actions concretes. Donnees ADEME, Eurostat, Banque Mondiale.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+.hero{text-align:center;padding:32px 20px;border-bottom:1px solid #e5e5e0}
+.hero h2{font-size:1.8rem;font-weight:900;margin-bottom:8px}
+.hero p{color:#666;font-size:.9rem;line-height:1.6;max-width:500px;margin:0 auto}
+.section{padding:24px 20px;max-width:720px;margin:0 auto}
+.section h3{font-size:1.15rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section h3 svg{width:24px;height:24px}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.card p{font-size:.85rem;color:#555;line-height:1.6}
+.card .source{font-size:.7rem;color:#999;margin-top:6px}
+.alert-box{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:20px;margin-bottom:16px}
+.alert-box h4{color:#DC2626;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.alert-box p{font-size:.85rem;color:#7f1d1d;line-height:1.6}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(min-width:640px){.stat-grid{grid-template-columns:1fr 1fr 1fr}}
+.stat-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center}
+.stat-val{font-size:1.8rem;font-weight:900;color:#DC2626}
+.stat-val.green{color:#059669}
+.stat-label{font-size:.75rem;color:#666;margin-top:4px;line-height:1.3}
+.stat-src{font-size:.6rem;color:#999;margin-top:4px}
+/* Quiz */
+.quiz-widget{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.quiz-widget h4{font-size:.95rem;font-weight:700;margin-bottom:4px}
+.quiz-sub{font-size:.8rem;color:#666;margin-bottom:16px}
+.quiz-question{font-size:.95rem;font-weight:700;margin-bottom:12px}
+.quiz-item{display:flex;align-items:center;gap:10px;font-size:.9rem;margin-bottom:8px}
+.quiz-item-icon{font-size:1.5rem}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.quiz-option{padding:12px;border:2px solid #e5e5e0;border-radius:10px;text-align:center;cursor:pointer;font-size:.85rem;font-weight:600;transition:all .2s;user-select:none}
+.quiz-option:hover{border-color:#059669;background:rgba(16,185,129,0.05)}
+.quiz-option.correct{border-color:#059669;background:#f0fdf4;color:#059669}
+.quiz-option.wrong{border-color:#DC2626;background:#fef2f2;color:#DC2626}
+.quiz-option.disabled{pointer-events:none;opacity:.7}
+.quiz-feedback{font-size:.85rem;padding:12px;border-radius:8px;margin-bottom:16px;display:none}
+.quiz-feedback.show{display:block}
+.quiz-score{text-align:center;font-size:1rem;font-weight:700;color:#059669;margin-top:12px}
+.quiz-btn{padding:10px 24px;background:#059669;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem}
+.action-list{counter-reset:action}
+.action-item{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px 16px 16px 52px;margin-bottom:10px;position:relative}
+.action-item::before{counter-increment:action;content:counter(action);position:absolute;left:16px;top:16px;width:28px;height:28px;border-radius:50%;background:#059669;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800}
+.action-item h4{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.action-item p{font-size:.8rem;color:#666;line-height:1.5}
+.action-item .impact{font-size:.75rem;color:#059669;font-weight:600;margin-top:4px}
+.action-item .source{font-size:.65rem;color:#999;margin-top:4px}
+.biblio-list{list-style:none}
+.biblio-list li{padding:10px 0;border-bottom:1px solid #f0f0e5;font-size:.8rem;line-height:1.5}
+.biblio-list li:last-child{border:none}
+.biblio-list .authors{font-weight:600}
+.biblio-list .title{font-style:italic}
+.biblio-list .journal{color:#666}
+.biblio-list a{color:#2563EB;font-size:.75rem}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>SOS Dechets</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <h2>Dechets &amp; Economie Circulaire</h2>
+  <p>Chaque Francais produit 354 kg de dechets menagers par an. Le meilleur dechet est celui qu'on ne produit pas.</p>
+</div>
+
+<!-- Stats -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    Les dechets en chiffres
+  </h3>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val">2 Mds t</div><div class="stat-label">de dechets produits par an dans le monde</div><div class="stat-src">Banque Mondiale 2018</div></div>
+    <div class="stat-card"><div class="stat-val">354 kg</div><div class="stat-label">de dechets menagers/hab/an en France</div><div class="stat-src">ADEME 2023</div></div>
+    <div class="stat-card"><div class="stat-val">30%</div><div class="stat-label">des dechets ne sont pas recycles en France</div><div class="stat-src">Eurostat 2023</div></div>
+    <div class="stat-card"><div class="stat-val">1/3</div><div class="stat-label">de la nourriture est gaspillee</div><div class="stat-src">FAO 2019</div></div>
+    <div class="stat-card"><div class="stat-val">3.4 Mds t</div><div class="stat-label">prevues en 2050 (+70% si rien ne change)</div><div class="stat-src">Banque Mondiale</div></div>
+  </div>
+</div>
+
+<!-- Pourquoi c'est grave -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    Pourquoi c'est grave
+  </h3>
+  <div class="alert-box">
+    <h4>Nous croulons sous nos propres dechets</h4>
+    <p>En France, <strong>18 millions de tonnes</strong> de dechets menagers sont collectees chaque annee. 26% sont enfouis, 37% incineres, 27% recycles et 10% compostes. L'enfouissement pollue les sols et les nappes ; l'incineration emet du CO2 et des polluants.</p>
+    <p style="margin-top:8px">Le gaspillage alimentaire represente <strong>10 millions de tonnes/an en France</strong> (150 kg/hab) et 8% des emissions mondiales de GES. Si le gaspillage alimentaire etait un pays, il serait le 3e emetteur mondial.</p>
+    <p style="margin-top:8px">Le recyclage ne suffit pas : seuls 9% du plastique mondial sont effectivement recycles. La solution est la <strong>reduction a la source</strong> et l'economie circulaire.</p>
+  </div>
+</div>
+
+<!-- Quiz tri -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    Quiz : dans quelle poubelle ?
+  </h3>
+  <div class="quiz-widget">
+    <h4>Testez vos connaissances en tri !</h4>
+    <div class="quiz-sub">5 questions pour devenir un pro du tri selectif.</div>
+    <div id="quiz-area"></div>
+    <div class="quiz-score" id="quiz-score" style="display:none"></div>
+  </div>
+</div>
+
+<!-- 10 Actions -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    10 actions pour reduire ses dechets
+  </h3>
+  <div class="action-list">
+    <div class="action-item">
+      <h4>Trier correctement ses dechets</h4>
+      <p>Depuis 2023, tous les emballages plastiques vont dans la poubelle jaune (y compris pots de yaourt, films, barquettes). Consultez le guide de votre commune.</p>
+      <div class="impact">Impact : +50% de recyclage si le tri est bien fait</div>
+      <div class="source">Source : Citeo, ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Composter ses biodechets</h4>
+      <p>Obligatoire depuis janvier 2024. Composteur de jardin, lombricomposteur d'appartement ou bac collectif : a vous de choisir.</p>
+      <div class="impact">Impact : -80 kg/an/personne detournes de la poubelle</div>
+      <div class="source">Source : ADEME, Loi AGEC 2020</div>
+    </div>
+    <div class="action-item">
+      <h4>Acheter en vrac</h4>
+      <p>Cereales, legumineuses, produits menagers, cosmetiques : le vrac elimine l'emballage a la source. Apportez vos contenants.</p>
+      <div class="impact">Impact : -30 kg d'emballages/an/personne</div>
+      <div class="source">Source : ADEME, Reseau Vrac</div>
+    </div>
+    <div class="action-item">
+      <h4>Refuser le jetable</h4>
+      <p>Pailles, gobelets, couverts, sacs : demandez-vous "ai-je vraiment besoin de ca ?" avant d'accepter un objet a usage unique.</p>
+      <div class="impact">Impact : les 5 gestes "refuser" = -100 kg dechets/an</div>
+      <div class="source">Source : Zero Waste France</div>
+    </div>
+    <div class="action-item">
+      <h4>Frequenter les Repair Cafes</h4>
+      <p>730 Repair Cafes en France. Des benevoles reparent gratuitement electromenager, vetements, electronique. Prolonger la vie = moins de dechets.</p>
+      <div class="impact">Impact : 70% des objets apportes sont repares</div>
+      <div class="source">Source : Repair Cafe France</div>
+    </div>
+    <div class="action-item">
+      <h4>Acheter d'occasion</h4>
+      <p>Leboncoin, Vinted, Emmaus, ressourceries : l'occasion evite la production de neuf et la mise en decharge.</p>
+      <div class="impact">Impact : 1 telephone reconditionne = -40 kg CO2 vs neuf</div>
+      <div class="source">Source : ADEME, Back Market</div>
+    </div>
+    <div class="action-item">
+      <h4>Reduire le gaspillage alimentaire</h4>
+      <p>Planifier ses repas, respecter les DLC/DDM, cuisiner les restes. L'appli Too Good To Go sauve 1 million de paniers/mois en France.</p>
+      <div class="impact">Impact : -30 kg nourriture gaspillee/an/personne</div>
+      <div class="source">Source : ADEME, Loi Garot 2016</div>
+    </div>
+    <div class="action-item">
+      <h4>Privilegier la consigne</h4>
+      <p>Une bouteille en verre consignee est reutilisee 30 a 50 fois. La France relance la consigne pour certains emballages.</p>
+      <div class="impact">Impact : -75% d'emissions vs bouteille a usage unique</div>
+      <div class="source">Source : ADEME, reseau Consigne</div>
+    </div>
+    <div class="action-item">
+      <h4>Donner au lieu de jeter</h4>
+      <p>Donnons.org, Geev, Emmaus : ce dont vous n'avez plus besoin fera le bonheur de quelqu'un d'autre.</p>
+      <div class="impact">Impact : -13 kg/an/personne si on donne au lieu de jeter</div>
+      <div class="source">Source : ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Faire ses produits menagers maison</h4>
+      <p>Vinaigre blanc + bicarbonate + savon noir = 95% des besoins de nettoyage. Zero emballage plastique, zero produit toxique.</p>
+      <div class="impact">Impact : -10 bidons plastique/an, -50 EUR d'economie</div>
+      <div class="source">Source : ADEME, UFC-Que Choisir</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bibliography -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A2E" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    Bibliographie
+  </h3>
+  <ul class="biblio-list">
+    <li><span class="authors">Banque Mondiale (2018).</span> <span class="title">What a Waste 2.0 — A Global Snapshot of Solid Waste Management to 2050.</span> <a href="https://datatopics.worldbank.org/what-a-waste/" target="_blank">worldbank.org</a></li>
+    <li><span class="authors">ADEME (2023).</span> <span class="title">Dechets — Chiffres cles 2023.</span> <a href="https://www.ademe.fr/les-dechets-en-chiffres" target="_blank">ademe.fr</a></li>
+    <li><span class="authors">Eurostat (2023).</span> <span class="title">Municipal waste statistics — Recycling rates in Europe.</span> <a href="https://ec.europa.eu/eurostat" target="_blank">ec.europa.eu</a></li>
+    <li><span class="authors">FAO (2019).</span> <span class="title">The State of Food and Agriculture 2019 — Moving forward on food loss and waste reduction.</span> <a href="https://www.fao.org/3/ca6030en/ca6030en.pdf" target="_blank">fao.org</a></li>
+    <li><span class="authors">Zero Waste France (2023).</span> <span class="title">Scenarii Zero Waste — Feuille de route 2023-2027.</span> <a href="https://www.zerowastefrance.org" target="_blank">zerowastefrance.org</a></li>
+    <li><span class="authors">OECD (2022).</span> <span class="title">Global Plastics Outlook — Only 9% of plastics recycled.</span> <a href="https://www.oecd.org/environment/plastics/" target="_blank">oecd.org</a></li>
+  </ul>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+
+<script>
+var QUESTIONS = [
+  { item: 'Pot de yaourt', icon: '🥛', answer: 'jaune', options: [{id:'jaune',label:'Poubelle jaune'},{id:'verre',label:'Conteneur verre'},{id:'grise',label:'Poubelle grise'},{id:'compost',label:'Compost'}], explanation: 'Depuis 2023, TOUS les emballages plastiques vont dans la poubelle jaune (extension des consignes de tri).' },
+  { item: 'Bouteille d\'huile en verre', icon: '🫒', answer: 'verre', options: [{id:'jaune',label:'Poubelle jaune'},{id:'verre',label:'Conteneur verre'},{id:'grise',label:'Poubelle grise'},{id:'dechetterie',label:'Dechetterie'}], explanation: 'Les bouteilles en verre vont au conteneur a verre, meme si elles ont contenu de l\'huile.' },
+  { item: 'Mouchoir en papier usage', icon: '🤧', answer: 'grise', options: [{id:'jaune',label:'Poubelle jaune'},{id:'grise',label:'Poubelle grise'},{id:'compost',label:'Compost'},{id:'papier',label:'Bac papier'}], explanation: 'Les mouchoirs usages vont dans la poubelle grise (ordures menageres). Trop souilles pour etre recycles.' },
+  { item: 'Epluchures de legumes', icon: '🥕', answer: 'compost', options: [{id:'grise',label:'Poubelle grise'},{id:'compost',label:'Compost'},{id:'jaune',label:'Poubelle jaune'},{id:'verre',label:'Conteneur verre'}], explanation: 'Les biodechets vont au compost (obligatoire depuis janvier 2024). Composteur individuel ou bac collectif.' },
+  { item: 'Carton de pizza (tache de gras)', icon: '🍕', answer: 'jaune', options: [{id:'jaune',label:'Poubelle jaune'},{id:'grise',label:'Poubelle grise'},{id:'papier',label:'Bac papier'},{id:'compost',label:'Compost'}], explanation: 'Le carton de pizza, meme tache, va dans la poubelle jaune. Le process de recyclage gere les taches de gras.' }
+];
+
+var currentQ = 0;
+var score = 0;
+
+function renderQuestion() {
+  var area = document.getElementById('quiz-area');
+  if (currentQ >= QUESTIONS.length) {
+    area.innerHTML = '';
+    var scoreEl = document.getElementById('quiz-score');
+    scoreEl.style.display = 'block';
+    var msg = score === 5 ? 'Parfait ! Vous etes un champion du tri !' : score >= 3 ? 'Bien joue ! Quelques progres possibles.' : 'Il y a du travail ! Consultez le guide de tri de votre commune.';
+    scoreEl.textContent = score + ' / 5 — ' + msg;
+    return;
+  }
+  var q = QUESTIONS[currentQ];
+  var html = '<div class="quiz-question"><span class="quiz-item-icon">' + q.icon + '</span> Ou va : ' + q.item + ' ?</div>';
+  html += '<div class="quiz-options" id="quiz-options">';
+  q.options.forEach(function(opt) {
+    html += '<div class="quiz-option" data-id="' + opt.id + '" onclick="answerQuiz(\'' + opt.id + '\')">' + opt.label + '</div>';
+  });
+  html += '</div>';
+  html += '<div class="quiz-feedback" id="quiz-feedback"></div>';
+  area.innerHTML = html;
+}
+
+window.answerQuiz = function(chosen) {
+  var q = QUESTIONS[currentQ];
+  var options = document.querySelectorAll('.quiz-option');
+  options.forEach(function(o) {
+    o.classList.add('disabled');
+    if (o.getAttribute('data-id') === q.answer) o.classList.add('correct');
+    if (o.getAttribute('data-id') === chosen && chosen !== q.answer) o.classList.add('wrong');
+  });
+  var fb = document.getElementById('quiz-feedback');
+  if (chosen === q.answer) {
+    score++;
+    fb.style.background = '#f0fdf4';
+    fb.style.color = '#059669';
+    fb.textContent = 'Correct ! ' + q.explanation;
+  } else {
+    fb.style.background = '#fef2f2';
+    fb.style.color = '#DC2626';
+    fb.textContent = 'Faux ! ' + q.explanation;
+  }
+  fb.classList.add('show');
+  setTimeout(function() { currentQ++; renderQuestion(); }, 2500);
+};
+
+renderQuestion();
+</script>
+<script src="js/cgu-gate.js"></script>
+</body>
+</html>

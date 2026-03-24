@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Eau — 2 milliards de personnes sans eau potable sure</title>
+<meta name="description" content="Eau potable : chiffres, calculateur personnel, actions concretes. Donnees OMS, ARS, BRGM.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+.hero{text-align:center;padding:32px 20px;border-bottom:1px solid #e5e5e0}
+.hero h2{font-size:1.8rem;font-weight:900;margin-bottom:8px}
+.hero p{color:#666;font-size:.9rem;line-height:1.6;max-width:500px;margin:0 auto}
+.section{padding:24px 20px;max-width:720px;margin:0 auto}
+.section h3{font-size:1.15rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section h3 svg{width:24px;height:24px}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.card p{font-size:.85rem;color:#555;line-height:1.6}
+.card .source{font-size:.7rem;color:#999;margin-top:6px}
+.alert-box{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:20px;margin-bottom:16px}
+.alert-box h4{color:#DC2626;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.alert-box p{font-size:.85rem;color:#7f1d1d;line-height:1.6}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(min-width:640px){.stat-grid{grid-template-columns:1fr 1fr 1fr}}
+.stat-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center}
+.stat-val{font-size:1.8rem;font-weight:900;color:#DC2626}
+.stat-val.blue{color:#2563EB}
+.stat-label{font-size:.75rem;color:#666;margin-top:4px;line-height:1.3}
+.stat-src{font-size:.6rem;color:#999;margin-top:4px}
+/* Calculator */
+.calc-widget{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.calc-widget h4{font-size:.95rem;font-weight:700;margin-bottom:16px}
+.calc-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f5f5f0}
+.calc-row:last-of-type{border:none}
+.calc-icon{font-size:1.5rem;width:36px;text-align:center;flex-shrink:0}
+.calc-label{flex:1;font-size:.85rem;font-weight:600}
+.calc-input{width:70px;padding:8px;border:1px solid #e5e5e0;border-radius:8px;font-size:.9rem;text-align:center;font-family:inherit}
+.calc-input:focus{outline:none;border-color:#059669}
+.calc-unit{font-size:.75rem;color:#999;width:50px}
+.calc-result{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:20px;text-align:center;margin-top:16px;display:none}
+.calc-total{font-size:2.2rem;font-weight:900;color:#2563EB}
+.calc-compare{font-size:.85rem;color:#555;margin-top:8px;line-height:1.5}
+.calc-btn{padding:12px 24px;background:#059669;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem;margin-top:16px;width:100%}
+.action-list{counter-reset:action}
+.action-item{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px 16px 16px 52px;margin-bottom:10px;position:relative}
+.action-item::before{counter-increment:action;content:counter(action);position:absolute;left:16px;top:16px;width:28px;height:28px;border-radius:50%;background:#059669;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800}
+.action-item h4{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.action-item p{font-size:.8rem;color:#666;line-height:1.5}
+.action-item .impact{font-size:.75rem;color:#059669;font-weight:600;margin-top:4px}
+.action-item .source{font-size:.65rem;color:#999;margin-top:4px}
+.biblio-list{list-style:none}
+.biblio-list li{padding:10px 0;border-bottom:1px solid #f0f0e5;font-size:.8rem;line-height:1.5}
+.biblio-list li:last-child{border:none}
+.biblio-list .authors{font-weight:600}
+.biblio-list .title{font-style:italic}
+.biblio-list .journal{color:#666}
+.biblio-list a{color:#2563EB;font-size:.75rem}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>SOS Eau</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <h2>Eau Potable</h2>
+  <p>L'eau douce represente seulement 2,5% de l'eau sur Terre. Et nous la gaspillons, la polluons, l'epuisons.</p>
+</div>
+
+<!-- Stats -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    L'eau en chiffres
+  </h3>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val">2 Mds</div><div class="stat-label">personnes sans acces a l'eau potable sure</div><div class="stat-src">OMS/UNICEF JMP 2023</div></div>
+    <div class="stat-card"><div class="stat-val">4 000</div><div class="stat-label">enfants meurent chaque jour de maladies hydriques</div><div class="stat-src">OMS 2024</div></div>
+    <div class="stat-card"><div class="stat-val">70%</div><div class="stat-label">de la conso mondiale d'eau = agriculture</div><div class="stat-src">FAO AQUASTAT</div></div>
+    <div class="stat-card"><div class="stat-val">148 L</div><div class="stat-label">consommes/jour par Francais (moyenne)</div><div class="stat-src">SISPEA/OFB 2023</div></div>
+    <div class="stat-card"><div class="stat-val">20%</div><div class="stat-label">de l'eau potable perdue dans les fuites du reseau en France</div><div class="stat-src">Observatoire Eau France</div></div>
+  </div>
+</div>
+
+<!-- Pourquoi c'est grave -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    Pourquoi c'est grave
+  </h3>
+  <div class="alert-box">
+    <h4>L'eau douce s'epuise plus vite qu'elle ne se renouvelle</h4>
+    <p>Les nappes phreatiques baissent partout en France. En 2023, <strong>68% des nappes etaient en dessous de la normale</strong>. Le changement climatique intensifie les secheresses et reduit les precipitations utiles.</p>
+    <p style="margin-top:8px">L'agriculture intensive consomme 70% de l'eau douce mondiale, dont une grande partie par irrigation par aspersion (evaporation de 30-50%). Les mega-bassines sont une fuite en avant : elles pompent les nappes en hiver pour irriguer l'ete.</p>
+    <p style="margin-top:8px">La pollution par les nitrates, pesticides et PFAS rend des captages impropres a la consommation. En France, <strong>12 millions de personnes</strong> sont alimentees par une eau non conforme au moins une fois par an.</p>
+  </div>
+</div>
+
+<!-- Calculator -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><path d="M12 2L6 12a6 6 0 1012 0L12 2z"/></svg>
+    Calculez votre consommation d'eau
+  </h3>
+  <div class="calc-widget">
+    <h4>Estimez votre consommation quotidienne :</h4>
+    <div class="calc-row"><div class="calc-icon">🚿</div><div class="calc-label">Douches/jour</div><input type="number" class="calc-input" id="calc-douche" value="1" min="0" max="5"><div class="calc-unit">x 60L</div></div>
+    <div class="calc-row"><div class="calc-icon">🛁</div><div class="calc-label">Bains/semaine</div><input type="number" class="calc-input" id="calc-bain" value="0" min="0" max="7"><div class="calc-unit">x 200L</div></div>
+    <div class="calc-row"><div class="calc-icon">🚽</div><div class="calc-label">Chasses d'eau/jour</div><input type="number" class="calc-input" id="calc-wc" value="5" min="0" max="15"><div class="calc-unit">x 9L</div></div>
+    <div class="calc-row"><div class="calc-icon">🍽️</div><div class="calc-label">Vaisselles/jour (main)</div><input type="number" class="calc-input" id="calc-vaisselle" value="1" min="0" max="5"><div class="calc-unit">x 40L</div></div>
+    <div class="calc-row"><div class="calc-icon">🌿</div><div class="calc-label">Arrosage jardin (min/jour)</div><input type="number" class="calc-input" id="calc-arrosage" value="0" min="0" max="60"><div class="calc-unit">x 15L/min</div></div>
+    <div class="calc-row"><div class="calc-icon">👕</div><div class="calc-label">Machines a laver/semaine</div><input type="number" class="calc-input" id="calc-linge" value="3" min="0" max="14"><div class="calc-unit">x 60L</div></div>
+    <button class="calc-btn" onclick="calcWater()">Calculer ma consommation</button>
+    <div class="calc-result" id="calc-result">
+      <div class="calc-total" id="calc-total"></div>
+      <div class="calc-compare" id="calc-compare"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 10 Actions -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    10 actions pour economiser l'eau
+  </h3>
+  <div class="action-list">
+    <div class="action-item">
+      <h4>Douche de 5 minutes maximum</h4>
+      <p>Passez de 10 min a 5 min : vous economisez 60 litres par douche, soit 21 000 litres par an.</p>
+      <div class="impact">Impact : -21 000 L/an</div>
+      <div class="source">Source : ADEME, Centre d'Information sur l'Eau</div>
+    </div>
+    <div class="action-item">
+      <h4>Installer un mousseur sur les robinets</h4>
+      <p>Un mousseur (aerateur) reduit le debit de 12L/min a 6L/min sans perte de confort. Cout : 5 EUR.</p>
+      <div class="impact">Impact : -50% de consommation au robinet</div>
+      <div class="source">Source : ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Reparer les fuites immediatement</h4>
+      <p>Un robinet qui goutte = 120 L/jour = 43 000 L/an. Une chasse d'eau qui fuit = 600 L/jour.</p>
+      <div class="impact">Impact : jusqu'a -219 000 L/an (chasse d'eau)</div>
+      <div class="source">Source : Centre d'Information sur l'Eau</div>
+    </div>
+    <div class="action-item">
+      <h4>Recuperer l'eau de pluie</h4>
+      <p>Une cuve de 1 000L couvre l'arrosage du jardin, le lavage de la voiture et le remplissage des WC.</p>
+      <div class="impact">Impact : -40% de consommation d'eau potable pour un pavillon</div>
+      <div class="source">Source : ADEME, arrete du 21 aout 2008</div>
+    </div>
+    <div class="action-item">
+      <h4>Pailler (mulcher) son jardin</h4>
+      <p>10 cm de paillis au pied des plantes reduit l'evaporation de 70%. Moins d'arrosage, meilleur sol.</p>
+      <div class="impact">Impact : -70% d'arrosage necessaire</div>
+      <div class="source">Source : INRAE</div>
+    </div>
+    <div class="action-item">
+      <h4>Utiliser une chasse d'eau double debit</h4>
+      <p>3L au lieu de 9L pour la petite chasse. Economie : 30 000 L/an pour une famille de 4.</p>
+      <div class="impact">Impact : -30 000 L/an/famille</div>
+      <div class="source">Source : Centre d'Information sur l'Eau</div>
+    </div>
+    <div class="action-item">
+      <h4>Privilegier le lave-vaisselle (rempli)</h4>
+      <p>Un lave-vaisselle consomme 12 L par cycle vs 40-100 L a la main. Attendez qu'il soit plein.</p>
+      <div class="impact">Impact : -70% d'eau vs vaisselle a la main</div>
+      <div class="source">Source : ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Arroser le soir ou tot le matin</h4>
+      <p>Arroser en plein soleil = 50% d'evaporation. Le soir ou le matin, l'eau penetre le sol efficacement.</p>
+      <div class="impact">Impact : -50% d'eau d'arrosage gaspillee</div>
+      <div class="source">Source : INRAE</div>
+    </div>
+    <div class="action-item">
+      <h4>Couper l'eau en se savonnant/brossant les dents</h4>
+      <p>2 minutes de robinet ouvert = 12 litres perdus. Coupez pendant le savonnage et le brossage.</p>
+      <div class="impact">Impact : -8 000 L/an</div>
+      <div class="source">Source : ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Manger moins de viande</h4>
+      <p>1 kg de boeuf = 15 400 L d'eau (eau virtuelle). 1 kg de legumes = 300 L. L'empreinte eau de notre alimentation est enorme.</p>
+      <div class="impact">Impact : -2 500 L/jour si regime vegetarien</div>
+      <div class="source">Source : Water Footprint Network (Mekonnen & Hoekstra 2012)</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bibliography -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A2E" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    Bibliographie
+  </h3>
+  <ul class="biblio-list">
+    <li><span class="authors">OMS/UNICEF (2023).</span> <span class="title">Progress on household drinking water, sanitation and hygiene 2000-2022.</span> <span class="journal">Joint Monitoring Programme (JMP).</span> <a href="https://washdata.org" target="_blank">washdata.org</a></li>
+    <li><span class="authors">FAO (2024).</span> <span class="title">AQUASTAT — Global water information system.</span> <a href="https://www.fao.org/aquastat" target="_blank">fao.org/aquastat</a></li>
+    <li><span class="authors">BRGM (2023).</span> <span class="title">Etat des nappes d'eau souterraine en France.</span> <a href="https://www.brgm.fr/fr/actualite/etat-nappes-eau-souterraine" target="_blank">brgm.fr</a></li>
+    <li><span class="authors">Centre d'Information sur l'Eau (2023).</span> <span class="title">Les chiffres de la consommation d'eau en France.</span> <a href="https://www.cieau.com" target="_blank">cieau.com</a></li>
+    <li><span class="authors">Mekonnen M.M. & Hoekstra A.Y. (2012).</span> <span class="title">A global assessment of the water footprint of farm animal products.</span> <span class="journal">Ecosystems, 15, 401-415.</span></li>
+    <li><span class="authors">ADEME (2023).</span> <span class="title">Reduire sa consommation d'eau — Guide pratique.</span> <a href="https://www.ademe.fr" target="_blank">ademe.fr</a></li>
+  </ul>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+
+<script>
+function calcWater() {
+  var douche = parseInt(document.getElementById('calc-douche').value) || 0;
+  var bain = parseInt(document.getElementById('calc-bain').value) || 0;
+  var wc = parseInt(document.getElementById('calc-wc').value) || 0;
+  var vaisselle = parseInt(document.getElementById('calc-vaisselle').value) || 0;
+  var arrosage = parseInt(document.getElementById('calc-arrosage').value) || 0;
+  var linge = parseInt(document.getElementById('calc-linge').value) || 0;
+
+  var daily = (douche * 60) + (bain * 200 / 7) + (wc * 9) + (vaisselle * 40) + (arrosage * 15) + (linge * 60 / 7);
+  daily = Math.round(daily);
+  var yearly = Math.round(daily * 365);
+  var avg = 148;
+
+  var result = document.getElementById('calc-result');
+  result.style.display = 'block';
+  document.getElementById('calc-total').textContent = daily + ' L/jour';
+
+  var diff = daily - avg;
+  var compare = '';
+  if (diff > 30) {
+    compare = 'C\'est ' + Math.round(diff) + ' L de plus que la moyenne francaise (' + avg + ' L/jour). Soit ' + yearly.toLocaleString('fr-FR') + ' L/an. Vous pouvez reduire !';
+    result.style.background = '#fef2f2';
+    result.style.borderColor = '#fecaca';
+  } else if (diff > -10) {
+    compare = 'Vous etes dans la moyenne francaise (' + avg + ' L/jour). Soit ' + yearly.toLocaleString('fr-FR') + ' L/an. Des ameliorations sont possibles !';
+    result.style.background = '#fffbeb';
+    result.style.borderColor = '#fde68a';
+  } else {
+    compare = 'Bravo ! Vous consommez ' + Math.round(Math.abs(diff)) + ' L de moins que la moyenne (' + avg + ' L/jour). Soit ' + yearly.toLocaleString('fr-FR') + ' L/an.';
+    result.style.background = '#f0fdf4';
+    result.style.borderColor = '#bbf7d0';
+  }
+  document.getElementById('calc-compare').textContent = compare;
+}
+</script>
+<script src="js/cgu-gate.js"></script>
+</body>
+</html>

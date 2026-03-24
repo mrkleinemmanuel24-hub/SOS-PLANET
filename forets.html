@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Forets — 10 millions d'hectares perdus chaque annee</title>
+<meta name="description" content="Forets et deforestation : chiffres, compteur temps reel, actions concretes. Donnees Global Forest Watch, FAO, WWF.">
+<meta name="theme-color" content="#059669">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#1A1A2E;min-height:100vh;padding-bottom:80px}
+a{color:#059669;text-decoration:none}
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e5e5e0;position:sticky;top:0;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+.hero{text-align:center;padding:32px 20px;border-bottom:1px solid #e5e5e0}
+.hero h2{font-size:1.8rem;font-weight:900;margin-bottom:8px}
+.hero p{color:#666;font-size:.9rem;line-height:1.6;max-width:500px;margin:0 auto}
+.section{padding:24px 20px;max-width:720px;margin:0 auto}
+.section h3{font-size:1.15rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section h3 svg{width:24px;height:24px}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:20px;margin-bottom:16px}
+.card p{font-size:.85rem;color:#555;line-height:1.6}
+.card .source{font-size:.7rem;color:#999;margin-top:6px}
+.alert-box{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:20px;margin-bottom:16px}
+.alert-box h4{color:#DC2626;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.alert-box p{font-size:.85rem;color:#7f1d1d;line-height:1.6}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(min-width:640px){.stat-grid{grid-template-columns:1fr 1fr 1fr}}
+.stat-card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center}
+.stat-val{font-size:1.8rem;font-weight:900;color:#DC2626}
+.stat-val.green{color:#059669}
+.stat-label{font-size:.75rem;color:#666;margin-top:4px;line-height:1.3}
+.stat-src{font-size:.6rem;color:#999;margin-top:4px}
+/* Counter */
+.counter-widget{background:linear-gradient(135deg,#fef2f2,#fff7ed);border:1px solid #fecaca;border-radius:12px;padding:24px;margin-bottom:16px;text-align:center}
+.counter-label{font-size:.85rem;font-weight:700;color:#DC2626;margin-bottom:8px}
+.counter-value{font-size:2.5rem;font-weight:900;color:#DC2626;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.counter-sub{font-size:.75rem;color:#7f1d1d;margin-top:8px;line-height:1.4}
+.counter-note{font-size:.65rem;color:#999;margin-top:6px}
+.action-list{counter-reset:action}
+.action-item{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px 16px 16px 52px;margin-bottom:10px;position:relative}
+.action-item::before{counter-increment:action;content:counter(action);position:absolute;left:16px;top:16px;width:28px;height:28px;border-radius:50%;background:#059669;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800}
+.action-item h4{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.action-item p{font-size:.8rem;color:#666;line-height:1.5}
+.action-item .impact{font-size:.75rem;color:#059669;font-weight:600;margin-top:4px}
+.action-item .source{font-size:.65rem;color:#999;margin-top:4px}
+.biblio-list{list-style:none}
+.biblio-list li{padding:10px 0;border-bottom:1px solid #f0f0e5;font-size:.8rem;line-height:1.5}
+.biblio-list li:last-child{border:none}
+.biblio-list .authors{font-weight:600}
+.biblio-list .title{font-style:italic}
+.biblio-list .journal{color:#666}
+.biblio-list a{color:#2563EB;font-size:.75rem}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e0;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&#8592; Accueil</a>
+  <h1>SOS Forets</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <h2>Forets &amp; Deforestation</h2>
+  <p>Les forets abritent 80% de la biodiversite terrestre. Nous en perdons l'equivalent d'un terrain de football toutes les 2 secondes.</p>
+</div>
+
+<!-- Stats -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    Les forets en chiffres
+  </h3>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val">10M ha</div><div class="stat-label">de foret perdus chaque annee</div><div class="stat-src">FAO FRA 2020</div></div>
+    <div class="stat-card"><div class="stat-val">80%</div><div class="stat-label">de la biodiversite terrestre vit en foret</div><div class="stat-src">WWF 2020</div></div>
+    <div class="stat-card"><div class="stat-val">-17%</div><div class="stat-label">de l'Amazonie perdue depuis 1970</div><div class="stat-src">INPE / WWF</div></div>
+    <div class="stat-card"><div class="stat-val">2.6 Mds</div><div class="stat-label">tonnes CO2/an absorbees par les forets</div><div class="stat-src">Global Carbon Project</div></div>
+    <div class="stat-card"><div class="stat-val">420M ha</div><div class="stat-label">de foret perdus depuis 1990</div><div class="stat-src">FAO 2020</div></div>
+  </div>
+</div>
+
+<!-- Pourquoi c'est grave -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    Pourquoi c'est grave
+  </h3>
+  <div class="alert-box">
+    <h4>Les forets sont les poumons et la pharmacie de la Terre</h4>
+    <p>Les forets absorbent <strong>2,6 milliards de tonnes de CO2 par an</strong> — 30% de nos emissions. Quand on les brule, elles liberent ce carbone : la deforestation cause 10% des emissions mondiales de gaz a effet de serre.</p>
+    <p style="margin-top:8px">L'Amazonie, qui produit 20% de l'oxygene mondial, approche d'un <strong>point de basculement</strong> : au-dela de 20-25% de deforestation, elle pourrait se transformer en savane, liberant 200 milliards de tonnes de CO2.</p>
+    <p style="margin-top:8px">Les principales causes : elevage bovin (80% de la deforestation amazonienne), huile de palme (Indonesie, Malaisie), soja, exploitation forestiere illegale et agriculture sur brulis.</p>
+  </div>
+</div>
+
+<!-- Live counter -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+    Compteur de deforestation en temps reel
+  </h3>
+  <div class="counter-widget">
+    <div class="counter-label">Arbres perdus depuis l'ouverture de cette page</div>
+    <div class="counter-value" id="tree-counter">0</div>
+    <div class="counter-sub">Soit environ <strong>800 arbres par seconde</strong> dans le monde<br>10 millions d'hectares/an = ~15 milliards d'arbres/an</div>
+    <div class="counter-note">Estimation basee sur FAO FRA 2020 (perte nette de couvert forestier)</div>
+  </div>
+</div>
+
+<!-- 10 Actions -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    10 actions pour proteger les forets
+  </h3>
+  <div class="action-list">
+    <div class="action-item">
+      <h4>Utiliser du papier recycle</h4>
+      <p>Le papier recycle consomme 70% moins d'eau et 50% moins d'energie que le papier vierge.</p>
+      <div class="impact">Impact : 1 tonne de papier recycle = 17 arbres sauves</div>
+      <div class="source">Source : EPA, ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Choisir du bois certifie FSC ou PEFC</h4>
+      <p>Ces labels garantissent que le bois provient de forets gerees durablement (replantation, biodiversite preservee).</p>
+      <div class="impact">Impact : 230 millions d'hectares certifies FSC dans le monde</div>
+      <div class="source">Source : FSC, PEFC</div>
+    </div>
+    <div class="action-item">
+      <h4>Eviter l'huile de palme non certifiee</h4>
+      <p>L'huile de palme est dans 50% des produits de supermarche. Preferez le label RSPO ou eliminez-la de vos achats.</p>
+      <div class="impact">Impact : l'huile de palme = 8% de la deforestation mondiale</div>
+      <div class="source">Source : IUCN 2018, Vijay et al. 2016</div>
+    </div>
+    <div class="action-item">
+      <h4>Reduire sa consommation de viande bovine</h4>
+      <p>L'elevage bovin est la premiere cause de deforestation dans le monde. Moins de boeuf = moins de forets detruites.</p>
+      <div class="impact">Impact : 1 steak = 4.5 m2 de foret deboisee</div>
+      <div class="source">Source : Pendrill et al. 2022 (Global Environmental Change)</div>
+    </div>
+    <div class="action-item">
+      <h4>Planter des arbres</h4>
+      <p>Plantez dans votre jardin, participez a des operations de reforestation locale (ONF, communes).</p>
+      <div class="impact">Impact : 1 arbre absorbe ~25 kg CO2/an a maturite</div>
+      <div class="source">Source : ONF, ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Parrainer la reforestation</h4>
+      <p>Reforest'Action, Ecosia, Tree-Nation : plantez des arbres a distance dans les zones les plus touchees.</p>
+      <div class="impact">Impact : Ecosia = 200 millions d'arbres plantes</div>
+      <div class="source">Source : Ecosia, Reforest'Action</div>
+    </div>
+    <div class="action-item">
+      <h4>Utiliser Ecosia comme moteur de recherche</h4>
+      <p>Ecosia reverse 80% de ses benefices a la plantation d'arbres. ~45 recherches = 1 arbre plante.</p>
+      <div class="impact">Impact : gratuit, automatique, 1 arbre toutes les 45 recherches</div>
+      <div class="source">Source : Ecosia.org</div>
+    </div>
+    <div class="action-item">
+      <h4>Reduire l'impression papier</h4>
+      <p>Pensez numerique d'abord. Si vous imprimez : recto-verso, brouillon, et papier recycle.</p>
+      <div class="impact">Impact : 1 employe de bureau = 70 kg papier/an</div>
+      <div class="source">Source : ADEME</div>
+    </div>
+    <div class="action-item">
+      <h4>Soutenir le reglement europeen contre la deforestation importee</h4>
+      <p>Le reglement EUDR (2023) interdit l'import de produits lies a la deforestation (soja, boeuf, palme, cacao, cafe, bois, caoutchouc).</p>
+      <div class="impact">Impact potentiel : -72% de deforestation importee en Europe</div>
+      <div class="source">Source : Reglement UE 2023/1115</div>
+    </div>
+    <div class="action-item">
+      <h4>Proteger les forets anciennes locales</h4>
+      <p>Signalez les coupes rases abusives (ONF, FNE, SNPN). Soutenez les reserves biologiques integrales.</p>
+      <div class="impact">Impact : les forets anciennes stockent 30-70% plus de carbone</div>
+      <div class="source">Source : Luyssaert et al. 2008 (Nature)</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bibliography -->
+<div class="section">
+  <h3>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A2E" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    Bibliographie
+  </h3>
+  <ul class="biblio-list">
+    <li><span class="authors">FAO (2020).</span> <span class="title">Global Forest Resources Assessment 2020 (FRA).</span> <a href="https://www.fao.org/forest-resources-assessment/2020" target="_blank">fao.org</a></li>
+    <li><span class="authors">Global Forest Watch (2024).</span> <span class="title">World Resources Institute — Tree cover loss data.</span> <a href="https://www.globalforestwatch.org" target="_blank">globalforestwatch.org</a></li>
+    <li><span class="authors">WWF (2020).</span> <span class="title">Deforestation and Forest Degradation.</span> <a href="https://www.worldwildlife.org/threats/deforestation-and-forest-degradation" target="_blank">worldwildlife.org</a></li>
+    <li><span class="authors">Pendrill F. et al. (2022).</span> <span class="title">Disentangling the numbers behind agriculture-driven tropical deforestation.</span> <span class="journal">Global Environmental Change, 73, 102462.</span></li>
+    <li><span class="authors">Luyssaert S. et al. (2008).</span> <span class="title">Old-growth forests as global carbon sinks.</span> <span class="journal">Nature, 455, 213-215.</span></li>
+    <li><span class="authors">INPE (2023).</span> <span class="title">PRODES — Monitoramento da Floresta Amazonica Brasileira por Satelite.</span> <a href="http://www.obt.inpe.br/OBT/assuntos/programas/amazonia/prodes" target="_blank">inpe.br</a></li>
+  </ul>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
+  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
+  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
+  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
+  <a href="compteurs.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+</nav>
+
+<script>
+// Live deforestation counter: ~800 trees/second (15 billion/year / 365 / 24 / 3600)
+var treeCount = 0;
+var treesPerSecond = 800;
+var startTime = Date.now();
+function updateCounter() {
+  var elapsed = (Date.now() - startTime) / 1000;
+  treeCount = Math.round(elapsed * treesPerSecond);
+  document.getElementById('tree-counter').textContent = treeCount.toLocaleString('fr-FR');
+  requestAnimationFrame(updateCounter);
+}
+updateCounter();
+</script>
+<script src="js/cgu-gate.js"></script>
+</body>
+</html>
