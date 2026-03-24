@@ -73,6 +73,15 @@ a{color:#059669;text-decoration:none}
 .bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:#999;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
 .bottom-nav a.active{color:#059669}
 .bottom-nav a svg{width:22px;height:22px}
+
+/* Rankings */
+.rank-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border:1px solid #e5e5e0;border-radius:10px;margin-bottom:5px}
+.rank-num{font-size:.9rem;font-weight:900;color:#C9A84C;width:28px;text-align:center;flex-shrink:0}
+.rank-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;color:#fff;flex-shrink:0}
+.rank-name{flex:1;font-size:.85rem;font-weight:700}
+.rank-xp{font-size:.8rem;font-weight:700;color:#059669;text-align:right}
+.rank-meta{font-size:.65rem;color:#999;text-align:right}
+.rank-row.me{background:#e6fff5;border-color:#059669}
 </style>
 </head>
 <body>
@@ -181,15 +190,41 @@ a{color:#059669;text-decoration:none}
   </ul>
 </div>
 
+<!-- Rankings -->
+<div class="section">
+  <h3>🏆 Classement Amis</h3>
+  <div id="ranking-friends"></div>
+</div>
+
+<div class="section">
+  <h3>🏘️ Classement Communes (Top 20)</h3>
+  <div id="ranking-communes"></div>
+</div>
+
+<div class="section">
+  <h3>🏢 Classement Entreprise</h3>
+  <div style="background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:16px;text-align:center">
+    <div style="font-size:.9rem;font-weight:700;margin-bottom:4px">Votre entreprise utilise SOS Planet ?</div>
+    <div style="font-size:.8rem;color:#666;margin-bottom:10px">Consultez le classement RSE de vos equipes.</div>
+    <a href="https://sos-planet-b2b.pages.dev" target="_blank" style="font-size:.85rem;font-weight:700;color:#059669">Voir le classement entreprise &rarr;</a>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🌍 Classement Pays</h3>
+  <div id="ranking-pays"></div>
+</div>
+
 <nav class="bottom-nav">
-  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</a>
-  <a href="engagements.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Engagements</a>
-  <a href="echanges.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Echanges</a>
-  <a href="alertes.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Alertes</a>
-  <a href="compteurs.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>Mon Impact</a>
+  <a href="index.html">🏠<br>Accueil</a>
+  <a href="defis.html">🏆<br>Defis</a>
+  <a href="amis.html">👥<br>Amis</a>
+  <a href="engagements.html">🌍<br>Explorer</a>
+  <a href="compteurs.html" class="active">📊<br>Impact</a>
 </nav>
 
 <script src="js/planet-engine.js"></script>
+<script src="js/planet-social.js"></script>
 <script src="js/cgu-gate.js"></script>
 <script>
 (function() {
@@ -270,6 +305,65 @@ a{color:#059669;text-decoration:none}
   animateCounter('p-sea', 101.0, 0.02, 'mm', 6000);
   // Deforestation: ~10M ha/year (stays roughly constant)
   animateCounter('p-forest', 10.0, 0.001, 'Mha', 12000);
+
+  // ---- Rankings ----
+  // Friends ranking
+  var friendsContainer = document.getElementById('ranking-friends');
+  if (friendsContainer && typeof PlanetSocial !== 'undefined') {
+    var friends = PlanetSocial.getFriends();
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('planet_user')); } catch(e) {}
+    var allFriends = friends.slice();
+    if (user) {
+      allFriends.push({ id: 'me', name: user.pseudo || 'Moi', level: PlanetSocial.getCurrentLevelNum(user.xp || 0), xp: user.xp || 0, streak: user.streak || 0, avatar: (user.pseudo || 'M')[0], color: '#10B981' });
+    }
+    allFriends.sort(function(a, b) { return b.xp - a.xp; });
+    allFriends.forEach(function(f, i) {
+      var rankEmoji = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i + 1)));
+      var isMe = f.id === 'me';
+      var row = document.createElement('div');
+      row.className = 'rank-row' + (isMe ? ' me' : '');
+      row.innerHTML =
+        '<div class="rank-num">' + rankEmoji + '</div>' +
+        '<div class="rank-avatar" style="background:' + (f.color || '#666') + '">' + f.avatar + '</div>' +
+        '<div class="rank-name">' + f.name + (isMe ? ' (toi)' : '') + '</div>' +
+        '<div style="text-align:right"><div class="rank-xp">' + f.xp + ' XP</div><div class="rank-meta">Niv. ' + f.level + ' | 🔥' + f.streak + 'j</div></div>';
+      friendsContainer.appendChild(row);
+    });
+  }
+
+  // Communes ranking
+  var communesContainer = document.getElementById('ranking-communes');
+  if (communesContainer && typeof PlanetSocial !== 'undefined') {
+    var communes = PlanetSocial.COMMUNE_RANKINGS.slice(0, 20);
+    communes.forEach(function(c, i) {
+      var rankEmoji = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i + 1)));
+      var row = document.createElement('div');
+      row.className = 'rank-row';
+      row.innerHTML =
+        '<div class="rank-num">' + rankEmoji + '</div>' +
+        '<div class="rank-name">' + c.name + '</div>' +
+        '<div style="text-align:right"><div class="rank-xp">' + (c.xp / 1000).toFixed(0) + 'k XP</div><div class="rank-meta">' + c.members.toLocaleString('fr-FR') + ' membres</div></div>';
+      communesContainer.appendChild(row);
+    });
+  }
+
+  // Country ranking
+  var paysContainer = document.getElementById('ranking-pays');
+  if (paysContainer && typeof PlanetSocial !== 'undefined') {
+    var pays = PlanetSocial.COUNTRY_RANKINGS;
+    pays.forEach(function(p, i) {
+      var rankEmoji = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i + 1)));
+      var isF = p.name === 'France';
+      var row = document.createElement('div');
+      row.className = 'rank-row' + (isF ? ' me' : '');
+      row.innerHTML =
+        '<div class="rank-num">' + rankEmoji + '</div>' +
+        '<div class="rank-name">' + p.flag + ' ' + p.name + '</div>' +
+        '<div class="rank-xp">' + (p.xp / 1000000).toFixed(1) + 'M XP</div>';
+      paysContainer.appendChild(row);
+    });
+  }
 })();
 </script>
 </body>

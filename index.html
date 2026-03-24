@@ -305,6 +305,27 @@ a{color:var(--accent);text-decoration:none}
 }
 .reset-btn:hover{opacity:1;color:var(--danger)}
 
+/* Journey */
+.journey-day{display:flex;align-items:center;gap:14px;padding:14px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;margin-bottom:8px;transition:all .2s}
+.journey-day.done{background:rgba(16,185,129,0.1);border-color:var(--accent)}
+.journey-day.current{background:rgba(251,191,36,0.1);border-color:var(--gold);box-shadow:0 0 15px rgba(251,191,36,0.2)}
+.journey-day.future{opacity:.4}
+.journey-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;flex-shrink:0;border:2px solid var(--card-border);background:var(--card)}
+.journey-day.done .journey-num{border-color:var(--accent);color:var(--accent)}
+.journey-day.current .journey-num{border-color:var(--gold);color:var(--gold);box-shadow:0 0 10px rgba(251,191,36,0.3)}
+.journey-emoji{font-size:1.2rem;flex-shrink:0}
+.journey-text{flex:1;font-size:.85rem;font-weight:600}
+.journey-day.done .journey-text{text-decoration:line-through;color:var(--text-dim)}
+.journey-check{font-size:1rem;color:var(--accent);font-weight:700}
+.journey-link{color:var(--accent);text-decoration:none;font-weight:700;font-size:.8rem}
+
+/* Social feed mini */
+.social-mini{display:flex;align-items:center;gap:10px;padding:12px;background:var(--card);border:1px solid var(--card-border);border-radius:10px;margin-bottom:6px}
+.social-mini-icon{font-size:1.1rem;flex-shrink:0}
+.social-mini-text{flex:1;font-size:.8rem}
+.social-mini-text strong{color:var(--accent)}
+.social-mini-time{font-size:.65rem;color:var(--text-dim);flex-shrink:0}
+
 /* Responsive */
 @media(max-width:400px){
   .engage-grid{grid-template-columns:1fr 1fr}
@@ -524,18 +545,52 @@ a{color:var(--accent);text-decoration:none}
     <button class="reset-btn" onclick="resetProfile()">Reinitialiser mon profil</button>
   </div>
 
+  <!-- 7-day journey -->
+  <div id="journey-section" style="display:none;padding:0 20px 20px">
+    <div class="today-title">🗓️ Ton parcours d'engagement</div>
+    <div id="journey-cards"></div>
+  </div>
+
+  <!-- Social feed section -->
+  <div id="social-feed-section" style="display:none;padding:0 20px 20px">
+    <div class="today-title">👥 Activite de tes amis</div>
+    <div id="social-feed-items"></div>
+  </div>
+
+  <!-- Invite prompt -->
+  <div id="invite-prompt" style="display:none;padding:0 20px 20px">
+    <div style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(59,130,246,0.15));border:1px solid var(--accent);border-radius:16px;padding:20px;text-align:center">
+      <div style="font-size:1.5rem;margin-bottom:8px">👥</div>
+      <div style="font-size:1rem;font-weight:800;margin-bottom:4px">Tu es tout seul !</div>
+      <div style="font-size:.85rem;color:var(--text-dim);margin-bottom:14px">Invite 5 amis pour multiplier ton impact.</div>
+      <button onclick="window.open('https://wa.me/?text='+encodeURIComponent(PlanetSocial.getShareMessage()),'_blank')" style="padding:12px 28px;border:none;border-radius:30px;background:#25D366;color:#fff;font-size:.9rem;font-weight:700;cursor:pointer">📱 Inviter par WhatsApp</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Daily reminder overlay -->
+<div id="reminder-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9000;align-items:center;justify-content:center;padding:20px">
+  <div style="max-width:400px;width:100%;background:linear-gradient(170deg,#0A1628,#0F2E1A);border:2px solid var(--accent);border-radius:24px;padding:32px 24px;text-align:center">
+    <div style="font-size:3rem;margin-bottom:12px">🌍</div>
+    <div style="font-size:1.2rem;font-weight:900;margin-bottom:16px">As-tu fait tes engagements aujourd'hui ?</div>
+    <div id="reminder-cards" style="margin-bottom:16px"></div>
+    <div id="reminder-streak" style="font-size:.9rem;color:var(--danger);font-weight:700;margin-bottom:16px"></div>
+    <button onclick="closeReminder()" style="padding:14px 36px;border:none;border-radius:30px;background:var(--accent);color:#fff;font-size:1rem;font-weight:700;cursor:pointer">Voir mon tableau de bord</button>
+  </div>
 </div>
 
 <!-- Bottom nav -->
 <nav class="bottom-nav">
   <a href="index.html" class="active"><span>🏠</span>Accueil</a>
-  <a href="engagements.html"><span>✅</span>Engagements</a>
-  <a href="echanges.html"><span>🔄</span>Echanges</a>
-  <a href="alertes.html"><span>🔔</span>Alertes</a>
+  <a href="defis.html"><span>🏆</span>Defis</a>
+  <a href="amis.html"><span>👥</span>Amis</a>
+  <a href="engagements.html"><span>🌍</span>Explorer</a>
   <a href="compteurs.html"><span>📊</span>Impact</a>
 </nav>
 
 <script src="js/planet-engine.js"></script>
+<script src="js/planet-social.js"></script>
 <script>
 (function() {
   'use strict';
@@ -1036,6 +1091,116 @@ a{color:var(--accent);text-decoration:none}
     location.reload();
   };
 
+  // ==== SOCIAL FEATURES ====
+
+  // 7-day journey
+  function renderJourney() {
+    var user = getUser();
+    if (!user) return;
+    var day = PlanetSocial.getJourneyDay();
+    if (day > 7) return; // Journey complete
+
+    var section = document.getElementById('journey-section');
+    section.style.display = 'block';
+    var container = document.getElementById('journey-cards');
+    container.innerHTML = '';
+
+    var JOURNEY = [
+      { day: 1, emoji: '✅', text: 'Choisis tes engagements', link: null },
+      { day: 2, emoji: '👥', text: 'Invite 5 amis', link: 'amis.html' },
+      { day: 3, emoji: '📊', text: 'Calcule ton empreinte carbone', link: 'carbone.html' },
+      { day: 4, emoji: '🏆', text: 'Lance ton premier defi', link: 'defis.html' },
+      { day: 5, emoji: '🌍', text: 'Rejoins un groupe', link: 'groupes.html' },
+      { day: 6, emoji: '📸', text: 'Partage ta premiere action', link: 'partage.html' },
+      { day: 7, emoji: '⭐', text: 'Badge "Premiere semaine" !', link: null }
+    ];
+
+    JOURNEY.forEach(function(j) {
+      var isDone = j.day < day;
+      var isCurrent = j.day === day;
+      var isFuture = j.day > day;
+      var card = document.createElement('div');
+      card.className = 'journey-day' + (isDone ? ' done' : '') + (isCurrent ? ' current' : '') + (isFuture ? ' future' : '');
+      var linkHTML = (isCurrent && j.link) ? ' <a href="' + j.link + '" class="journey-link">&rarr; Go</a>' : '';
+      card.innerHTML =
+        '<div class="journey-num">' + j.day + '</div>' +
+        '<div class="journey-emoji">' + j.emoji + '</div>' +
+        '<div class="journey-text">Jour ' + j.day + ' : ' + j.text + linkHTML + '</div>' +
+        (isDone ? '<div class="journey-check">✅</div>' : '');
+      container.appendChild(card);
+    });
+  }
+
+  // Social feed (mini, on homepage)
+  function renderSocialFeed() {
+    var section = document.getElementById('social-feed-section');
+    section.style.display = 'block';
+    var container = document.getElementById('social-feed-items');
+    container.innerHTML = '';
+    var activities = PlanetSocial.DEMO_ACTIVITIES.slice(0, 5);
+    activities.forEach(function(a) {
+      var item = document.createElement('div');
+      item.className = 'social-mini';
+      item.innerHTML =
+        '<div class="social-mini-icon">' + a.icon + '</div>' +
+        '<div class="social-mini-text"><strong>' + a.user + '</strong> ' + a.text + '</div>' +
+        '<div class="social-mini-time">' + a.time + '</div>';
+      container.appendChild(item);
+    });
+    // View all link
+    var viewAll = document.createElement('div');
+    viewAll.style.cssText = 'text-align:center;margin-top:8px';
+    viewAll.innerHTML = '<a href="amis.html" style="font-size:.85rem;font-weight:700">Voir tout le fil &rarr;</a>';
+    container.appendChild(viewAll);
+  }
+
+  // Invite prompt
+  function renderInvitePrompt() {
+    var friends = PlanetSocial.getFriends();
+    // Show if user has less than 3 "real" friends (demo friends don't count in real scenario)
+    // For demo, we always show it
+    var prompt = document.getElementById('invite-prompt');
+    prompt.style.display = 'block';
+  }
+
+  // Daily reminder overlay
+  function checkReminder() {
+    var user = getUser();
+    if (!user) return;
+    if (PlanetSocial.needsReminder()) {
+      var overlay = document.getElementById('reminder-overlay');
+      overlay.style.display = 'flex';
+
+      // Render reminder cards
+      var container = document.getElementById('reminder-cards');
+      container.innerHTML = '';
+      if (user.engagements) {
+        user.engagements.forEach(function(eng) {
+          var checked = user.todayChecked && user.todayChecked[eng.id];
+          if (!checked) {
+            var card = document.createElement('div');
+            card.style.cssText = 'background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;margin-bottom:6px;display:flex;align-items:center;gap:10px';
+            card.innerHTML = '<span style="font-size:1.3rem">' + eng.emoji + '</span><span style="flex:1;font-size:.85rem;font-weight:600">' + eng.title + '</span>';
+            container.appendChild(card);
+          }
+        });
+      }
+
+      // Streak danger
+      var streakEl = document.getElementById('reminder-streak');
+      if (PlanetSocial.isStreakInDanger()) {
+        var hours = PlanetSocial.getStreakDangerHours();
+        streakEl.textContent = '🔥 Streak en danger ! ' + (user.streak || 0) + ' jours — Il te reste ' + hours + 'h !';
+      } else {
+        streakEl.textContent = '';
+      }
+    }
+  }
+
+  window.closeReminder = function() {
+    document.getElementById('reminder-overlay').style.display = 'none';
+  };
+
   // ==== INIT ====
   var user = getUser();
   if (user && user.pseudo) {
@@ -1043,6 +1208,11 @@ a{color:var(--accent);text-decoration:none}
     document.getElementById('onboarding').style.display = 'none';
     document.getElementById('dashboard').classList.add('active');
     renderDashboard();
+    // Social features
+    renderJourney();
+    renderSocialFeed();
+    renderInvitePrompt();
+    checkReminder();
   } else {
     // New user — show onboarding
     document.getElementById('onboarding').style.display = '';

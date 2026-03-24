@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Partage</title>
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);
+  --card-hover:rgba(16,185,129,0.15);--danger:#EF4444;--blue:#3B82F6;
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.section{padding:20px;max-width:600px;margin:0 auto}
+.section-title{font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--card-border)}
+
+/* Milestone card */
+.milestone-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:18px;margin-bottom:12px;display:flex;align-items:center;gap:14px;transition:all .2s}
+.milestone-card:hover{border-color:var(--accent);background:var(--card-hover)}
+.milestone-icon{font-size:2rem;flex-shrink:0}
+.milestone-info{flex:1}
+.milestone-text{font-size:.95rem;font-weight:700}
+.milestone-date{font-size:.75rem;color:var(--text-dim);margin-top:2px}
+.milestone-share{flex-shrink:0}
+.btn-share-small{padding:8px 14px;border:none;border-radius:10px;background:rgba(16,185,129,0.15);color:var(--accent);font-size:.75rem;font-weight:700;cursor:pointer;border:1px solid rgba(16,185,129,0.3);transition:all .2s}
+.btn-share-small:hover{background:rgba(16,185,129,0.25)}
+
+/* Share card preview */
+.share-card{border-radius:20px;padding:32px 24px;text-align:center;position:relative;overflow:hidden;margin-bottom:16px}
+.share-card.green{background:linear-gradient(135deg,#059669,#10B981,#34D399)}
+.share-card.gold{background:linear-gradient(135deg,#B45309,#FBBF24,#FDE68A)}
+.share-card.blue{background:linear-gradient(135deg,#1D4ED8,#3B82F6,#93C5FD)}
+.share-card::before{content:'';position:absolute;top:-30%;right:-30%;width:60%;height:60%;background:rgba(255,255,255,0.08);border-radius:50%}
+.share-card::after{content:'';position:absolute;bottom:-20%;left:-20%;width:40%;height:40%;background:rgba(255,255,255,0.05);border-radius:50%}
+.share-card-icon{font-size:3rem;display:block;margin-bottom:12px;position:relative;z-index:1}
+.share-card-text{font-size:1.2rem;font-weight:900;color:#fff;position:relative;z-index:1;margin-bottom:6px}
+.share-card-sub{font-size:.85rem;color:rgba(255,255,255,0.8);position:relative;z-index:1;margin-bottom:16px}
+.share-card-url{font-size:.7rem;color:rgba(255,255,255,0.6);position:relative;z-index:1}
+
+/* Share buttons row */
+.share-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+.share-btn{padding:10px 16px;border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.share-btn:hover{transform:translateY(-2px)}
+.share-btn.wa{background:#25D366;color:#fff}
+.share-btn.sms{background:var(--blue);color:#fff}
+.share-btn.x{background:#000;color:#fff;border:1px solid #333}
+.share-btn.fb{background:#1877F2;color:#fff}
+.share-btn.copy{background:var(--card);color:var(--text);border:1px solid var(--card-border)}
+
+/* Profile card generator */
+.profile-card{background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(59,130,246,0.2));border:2px solid var(--accent);border-radius:20px;padding:28px;text-align:center}
+.profile-card-title{font-size:.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:700;margin-bottom:12px}
+.profile-pseudo{font-size:1.6rem;font-weight:900;margin-bottom:4px}
+.profile-stats{display:flex;gap:16px;justify-content:center;margin:12px 0}
+.profile-stat{text-align:center}
+.profile-stat-val{font-size:1.3rem;font-weight:900;color:var(--accent)}
+.profile-stat-label{font-size:.65rem;color:var(--text-dim)}
+.profile-level{font-size:1rem;font-weight:700;color:var(--gold);margin-top:8px}
+
+.btn-generate{width:100%;padding:16px;border:none;border-radius:14px;background:var(--accent);color:#fff;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;margin-top:16px}
+.btn-generate:hover{background:var(--accent-light);transform:translateY(-2px)}
+
+/* Toast */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 24px;border-radius:30px;font-size:.85rem;font-weight:700;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Accueil</a>
+  <h1>📸 Partage</h1>
+  <div class="spacer"></div>
+</div>
+
+<!-- Profile card -->
+<div class="section">
+  <div class="section-title">Ma carte de profil</div>
+  <div class="profile-card" id="profile-card">
+    <div class="profile-card-title">SOS Planet</div>
+    <div class="profile-pseudo" id="p-pseudo">—</div>
+    <div class="profile-stats">
+      <div class="profile-stat"><div class="profile-stat-val" id="p-xp">0</div><div class="profile-stat-label">XP</div></div>
+      <div class="profile-stat"><div class="profile-stat-val" id="p-co2">0</div><div class="profile-stat-label">kg CO2</div></div>
+      <div class="profile-stat"><div class="profile-stat-val" id="p-streak">0</div><div class="profile-stat-label">🔥 jours</div></div>
+    </div>
+    <div class="profile-level" id="p-level"></div>
+  </div>
+  <div class="share-btns" style="margin-top:16px">
+    <button class="share-btn wa" onclick="shareProfile('whatsapp')">📱 WhatsApp</button>
+    <button class="share-btn sms" onclick="shareProfile('sms')">💬 SMS</button>
+    <button class="share-btn x" onclick="shareProfile('x')">𝕏 Twitter</button>
+    <button class="share-btn fb" onclick="shareProfile('fb')">📘 Facebook</button>
+    <button class="share-btn copy" onclick="shareProfile('copy')">📋 Copier</button>
+  </div>
+</div>
+
+<!-- Milestones -->
+<div class="section">
+  <div class="section-title">Mes accomplissements</div>
+  <div id="milestones"></div>
+</div>
+
+<!-- Shareable milestone cards -->
+<div class="section">
+  <div class="section-title">Cartes a partager</div>
+  <div id="share-cards"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="defis.html"><span>🏆</span>Defis</a>
+  <a href="amis.html"><span>👥</span>Amis</a>
+  <a href="engagements.html"><span>🌍</span>Explorer</a>
+  <a href="compteurs.html"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-social.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('planet_user')); } catch(e) {}
+
+  function showToast(msg) {
+    var toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2500);
+  }
+
+  // ---- Profile card ----
+  function renderProfile() {
+    if (!user) return;
+    document.getElementById('p-pseudo').textContent = user.pseudo || '—';
+    document.getElementById('p-xp').textContent = user.xp || 0;
+    document.getElementById('p-co2').textContent = user.xp || 0;
+    document.getElementById('p-streak').textContent = user.streak || 0;
+    var levelNum = PlanetSocial.getCurrentLevelNum(user.xp || 0);
+    var levelNames = ['', 'Debut', 'Graine', 'Feuille', 'Plante', 'Herbe', 'Jeune Pousse', 'Prairie', 'Sequoia', 'Foret Ancienne', 'Gardien de la Planete'];
+    document.getElementById('p-level').textContent = 'Niveau ' + levelNum + ' — ' + (levelNames[levelNum] || '');
+  }
+
+  window.shareProfile = function(platform) {
+    var pseudo = user ? user.pseudo : 'Ami';
+    var xp = user ? user.xp : 0;
+    var streak = user ? user.streak : 0;
+    var msg = pseudo + ' sur SOS Planet — Niveau ' + PlanetSocial.getCurrentLevelNum(xp) + ' — ' + xp + ' kg CO2 economises — 🔥' + streak + ' jours de streak ! Rejoins-moi 👉 https://sos-planet.pages.dev';
+    var url = 'https://sos-planet.pages.dev';
+
+    if (platform === 'whatsapp') {
+      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+    } else if (platform === 'sms') {
+      window.location.href = 'sms:?body=' + encodeURIComponent(msg);
+    } else if (platform === 'x') {
+      window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(msg), '_blank');
+    } else if (platform === 'fb') {
+      window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url) + '&quote=' + encodeURIComponent(msg), '_blank');
+    } else if (platform === 'copy') {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(msg);
+      }
+      showToast('Texte copie ! 📋');
+      return;
+    }
+    showToast('Partage en cours...');
+  };
+
+  // ---- Milestones ----
+  function renderMilestones() {
+    var container = document.getElementById('milestones');
+    var milestones = PlanetSocial.getMilestones();
+
+    // Always show some demo milestones
+    var demoMilestones = [
+      { icon: '🌱', text: 'Premier engagement', date: user ? user.joinDate : '2026-03-24T00:00:00' },
+      { icon: '🔥', text: '7 jours de streak', date: '2026-03-24T00:00:00' },
+      { icon: '💯', text: '100 kg CO2 economises', date: '2026-03-24T00:00:00' },
+      { icon: '🌳', text: 'Niveau Arbre atteint', date: '2026-03-24T00:00:00' },
+      { icon: '👥', text: '5 amis recrutes', date: '2026-03-24T00:00:00' },
+      { icon: '🏆', text: 'Defi zero dechet reussi', date: '2026-03-24T00:00:00' }
+    ];
+
+    var items = milestones.length > 2 ? milestones : demoMilestones;
+
+    container.innerHTML = '';
+    items.forEach(function(m) {
+      var dateStr = '24 mars 2026';
+      try {
+        var d = new Date(m.date);
+        dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+      } catch(e) {}
+
+      var card = document.createElement('div');
+      card.className = 'milestone-card';
+      card.innerHTML =
+        '<div class="milestone-icon">' + m.icon + '</div>' +
+        '<div class="milestone-info">' +
+          '<div class="milestone-text">' + m.text + '</div>' +
+          '<div class="milestone-date">' + dateStr + '</div>' +
+        '</div>' +
+        '<div class="milestone-share"><button class="btn-share-small" onclick="shareMilestone(\'' + m.icon + '\',\'' + m.text.replace(/'/g, "\\'") + '\')">Partager</button></div>';
+      container.appendChild(card);
+    });
+  }
+
+  window.shareMilestone = function(icon, text) {
+    var pseudo = user ? user.pseudo : 'Un ami';
+    var msg = icon + ' ' + pseudo + ' a debloque : ' + text + ' sur SOS Planet ! 🌍 Rejoins-moi 👉 https://sos-planet.pages.dev';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(msg);
+    }
+    showToast('Accomplissement copie ! Partage-le ! 📋');
+  };
+
+  // ---- Shareable cards ----
+  function renderShareCards() {
+    var container = document.getElementById('share-cards');
+    var pseudo = user ? user.pseudo : 'Ami';
+    var xp = user ? user.xp : 0;
+
+    var cards = [
+      { gradient: 'green', icon: '🌱', title: 'Premier engagement', sub: pseudo + ' s\'engage pour la planete', url: 'sos-planet.pages.dev' },
+      { gradient: 'gold', icon: '🔥', title: (user ? user.streak : 7) + ' jours de streak', sub: pseudo + ' — ' + xp + ' XP', url: 'sos-planet.pages.dev' },
+      { gradient: 'blue', icon: '🌍', title: xp + ' kg CO2 economises', sub: pseudo + ' — SOS Planet', url: 'sos-planet.pages.dev' }
+    ];
+
+    container.innerHTML = '';
+    cards.forEach(function(c) {
+      var html =
+        '<div class="share-card ' + c.gradient + '">' +
+          '<div class="share-card-icon">' + c.icon + '</div>' +
+          '<div class="share-card-text">' + c.title + '</div>' +
+          '<div class="share-card-sub">' + c.sub + '</div>' +
+          '<div class="share-card-url">Rejoins-moi &rarr; ' + c.url + '</div>' +
+        '</div>' +
+        '<div class="share-btns">' +
+          '<button class="share-btn wa" onclick="shareCard(\'' + c.title.replace(/'/g, "\\'") + '\',\'' + c.sub.replace(/'/g, "\\'") + '\',\'whatsapp\')">📱 WhatsApp</button>' +
+          '<button class="share-btn sms" onclick="shareCard(\'' + c.title.replace(/'/g, "\\'") + '\',\'' + c.sub.replace(/'/g, "\\'") + '\',\'sms\')">💬 SMS</button>' +
+          '<button class="share-btn x" onclick="shareCard(\'' + c.title.replace(/'/g, "\\'") + '\',\'' + c.sub.replace(/'/g, "\\'") + '\',\'x\')">𝕏</button>' +
+          '<button class="share-btn fb" onclick="shareCard(\'' + c.title.replace(/'/g, "\\'") + '\',\'' + c.sub.replace(/'/g, "\\'") + '\',\'fb\')">📘</button>' +
+          '<button class="share-btn copy" onclick="shareCard(\'' + c.title.replace(/'/g, "\\'") + '\',\'' + c.sub.replace(/'/g, "\\'") + '\',\'copy\')">📋</button>' +
+        '</div>';
+      container.insertAdjacentHTML('beforeend', html);
+    });
+  }
+
+  window.shareCard = function(title, sub, platform) {
+    var msg = '🌍 ' + title + ' — ' + sub + ' 👉 https://sos-planet.pages.dev';
+    if (platform === 'whatsapp') {
+      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+    } else if (platform === 'sms') {
+      window.location.href = 'sms:?body=' + encodeURIComponent(msg);
+    } else if (platform === 'x') {
+      window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(msg), '_blank');
+    } else if (platform === 'fb') {
+      window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://sos-planet.pages.dev') + '&quote=' + encodeURIComponent(msg), '_blank');
+    } else if (platform === 'copy') {
+      if (navigator.clipboard) { navigator.clipboard.writeText(msg); }
+      showToast('Copie ! 📋');
+      return;
+    }
+    showToast('Partage en cours...');
+  };
+
+  // ---- Init ----
+  renderProfile();
+  renderMilestones();
+  renderShareCards();
+})();
+</script>
+</body>
+</html>

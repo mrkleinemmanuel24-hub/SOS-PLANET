@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Amis</title>
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);
+  --card-hover:rgba(16,185,129,0.15);--danger:#EF4444;--blue:#3B82F6;
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.section{padding:20px;max-width:600px;margin:0 auto}
+.section-title{font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--card-border)}
+
+/* Invite buttons */
+.invite-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.invite-btn{display:flex;align-items:center;gap:12px;padding:16px 20px;border:none;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;width:100%;text-align:left}
+.invite-btn:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.invite-btn.whatsapp{background:#25D366;color:#fff}
+.invite-btn.sms{background:var(--blue);color:#fff}
+.invite-btn.copy{background:var(--card);color:var(--text);border:1px solid var(--card-border)}
+.invite-btn span{font-size:1.3rem}
+.invite-note{font-size:.75rem;color:var(--text-dim);text-align:center;margin-bottom:8px}
+
+/* Friend card */
+.friend-card{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;transition:all .2s}
+.friend-card:hover{border-color:var(--accent);background:var(--card-hover)}
+.friend-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:#fff;flex-shrink:0}
+.friend-info{flex:1}
+.friend-name{font-size:.95rem;font-weight:700}
+.friend-stats{font-size:.75rem;color:var(--text-dim);margin-top:2px;display:flex;gap:10px;flex-wrap:wrap}
+.friend-stats span{display:inline-flex;align-items:center;gap:3px}
+.friend-badge{padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:700;background:rgba(251,191,36,0.15);color:var(--gold);border:1px solid rgba(251,191,36,0.3)}
+.friend-actions{display:flex;gap:6px;flex-shrink:0}
+.friend-btn{padding:8px 12px;border:none;border-radius:10px;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s}
+.friend-btn.defi{background:var(--accent);color:#fff}
+.friend-btn.defi:hover{background:var(--accent-light)}
+.friend-btn.bravo{background:var(--card);color:var(--gold);border:1px solid rgba(251,191,36,0.3)}
+.friend-btn.bravo:hover{background:rgba(251,191,36,0.15)}
+
+/* Activity feed */
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;margin-bottom:8px}
+.activity-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
+.activity-content{flex:1}
+.activity-user{font-weight:700;color:var(--accent);font-size:.9rem}
+.activity-text{font-size:.85rem;color:var(--text);margin-top:2px}
+.activity-time{font-size:.7rem;color:var(--text-dim);margin-top:4px}
+.activity-actions{display:flex;gap:6px;margin-top:8px}
+.activity-btn{padding:6px 12px;border:none;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s}
+.activity-btn.bravo{background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.2)}
+.activity-btn.moiaussi{background:rgba(16,185,129,0.1);color:var(--accent);border:1px solid rgba(16,185,129,0.2)}
+.activity-btn:hover{transform:scale(1.05)}
+.activity-btn.clicked{opacity:.5;pointer-events:none}
+
+/* Toast */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 24px;border-radius:30px;font-size:.85rem;font-weight:700;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+
+@media(max-width:400px){
+  .friend-actions{flex-direction:column;gap:4px}
+  .friend-stats{flex-direction:column;gap:2px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Accueil</a>
+  <h1>👥 Amis</h1>
+  <div class="spacer"></div>
+</div>
+
+<!-- Invite section -->
+<div class="section">
+  <div class="section-title">Invite tes amis</div>
+  <div class="invite-grid">
+    <button class="invite-btn whatsapp" onclick="inviteWhatsApp()"><span>📱</span> Inviter par WhatsApp</button>
+    <button class="invite-btn sms" onclick="inviteSMS()"><span>💬</span> Inviter par SMS</button>
+    <button class="invite-btn copy" onclick="copyLink()"><span>🔗</span> Copier mon lien</button>
+  </div>
+  <div class="invite-note">Plus tu invites d'amis, plus ton impact est grand !</div>
+</div>
+
+<!-- Friends list -->
+<div class="section">
+  <div class="section-title">Mes amis</div>
+  <div id="friends-list"></div>
+</div>
+
+<!-- Activity feed -->
+<div class="section">
+  <div class="section-title">Fil d'activite</div>
+  <div id="activity-feed"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="defis.html"><span>🏆</span>Defis</a>
+  <a href="amis.html" class="active"><span>👥</span>Amis</a>
+  <a href="engagements.html"><span>🌍</span>Explorer</a>
+  <a href="compteurs.html"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-social.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('planet_user')); } catch(e) {}
+
+  // ---- Invite functions ----
+  window.inviteWhatsApp = function() {
+    var msg = PlanetSocial.getShareMessage();
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+    showToast('Ouverture de WhatsApp...');
+  };
+
+  window.inviteSMS = function() {
+    var msg = PlanetSocial.getShareMessage();
+    window.location.href = 'sms:?body=' + encodeURIComponent(msg);
+    showToast('Ouverture des SMS...');
+  };
+
+  window.copyLink = function() {
+    var url = PlanetSocial.getShareURL();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function() {
+        showToast('Lien copie ! 📋');
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      showToast('Lien copie ! 📋');
+    }
+  };
+
+  function showToast(msg) {
+    var toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2500);
+  }
+
+  // ---- Friends list ----
+  function renderFriends() {
+    var container = document.getElementById('friends-list');
+    var friends = PlanetSocial.getFriends();
+    container.innerHTML = '';
+    friends.forEach(function(f) {
+      var card = document.createElement('div');
+      card.className = 'friend-card';
+      card.innerHTML =
+        '<div class="friend-avatar" style="background:' + f.color + '">' + f.avatar + '</div>' +
+        '<div class="friend-info">' +
+          '<div class="friend-name">' + f.name + ' <span class="friend-badge">Niv. ' + f.level + '</span></div>' +
+          '<div class="friend-stats">' +
+            '<span>⭐ ' + f.xp + ' XP</span>' +
+            '<span>🔥 ' + f.streak + ' jours</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="friend-actions">' +
+          '<button class="friend-btn defi" onclick="defierAmi(\'' + f.id + '\')">💪 Defier</button>' +
+          '<button class="friend-btn bravo" onclick="encouragerAmi(\'' + f.name + '\', this)">👏 Bravo</button>' +
+        '</div>';
+      container.appendChild(card);
+    });
+  }
+
+  window.defierAmi = function(friendId) {
+    window.location.href = 'defis.html?ami=' + friendId;
+  };
+
+  window.encouragerAmi = function(name, btn) {
+    btn.textContent = '✅ Envoye';
+    btn.classList.add('clicked');
+    showToast('Encouragement envoye a ' + name + ' ! 👏');
+  };
+
+  // ---- Activity feed ----
+  function renderActivities() {
+    var container = document.getElementById('activity-feed');
+    var activities = PlanetSocial.DEMO_ACTIVITIES;
+    container.innerHTML = '';
+    activities.forEach(function(a, idx) {
+      var item = document.createElement('div');
+      item.className = 'activity-item';
+      item.innerHTML =
+        '<div class="activity-icon">' + a.icon + '</div>' +
+        '<div class="activity-content">' +
+          '<span class="activity-user">' + a.user + '</span>' +
+          '<div class="activity-text">' + a.text + '</div>' +
+          '<div class="activity-time">' + a.time + '</div>' +
+          '<div class="activity-actions">' +
+            '<button class="activity-btn bravo" onclick="clickBravo(this)">👏 Bravo</button>' +
+            '<button class="activity-btn moiaussi" onclick="clickMoiAussi(this)">💪 Moi aussi</button>' +
+          '</div>' +
+        '</div>';
+      container.appendChild(item);
+    });
+  }
+
+  window.clickBravo = function(btn) {
+    btn.textContent = '👏 Envoye !';
+    btn.classList.add('clicked');
+  };
+
+  window.clickMoiAussi = function(btn) {
+    btn.textContent = '💪 Note !';
+    btn.classList.add('clicked');
+    showToast('Engagement note ! Continue comme ca !');
+  };
+
+  // ---- Init ----
+  renderFriends();
+  renderActivities();
+})();
+</script>
+</body>
+</html>

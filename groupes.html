@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Groupes</title>
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);
+  --card-hover:rgba(16,185,129,0.15);--danger:#EF4444;--blue:#3B82F6;
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.section{padding:20px;max-width:600px;margin:0 auto}
+.section-title{font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--card-border)}
+
+/* Form */
+.form-group{margin-bottom:14px}
+.form-label{font-size:.85rem;font-weight:700;margin-bottom:6px;display:block}
+.form-input{width:100%;padding:14px 16px;border:2px solid var(--card-border);border-radius:12px;background:var(--card);color:var(--text);font-size:1rem;font-weight:600;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--accent)}
+.form-input::placeholder{color:var(--text-dim);font-weight:400}
+.form-select{width:100%;padding:14px 16px;border:2px solid var(--card-border);border-radius:12px;background:var(--card);color:var(--text);font-size:1rem;font-weight:600;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.form-select:focus{border-color:var(--accent)}
+.form-select option{background:#1a2744;color:var(--text)}
+
+.btn-create{width:100%;padding:16px;border:none;border-radius:14px;background:var(--accent);color:#fff;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s}
+.btn-create:hover{background:var(--accent-light);transform:translateY(-2px)}
+
+/* Group card */
+.group-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:20px;margin-bottom:12px;cursor:pointer;transition:all .2s}
+.group-card:hover{border-color:var(--accent);background:var(--card-hover)}
+.group-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.group-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.group-icon.famille{background:rgba(236,72,153,0.2);border:1px solid rgba(236,72,153,0.3)}
+.group-icon.entreprise{background:rgba(59,130,246,0.2);border:1px solid rgba(59,130,246,0.3)}
+.group-icon.amis{background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.3)}
+.group-icon.classe{background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.3)}
+.group-icon.commune{background:rgba(251,191,36,0.2);border:1px solid rgba(251,191,36,0.3)}
+.group-info{flex:1}
+.group-name{font-size:1rem;font-weight:800}
+.group-meta{font-size:.75rem;color:var(--text-dim);margin-top:2px;display:flex;gap:10px;flex-wrap:wrap}
+.group-challenge{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2);border-radius:10px;padding:10px 14px;margin-top:8px}
+.group-challenge-title{font-size:.8rem;font-weight:700;color:var(--gold);margin-bottom:6px}
+.group-progress-bar{background:rgba(255,255,255,0.08);border-radius:6px;height:8px;overflow:hidden}
+.group-progress-fill{height:100%;background:var(--gold);border-radius:6px;transition:width .5s}
+
+/* Group detail */
+.group-detail{display:none}
+.group-detail.show{display:block}
+.group-list-view{display:block}
+.group-list-view.hide{display:none}
+
+.detail-back{font-size:.85rem;font-weight:600;color:var(--accent);cursor:pointer;margin-bottom:16px;display:inline-flex;align-items:center;gap:4px}
+.detail-header{text-align:center;margin-bottom:20px}
+.detail-name{font-size:1.4rem;font-weight:900}
+.detail-code{font-size:.8rem;color:var(--text-dim);margin-top:4px}
+.detail-stats{display:flex;gap:12px;justify-content:center;margin-top:12px}
+.detail-stat{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:10px 16px;text-align:center}
+.detail-stat-val{font-size:1.2rem;font-weight:900;color:var(--accent)}
+.detail-stat-label{font-size:.65rem;color:var(--text-dim);margin-top:2px}
+
+.member-row{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border:1px solid var(--card-border);border-radius:10px;margin-bottom:6px}
+.member-rank{font-size:1rem;font-weight:900;color:var(--gold);width:28px;text-align:center;flex-shrink:0}
+.member-name{flex:1;font-size:.9rem;font-weight:700}
+.member-xp{font-size:.8rem;font-weight:700;color:var(--accent)}
+.member-level{font-size:.7rem;color:var(--text-dim)}
+
+.btn-share-code{width:100%;padding:14px;border:none;border-radius:12px;background:rgba(16,185,129,0.15);color:var(--accent);font-size:.9rem;font-weight:700;cursor:pointer;border:1px solid rgba(16,185,129,0.3);margin-top:12px;transition:all .2s}
+.btn-share-code:hover{background:rgba(16,185,129,0.25)}
+
+.btn-new-challenge{width:100%;padding:14px;border:none;border-radius:12px;background:rgba(251,191,36,0.15);color:var(--gold);font-size:.9rem;font-weight:700;cursor:pointer;border:1px solid rgba(251,191,36,0.3);margin-top:8px;transition:all .2s}
+.btn-new-challenge:hover{background:rgba(251,191,36,0.25)}
+
+/* Join */
+.join-row{display:flex;gap:8px}
+.join-input{flex:1;padding:14px 16px;border:2px solid var(--card-border);border-radius:12px;background:var(--card);color:var(--text);font-size:1rem;font-weight:600;outline:none;text-transform:uppercase;letter-spacing:1px}
+.join-input:focus{border-color:var(--accent)}
+.join-btn{padding:14px 20px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;transition:all .2s}
+.join-btn:hover{background:var(--accent-light)}
+
+/* Code display */
+.code-display{text-align:center;padding:20px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:14px;margin-top:14px;display:none}
+.code-display.show{display:block}
+.code-value{font-size:1.8rem;font-weight:900;letter-spacing:3px;color:var(--accent);margin:8px 0}
+.code-label{font-size:.8rem;color:var(--text-dim)}
+.code-share-btns{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.code-share-btn{padding:10px 16px;border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s}
+.code-share-btn.wa{background:#25D366;color:#fff}
+.code-share-btn.sms{background:var(--blue);color:#fff}
+.code-share-btn.cp{background:var(--card);color:var(--text);border:1px solid var(--card-border)}
+
+/* Toast */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 24px;border-radius:30px;font-size:.85rem;font-weight:700;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Accueil</a>
+  <h1>👨‍👩‍👧‍👦 Groupes</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="group-list-view" id="list-view">
+
+<!-- Create group -->
+<div class="section">
+  <div class="section-title">Creer un groupe</div>
+  <div class="form-group">
+    <label class="form-label">Nom du groupe</label>
+    <input type="text" class="form-input" id="group-name" placeholder="Ex: Famille Dupont" maxlength="40">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Type</label>
+    <select class="form-select" id="group-type">
+      <option value="Famille">👨‍👩‍👧‍👦 Famille</option>
+      <option value="Amis">🤝 Amis</option>
+      <option value="Entreprise">🏢 Entreprise</option>
+      <option value="Classe">🎓 Classe</option>
+      <option value="Commune">🏘️ Commune</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Description (optionnel)</label>
+    <input type="text" class="form-input" id="group-desc" placeholder="Objectif du groupe..." maxlength="100">
+  </div>
+  <button class="btn-create" onclick="createGroup()">Creer le groupe 🌍</button>
+  <div class="code-display" id="code-display">
+    <div class="code-label">Code d'invitation</div>
+    <div class="code-value" id="new-code"></div>
+    <div class="code-label">Partage ce code a tes proches !</div>
+    <div class="code-share-btns">
+      <button class="code-share-btn wa" onclick="shareCodeWA()">📱 WhatsApp</button>
+      <button class="code-share-btn sms" onclick="shareCodeSMS()">💬 SMS</button>
+      <button class="code-share-btn cp" onclick="shareCodeCopy()">📋 Copier</button>
+    </div>
+  </div>
+</div>
+
+<!-- My groups -->
+<div class="section">
+  <div class="section-title">Mes groupes</div>
+  <div id="groups-list"></div>
+</div>
+
+<!-- Join group -->
+<div class="section">
+  <div class="section-title">Rejoindre un groupe</div>
+  <div class="join-row">
+    <input type="text" class="join-input" id="join-code" placeholder="PLAN-XXXXXX" maxlength="11">
+    <button class="join-btn" onclick="joinGroup()">Rejoindre</button>
+  </div>
+</div>
+
+</div>
+
+<!-- Group detail -->
+<div class="group-detail" id="detail-view">
+  <div class="section">
+    <div class="detail-back" onclick="backToList()">&larr; Retour</div>
+    <div class="detail-header">
+      <div class="detail-name" id="detail-name"></div>
+      <div class="detail-code" id="detail-code"></div>
+      <div class="detail-stats">
+        <div class="detail-stat"><div class="detail-stat-val" id="detail-members">0</div><div class="detail-stat-label">membres</div></div>
+        <div class="detail-stat"><div class="detail-stat-val" id="detail-xp">0</div><div class="detail-stat-label">XP total</div></div>
+        <div class="detail-stat"><div class="detail-stat-val" id="detail-level">0</div><div class="detail-stat-label">niveau groupe</div></div>
+      </div>
+    </div>
+    <div id="detail-challenge"></div>
+    <div class="section-title" style="margin-top:20px">Classement</div>
+    <div id="detail-leaderboard"></div>
+    <button class="btn-share-code" id="detail-share" onclick="shareGroupCode()">📋 Partager le code d'invitation</button>
+    <button class="btn-new-challenge" onclick="showToast('Nouveau defi lance ! 🏆')">🏆 Lancer un nouveau defi</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="defis.html"><span>🏆</span>Defis</a>
+  <a href="amis.html"><span>👥</span>Amis</a>
+  <a href="engagements.html"><span>🌍</span>Explorer</a>
+  <a href="compteurs.html"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-social.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var lastCreatedCode = '';
+  var currentDetailGroup = null;
+
+  function showToastFn(msg) {
+    var toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2500);
+  }
+  window.showToast = showToastFn;
+
+  var typeIcons = { 'Famille': '👨‍👩‍👧‍👦', 'Amis': '🤝', 'Entreprise': '🏢', 'Classe': '🎓', 'Commune': '🏘️' };
+  var typeClasses = { 'Famille': 'famille', 'Amis': 'amis', 'Entreprise': 'entreprise', 'Classe': 'classe', 'Commune': 'commune' };
+
+  // ---- Create group ----
+  window.createGroup = function() {
+    var name = document.getElementById('group-name').value.trim();
+    var type = document.getElementById('group-type').value;
+    var desc = document.getElementById('group-desc').value.trim();
+    if (!name) { showToastFn('Donne un nom au groupe !'); return; }
+    var group = PlanetSocial.createGroup(name, type, desc);
+    lastCreatedCode = group.code;
+    document.getElementById('new-code').textContent = group.code;
+    document.getElementById('code-display').classList.add('show');
+    document.getElementById('group-name').value = '';
+    document.getElementById('group-desc').value = '';
+    renderGroups();
+    showToastFn('Groupe cree ! 🎉');
+  };
+
+  window.shareCodeWA = function() {
+    var msg = 'Rejoins mon groupe SOS Planet ! Code : ' + lastCreatedCode + ' 🌍 https://sos-planet.pages.dev/groupes.html';
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  };
+  window.shareCodeSMS = function() {
+    var msg = 'Rejoins mon groupe SOS Planet ! Code : ' + lastCreatedCode + ' 🌍 https://sos-planet.pages.dev/groupes.html';
+    window.location.href = 'sms:?body=' + encodeURIComponent(msg);
+  };
+  window.shareCodeCopy = function() {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(lastCreatedCode);
+    }
+    showToastFn('Code copie ! 📋');
+  };
+
+  // ---- Join group ----
+  window.joinGroup = function() {
+    var code = document.getElementById('join-code').value.trim().toUpperCase();
+    if (!code) { showToastFn('Entre un code d\'invitation'); return; }
+    var group = PlanetSocial.joinGroup(code);
+    if (group) {
+      showToastFn('Tu as rejoint "' + group.name + '" ! 🎉');
+      document.getElementById('join-code').value = '';
+      renderGroups();
+    } else {
+      showToastFn('Code introuvable 😕');
+    }
+  };
+
+  // ---- Render groups ----
+  function renderGroups() {
+    var container = document.getElementById('groups-list');
+    var groups = PlanetSocial.getGroups();
+    container.innerHTML = '';
+    groups.forEach(function(g, idx) {
+      var icon = typeIcons[g.type] || '👥';
+      var cls = typeClasses[g.type] || 'amis';
+      var card = document.createElement('div');
+      card.className = 'group-card';
+      card.onclick = function() { showDetail(g); };
+      var challengeHTML = '';
+      if (g.currentChallenge) {
+        challengeHTML = '<div class="group-challenge">' +
+          '<div class="group-challenge-title">🏆 ' + g.currentChallenge + '</div>' +
+          '<div class="group-progress-bar"><div class="group-progress-fill" style="width:' + g.challengeProgress + '%"></div></div>' +
+          '</div>';
+      }
+      card.innerHTML =
+        '<div class="group-header">' +
+          '<div class="group-icon ' + cls + '">' + icon + '</div>' +
+          '<div class="group-info">' +
+            '<div class="group-name">' + g.name + '</div>' +
+            '<div class="group-meta">' +
+              '<span>👥 ' + g.members.length + ' membres</span>' +
+              '<span>⭐ ' + g.totalXP.toLocaleString('fr-FR') + ' XP</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>' + challengeHTML;
+      container.appendChild(card);
+    });
+  }
+
+  // ---- Group detail ----
+  function showDetail(group) {
+    currentDetailGroup = group;
+    document.getElementById('list-view').classList.add('hide');
+    document.getElementById('detail-view').classList.add('show');
+    document.getElementById('detail-name').textContent = group.name;
+    document.getElementById('detail-code').textContent = 'Code : ' + group.code;
+    document.getElementById('detail-members').textContent = group.members.length;
+    document.getElementById('detail-xp').textContent = group.totalXP.toLocaleString('fr-FR');
+    var groupLevel = Math.min(10, Math.floor(group.totalXP / 500) + 1);
+    document.getElementById('detail-level').textContent = groupLevel;
+
+    // Challenge
+    var chEl = document.getElementById('detail-challenge');
+    if (group.currentChallenge) {
+      chEl.innerHTML = '<div class="group-challenge" style="margin-bottom:0">' +
+        '<div class="group-challenge-title">🏆 Defi en cours : ' + group.currentChallenge + '</div>' +
+        '<div class="group-progress-bar"><div class="group-progress-fill" style="width:' + group.challengeProgress + '%"></div></div>' +
+        '</div>';
+    } else {
+      chEl.innerHTML = '';
+    }
+
+    // Leaderboard
+    var lb = document.getElementById('detail-leaderboard');
+    lb.innerHTML = '';
+    var sorted = group.members.slice().sort(function(a, b) { return b.xp - a.xp; });
+    sorted.forEach(function(m, i) {
+      var rankEmoji = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i + 1)));
+      var row = document.createElement('div');
+      row.className = 'member-row';
+      row.innerHTML =
+        '<div class="member-rank">' + rankEmoji + '</div>' +
+        '<div class="member-name">' + m.name + '</div>' +
+        '<div style="text-align:right"><div class="member-xp">' + m.xp + ' XP</div><div class="member-level">Niv. ' + m.level + '</div></div>';
+      lb.appendChild(row);
+    });
+
+    lastCreatedCode = group.code;
+  }
+
+  window.backToList = function() {
+    document.getElementById('list-view').classList.remove('hide');
+    document.getElementById('detail-view').classList.remove('show');
+  };
+
+  window.shareGroupCode = function() {
+    if (currentDetailGroup && navigator.clipboard) {
+      navigator.clipboard.writeText(currentDetailGroup.code);
+    }
+    showToastFn('Code copie ! 📋');
+  };
+
+  // ---- Init ----
+  renderGroups();
+})();
+</script>
+</body>
+</html>
