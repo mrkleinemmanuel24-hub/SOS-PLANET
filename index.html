@@ -465,6 +465,7 @@ a{color:var(--accent);text-decoration:none}
       <a href="projets.html" class="quick-action" style="border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.08)"><span class="quick-action-icon">🌱</span><div class="quick-action-name">Projets pres de chez toi</div></a>
       <a href="evenements.html" class="quick-action" style="border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.08)"><span class="quick-action-icon">📅</span><div class="quick-action-name">Prochain evenement</div></a>
       <a href="mentorat.html" class="quick-action" style="border-color:rgba(59,130,246,0.4);background:rgba(59,130,246,0.08)"><span class="quick-action-icon">🤝</span><div class="quick-action-name">Mentorat</div></a>
+      <a href="videos.html" class="quick-action" style="border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.08)"><span class="quick-action-icon">📹</span><div class="quick-action-name">Videos inspirantes</div></a>
       <a href="engagements.html" class="quick-action"><span class="quick-action-icon">➕</span><div class="quick-action-name">Ajouter un engagement</div></a>
       <a href="pfas.html" class="quick-action"><span class="quick-action-icon">🚰</span><div class="quick-action-name">Verifier mon eau</div></a>
       <a href="echanges.html" class="quick-action"><span class="quick-action-icon">🔄</span><div class="quick-action-name">Echanger</div></a>
@@ -492,62 +493,12 @@ a{color:var(--accent);text-decoration:none}
     </div>
   </div>
 
-  <!-- Videos -->
+  <!-- Video du jour -->
   <div class="videos-section">
-    <div class="videos-title">Comprendre et agir</div>
-    <div class="videos-scroll">
-      <div class="video-card">
-        <div class="video-thumb">
-          <div style="position:relative;width:100%;height:100%;background:linear-gradient(135deg,#1a3a5c,#0d7377);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
-            <span style="font-size:2.5rem">🌡️</span>
-            <span style="font-size:.75rem;font-weight:700;color:#fff;text-align:center;padding:0 12px">Le changement climatique en 2 minutes</span>
-            <span style="font-size:1.8rem;opacity:.7">▶</span>
-          </div>
-        </div>
-        <div class="video-info">
-          <div class="video-info-title">2 minutes pour comprendre le changement climatique</div>
-          <div class="video-info-dur">🎬 Bientot disponible</div>
-        </div>
-      </div>
-      <div class="video-card">
-        <div class="video-thumb">
-          <div style="position:relative;width:100%;height:100%;background:linear-gradient(135deg,#4a1942,#c62368);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
-            <span style="font-size:2.5rem">🚰</span>
-            <span style="font-size:.75rem;font-weight:700;color:#fff;text-align:center;padding:0 12px">PFAS : les polluants eternels</span>
-            <span style="font-size:1.8rem;opacity:.7">▶</span>
-          </div>
-        </div>
-        <div class="video-info">
-          <div class="video-info-title">Les PFAS, polluants eternels : enquete</div>
-          <div class="video-info-dur">🎬 Bientot disponible</div>
-        </div>
-      </div>
-      <div class="video-card">
-        <div class="video-thumb">
-          <div style="position:relative;width:100%;height:100%;background:linear-gradient(135deg,#0f5132,#198754);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
-            <span style="font-size:2.5rem">🌿</span>
-            <span style="font-size:.75rem;font-weight:700;color:#fff;text-align:center;padding:0 12px">Reduire son empreinte carbone</span>
-            <span style="font-size:1.8rem;opacity:.7">▶</span>
-          </div>
-        </div>
-        <div class="video-info">
-          <div class="video-info-title">Comment reduire son empreinte carbone au quotidien</div>
-          <div class="video-info-dur">🎬 Bientot disponible</div>
-        </div>
-      </div>
-      <div class="video-card">
-        <div class="video-thumb">
-          <div style="position:relative;width:100%;height:100%;background:linear-gradient(135deg,#7b2d26,#e8590c);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
-            <span style="font-size:2.5rem">💼</span>
-            <span style="font-size:.75rem;font-weight:700;color:#fff;text-align:center;padding:0 12px">Entrepreneurs a impact</span>
-            <span style="font-size:1.8rem;opacity:.7">▶</span>
-          </div>
-        </div>
-        <div class="video-info">
-          <div class="video-info-title">Entrepreneurs a impact : ils changent le monde</div>
-          <div class="video-info-dur">🎬 Bientot disponible</div>
-        </div>
-      </div>
+    <div class="videos-title">Video du jour</div>
+    <div id="video-du-jour"></div>
+    <div style="text-align:center;margin-top:12px">
+      <a href="videos.html" style="font-size:.85rem;font-weight:700;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:6px">Voir toutes les videos &rarr;</a>
     </div>
   </div>
 
@@ -630,7 +581,7 @@ a{color:var(--accent);text-decoration:none}
   <a href="index.html" class="active"><span>🏠</span>Accueil</a>
   <a href="engagements.html"><span>✅</span>Engagements</a>
   <a href="projets.html"><span>🌱</span>Projets</a>
-  <a href="evenements.html"><span>📅</span>Evenements</a>
+  <a href="videos.html"><span>📹</span>Videos</a>
   <a href="compteurs.html"><span>📊</span>Impact</a>
 </nav>
 
@@ -1262,6 +1213,42 @@ a{color:var(--accent);text-decoration:none}
   };
 
   // ==== PERSONALIZED FEED (after 7-day journey) ====
+  function renderVideoDuJour() {
+    var VIDS = [
+      { emoji:'🌍', title:'La Fresque du Climat — Comprendre en 3 heures', desc:"L'atelier qui change ta vision du monde.", search:'fresque+du+climat', gradient:'linear-gradient(135deg,#0d7377,#14532d)' },
+      { emoji:'🥗', title:'Le circuit court, c\'est quoi ?', desc:'AMAP, marches locaux, producteurs.', search:'circuit+court+AMAP+explication', gradient:'linear-gradient(135deg,#92400e,#eab308)' },
+      { emoji:'♻️', title:'Zero dechet : par ou commencer', desc:'5 premiers gestes simples.', search:'zero+dechet+debutant+france', gradient:'linear-gradient(135deg,#14532d,#059669)' },
+      { emoji:'🔧', title:'Repair Cafe : on repare tout !', desc:'Plutot que jeter, on repare ensemble.', search:'repair+cafe+france+comment', gradient:'linear-gradient(135deg,#581c87,#a855f7)' },
+      { emoji:'🌱', title:'Creer son jardin partage', desc:'Du beton au potager.', search:'jardin+partage+urbain+france', gradient:'linear-gradient(135deg,#065f46,#34d399)' },
+      { emoji:'🏭', title:'L\'economie circulaire expliquee', desc:'Rien ne se perd, tout se transforme.', search:'economie+circulaire+explication', gradient:'linear-gradient(135deg,#1e3a5f,#0891b2)' },
+      { emoji:'🍽️', title:'Disco Soupe : cuisiner contre le gaspi', desc:'500 kg de legumes sauves en une soiree.', search:'disco+soupe+anti+gaspillage', gradient:'linear-gradient(135deg,#9a3412,#f59e0b)' },
+      { emoji:'🐝', title:'Sauver les abeilles en ville', desc:'L\'apiculture urbaine, une solution ?', search:'apiculture+urbaine+sauver+abeilles', gradient:'linear-gradient(135deg,#713f12,#facc15)' },
+      { emoji:'👕', title:'La mode ethique, c\'est possible', desc:'Acheter moins mais mieux.', search:'mode+ethique+france+durable', gradient:'linear-gradient(135deg,#831843,#ec4899)' },
+      { emoji:'🚲', title:'Le velo change la ville', desc:'Comment les cyclistes transforment nos rues.', search:'velo+ville+france+mobilite', gradient:'linear-gradient(135deg,#1e3a5f,#3b82f6)' },
+      { emoji:'🏡', title:'Tiny house : vivre avec moins', desc:'Moins de m2, plus de liberte.', search:'tiny+house+france+temoignage', gradient:'linear-gradient(135deg,#365314,#84cc16)' },
+      { emoji:'🤝', title:'mod\'emplois : des projets qui changent le monde', desc:'Entrepreneurs a impact en France.', search:'mod+emplois+entrepreneur+impact', gradient:'linear-gradient(135deg,#7f1d1d,#ef4444)' }
+    ];
+    // Pick video of the day based on date
+    var dayIndex = Math.floor(Date.now() / 86400000) % VIDS.length;
+    var v = VIDS[dayIndex];
+    var container = document.getElementById('video-du-jour');
+    if (!container) return;
+    container.innerHTML =
+      '<div class="video-card" style="width:100%;max-width:400px;margin:0 auto;cursor:pointer" onclick="window.open(\'https://www.youtube.com/results?search_query=' + v.search + '\',\'_blank\')">' +
+        '<div class="video-thumb">' +
+          '<div style="position:relative;width:100%;height:100%;background:' + v.gradient + ';display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">' +
+            '<span style="font-size:2.5rem">' + v.emoji + '</span>' +
+            '<span style="font-size:.75rem;font-weight:700;color:#fff;text-align:center;padding:0 12px">' + v.title + '</span>' +
+            '<span style="font-size:1.8rem;opacity:.7;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)">▶</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="video-info">' +
+          '<div class="video-info-title">' + v.title + '</div>' +
+          '<div class="video-info-dur" style="color:var(--accent)">' + v.desc + '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
   function renderPersonalizedFeed() {
     var day = PlanetSocial.getJourneyDay();
     if (day <= 7) return; // Still in journey
@@ -1383,6 +1370,7 @@ a{color:var(--accent);text-decoration:none}
     renderSocialFeed();
     renderInvitePrompt();
     renderPersonalizedFeed();
+    renderVideoDuJour();
     checkReminder();
     // Progressive unlock system
     if (window.PlanetTutorial) {
