@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Projets a impact</title>
+<meta name="description" content="Rejoins un projet a impact pres de chez toi. Environnement, solidarite, alimentation, education.">
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);--card-hover:rgba(16,185,129,0.15);
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.hero{text-align:center;padding:32px 20px 24px}
+.hero-emoji{font-size:3rem;display:block;margin-bottom:12px}
+.hero h2{font-size:1.6rem;font-weight:900;margin-bottom:8px;line-height:1.2}
+.hero p{color:var(--text-dim);font-size:.9rem;max-width:480px;margin:0 auto;line-height:1.5}
+.hero-stat{margin-top:12px;font-size:.85rem;color:var(--accent);font-weight:700}
+
+/* Search */
+.search-bar{padding:0 20px 16px;max-width:720px;margin:0 auto}
+.search-input{width:100%;padding:12px 16px 12px 42px;border:1px solid var(--card-border);border-radius:12px;background:var(--card);color:var(--text);font-size:.9rem;font-family:inherit;outline:none;transition:border-color .2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:14px center}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--text-dim)}
+
+/* Tabs */
+.tabs{display:flex;gap:8px;padding:0 20px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:720px;margin:0 auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:8px 18px;border-radius:24px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;border:1px solid var(--card-border);background:var(--card);color:var(--text-dim);transition:all .2s;user-select:none}
+.tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.tab:hover:not(.active){border-color:var(--accent);color:var(--accent)}
+
+/* City filter */
+.city-bar{display:flex;gap:6px;padding:0 20px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:720px;margin:0 auto}
+.city-bar::-webkit-scrollbar{display:none}
+.city-pill{padding:5px 12px;border-radius:16px;font-size:.7rem;font-weight:600;cursor:pointer;white-space:nowrap;border:1px solid var(--card-border);background:transparent;color:var(--text-dim);transition:all .2s}
+.city-pill.active{background:rgba(251,191,36,0.15);border-color:var(--gold);color:var(--gold)}
+
+/* Grid */
+.projects-grid{display:grid;grid-template-columns:1fr;gap:12px;padding:0 20px 20px;max-width:720px;margin:0 auto}
+@media(min-width:540px){.projects-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:800px){.projects-grid{grid-template-columns:1fr 1fr 1fr}}
+
+.project-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:20px;transition:all .3s;position:relative;overflow:hidden}
+.project-card:hover{border-color:var(--accent);background:var(--card-hover);transform:translateY(-2px)}
+.project-cat{position:absolute;top:12px;right:12px;font-size:.6rem;font-weight:700;padding:3px 10px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px}
+.project-cat.env{background:rgba(16,185,129,0.2);color:var(--accent)}
+.project-cat.sol{background:rgba(251,191,36,0.2);color:var(--gold)}
+.project-cat.ali{background:rgba(239,68,68,0.15);color:#F87171}
+.project-cat.edu{background:rgba(59,130,246,0.2);color:#60A5FA}
+.project-emoji{font-size:2rem;display:block;margin-bottom:10px}
+.project-title{font-size:1rem;font-weight:800;margin-bottom:6px;line-height:1.3}
+.project-desc{font-size:.82rem;color:var(--text-dim);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.project-meta{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.75rem;color:var(--text-dim)}
+.project-loc{display:flex;align-items:center;gap:4px}
+.project-people{display:flex;align-items:center;gap:4px;color:var(--accent);font-weight:600}
+.btn-join{width:100%;padding:10px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-join:hover{background:var(--accent-light);transform:scale(1.02)}
+.btn-join.joined{background:rgba(16,185,129,0.15);color:var(--accent);border:1px solid var(--accent)}
+
+.create-banner{background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(16,185,129,0.15));border:1px solid var(--gold);border-radius:16px;padding:24px;text-align:center;margin:0 20px 20px;max-width:680px;margin-left:auto;margin-right:auto}
+.create-banner h3{font-size:1.1rem;font-weight:800;color:var(--gold);margin-bottom:6px}
+.create-banner p{font-size:.85rem;color:var(--text-dim);margin-bottom:14px}
+.create-banner a{display:inline-block;padding:10px 28px;border-radius:24px;background:var(--gold);color:#0A1628;font-weight:700;font-size:.9rem;transition:all .2s}
+.create-banner a:hover{transform:scale(1.05)}
+
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-dim);font-size:.9rem}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Accueil</a>
+  <h1>Projets a impact</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <span class="hero-emoji">🌱</span>
+  <h2>Rejoins un projet pres de chez toi</h2>
+  <p>Des milliers de citoyens agissent deja dans leur quartier. Trouve le projet qui te correspond et rejoins l'aventure.</p>
+  <div class="hero-stat">8 247 projets actifs en France — 142 000 participants</div>
+</div>
+
+<div class="search-bar">
+  <input type="text" class="search-input" id="search" placeholder="Rechercher un projet..." oninput="filterProjects()">
+</div>
+
+<div class="tabs" id="tabs"></div>
+<div class="city-bar" id="city-bar"></div>
+
+<div class="projects-grid" id="projects-grid"></div>
+
+<div class="create-banner">
+  <h3>Tu as une idee ? Lance ton projet !</h3>
+  <p>8 000 projets sont nes comme ca — une idee, une personne, un premier pas.</p>
+  <a href="creer-projet.html">Creer mon projet</a>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="engagements.html"><span>✅</span>Engagements</a>
+  <a href="projets.html" class="active"><span>🌱</span>Projets</a>
+  <a href="evenements.html"><span>📅</span>Evenements</a>
+  <a href="compteurs.html"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-moderation.js"></script>
+<script src="js/cgu-gate.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var CATEGORIES = ['Tous','Environnement','Solidarite','Alimentation','Education'];
+  var CAT_SHORT = {Environnement:'env',Solidarite:'sol',Alimentation:'ali',Education:'edu'};
+  var CITIES = ['Toutes','Paris','Lyon','Marseille','Bordeaux','Nantes','Lille','Toulouse','Strasbourg'];
+  var currentCat = 'Tous';
+  var currentCity = 'Toutes';
+
+  var PROJECTS = [
+    // Environnement (10)
+    {emoji:'🌿',title:'AMAP Bio du Marais',desc:'Panier de legumes bio chaque semaine, direct du producteur. Circuit court et zero intermediaire.',city:'Paris',cat:'Environnement',people:187},
+    {emoji:'🔧',title:'Repair Cafe Confluence',desc:'Repare tes objets au lieu de les jeter. Electromenager, velo, couture, electronique.',city:'Lyon',cat:'Environnement',people:134},
+    {emoji:'🧹',title:'Clean Walk Canal Saint-Martin',desc:'Ramassage de dechets convivial tous les samedis matin. 2 tonnes ramassees en 2025.',city:'Paris',cat:'Environnement',people:89},
+    {emoji:'🌻',title:'Jardin Partage des Chartrons',desc:'200m2 de potager collectif en plein centre-ville. Legumes, fleurs, convivialite.',city:'Bordeaux',cat:'Environnement',people:56},
+    {emoji:'♻️',title:'Compost Collectif Vauban',desc:'Point de compostage de quartier. 15 tonnes de dechets detournes de la poubelle en 1 an.',city:'Strasbourg',cat:'Environnement',people:72},
+    {emoji:'🚲',title:'Velo-ecole pour tous',desc:'Apprendre a faire du velo a tout age, gratuit. Cours collectifs les week-ends.',city:'Nantes',cat:'Environnement',people:45},
+    {emoji:'🌱',title:'Grainotheque Municipale',desc:'Echange de graines entre jardiniers. 200+ varietes locales et anciennes disponibles.',city:'Toulouse',cat:'Environnement',people:38},
+    {emoji:'🌳',title:'Plantation Foret Urbaine',desc:'Methode Miyawaki : 500 arbres plantes en 2025. Objectif 2000 en 2026.',city:'Lille',cat:'Environnement',people:167},
+    {emoji:'💧',title:'Sentinelles de l\'eau',desc:'Surveillance citoyenne des cours d\'eau. Analyse, signalement, action.',city:'Marseille',cat:'Environnement',people:53},
+    {emoji:'🐝',title:'Rucher Participatif Croix-Rousse',desc:'3 ruches sur les toits. Formation apiculture urbaine. Miel local.',city:'Lyon',cat:'Environnement',people:29},
+
+    // Solidarite (8)
+    {emoji:'📚',title:'Cours de francais pour migrants',desc:'Benevoles donnent des cours 3 fois par semaine. 120 apprenants cette annee.',city:'Paris',cat:'Solidarite',people:42},
+    {emoji:'🍲',title:'Maraude Solidaire du Vieux-Port',desc:'Distribution de repas chauds les mardis et jeudis. 80 repas par soir.',city:'Marseille',cat:'Solidarite',people:67},
+    {emoji:'☕',title:'Cafe Suspendu Gambetta',desc:'Paye un cafe en plus, il sera offert a quelqu\'un qui en a besoin.',city:'Bordeaux',cat:'Solidarite',people:15},
+    {emoji:'📦',title:'Give Box de quartier',desc:'Boite a dons en libre-service : vetements, livres, jouets. Donner, prendre, partager.',city:'Nantes',cat:'Solidarite',people:34},
+    {emoji:'📖',title:'Bibliotheque de rue',desc:'Livres en libre acces dans le quartier. 500 livres en circulation.',city:'Toulouse',cat:'Solidarite',people:23},
+    {emoji:'🏠',title:'Colocation Solidaire Intergenerationnelle',desc:'Un senior heberge un etudiant. Compagnie et loyer reduit.',city:'Lille',cat:'Solidarite',people:18},
+    {emoji:'🎒',title:'Collecte Fournitures Scolaires',desc:'1 200 kits distribues a la rentree 2025 pour les familles en difficulte.',city:'Strasbourg',cat:'Solidarite',people:89},
+    {emoji:'🤝',title:'Parrainage de Refugies',desc:'Accompagner une famille refugiee dans ses demarches. Formation et soutien.',city:'Lyon',cat:'Solidarite',people:31},
+
+    // Alimentation (6)
+    {emoji:'🍳',title:'Disco Soupe Anti-gaspi',desc:'Cuisine collective avec des invendus. Musique, convivialite, zero gaspillage.',city:'Bordeaux',cat:'Alimentation',people:76},
+    {emoji:'🥕',title:'Potager Partage des Minimes',desc:'100 parcelles en permaculture. Formations gratuites pour debutants.',city:'Toulouse',cat:'Alimentation',people:94},
+    {emoji:'🧑‍🍳',title:'Atelier Cuisine Solidaire',desc:'Apprendre a cuisiner sain et pas cher. Recettes anti-gaspi chaque semaine.',city:'Lille',cat:'Alimentation',people:48},
+    {emoji:'🍎',title:'Verger Collectif de la Butte',desc:'300 arbres fruitiers plantes par des citoyens. Recolte partagee.',city:'Paris',cat:'Alimentation',people:112},
+    {emoji:'🐔',title:'Poulailler Partage Saint-Michel',desc:'6 poules pour 20 familles. OEufs frais, compost naturel, lien social.',city:'Nantes',cat:'Alimentation',people:20},
+    {emoji:'🫙',title:'Conserverie Participative',desc:'Transformer les surplus du jardin en conserves. Ateliers collectifs mensuels.',city:'Strasbourg',cat:'Alimentation',people:35},
+
+    // Education (6)
+    {emoji:'🎨',title:'Atelier Upcycling Creatif',desc:'Transformer les dechets en objets d\'art. Couture, menuiserie, bijoux recycles.',city:'Marseille',cat:'Education',people:41},
+    {emoji:'🌍',title:'Fresque du Climat — Animateurs Benevoles',desc:'Former des animateurs pour sensibiliser au changement climatique.',city:'Paris',cat:'Education',people:198},
+    {emoji:'🔬',title:'Science Citoyenne — Observateurs Nature',desc:'Compter les oiseaux, papillons, pollinisateurs. Donnees pour la recherche.',city:'Lyon',cat:'Education',people:83},
+    {emoji:'🧒',title:'Ecole de la Nature',desc:'Ateliers pour enfants : decouverte de la faune et flore locale, jardinage.',city:'Nantes',cat:'Education',people:57},
+    {emoji:'📱',title:'Ateliers Numerique Senior',desc:'Aider les seniors a utiliser les outils numeriques au quotidien.',city:'Bordeaux',cat:'Education',people:33},
+    {emoji:'🎓',title:'Tutorat Ecolo pour Lyceens',desc:'Preparer les jeunes aux metiers de la transition ecologique. Mentorat et stages.',city:'Toulouse',cat:'Education',people:26}
+  ];
+
+  // Load user-created projects
+  var userProjects = [];
+  try { userProjects = JSON.parse(localStorage.getItem('planet_user_projects')) || []; } catch(e) {}
+  var allProjects = userProjects.concat(PROJECTS);
+
+  // Joined tracking
+  var joined = [];
+  try { joined = JSON.parse(localStorage.getItem('planet_joined_projects')) || []; } catch(e) {}
+
+  // Build tabs
+  var tabsEl = document.getElementById('tabs');
+  CATEGORIES.forEach(function(cat) {
+    var t = document.createElement('div');
+    t.className = 'tab' + (cat === currentCat ? ' active' : '');
+    t.textContent = cat;
+    t.onclick = function() { currentCat = cat; render(); };
+    tabsEl.appendChild(t);
+  });
+
+  // Build city bar
+  var cityBar = document.getElementById('city-bar');
+  CITIES.forEach(function(city) {
+    var p = document.createElement('div');
+    p.className = 'city-pill' + (city === currentCity ? ' active' : '');
+    p.textContent = city;
+    p.onclick = function() { currentCity = city; render(); };
+    cityBar.appendChild(p);
+  });
+
+  function render() {
+    // Update tabs
+    document.querySelectorAll('.tab').forEach(function(t) {
+      t.classList.toggle('active', t.textContent === currentCat);
+    });
+    document.querySelectorAll('.city-pill').forEach(function(p) {
+      p.classList.toggle('active', p.textContent === currentCity);
+    });
+
+    var query = (document.getElementById('search').value || '').toLowerCase();
+    var grid = document.getElementById('projects-grid');
+    grid.innerHTML = '';
+
+    var filtered = allProjects.filter(function(p) {
+      if (currentCat !== 'Tous' && p.cat !== currentCat) return false;
+      if (currentCity !== 'Toutes' && p.city !== currentCity) return false;
+      if (query && (p.title + ' ' + p.desc + ' ' + p.city).toLowerCase().indexOf(query) === -1) return false;
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">Aucun projet trouve. Essaie d\'elargir ta recherche ou <a href="creer-projet.html">cree le tien</a> !</div>';
+      return;
+    }
+
+    filtered.forEach(function(p, i) {
+      var catClass = CAT_SHORT[p.cat] || 'env';
+      var isJoined = joined.indexOf(p.title) !== -1;
+      var card = document.createElement('div');
+      card.className = 'project-card';
+      card.innerHTML =
+        '<div class="project-cat ' + catClass + '">' + p.cat + '</div>' +
+        '<span class="project-emoji">' + p.emoji + '</span>' +
+        '<div class="project-title">' + p.title + '</div>' +
+        '<div class="project-desc">' + p.desc + '</div>' +
+        '<div class="project-meta">' +
+        '<span class="project-loc">📍 ' + p.city + '</span>' +
+        '<span class="project-people">👥 ' + p.people + ' personnes</span>' +
+        '</div>' +
+        '<button class="btn-join' + (isJoined ? ' joined' : '') + '" data-title="' + p.title.replace(/"/g,'&quot;') + '">' +
+        (isJoined ? '✓ Tu as rejoint ce projet' : 'Rejoindre') + '</button>';
+      grid.appendChild(card);
+    });
+
+    // Bind join buttons
+    grid.querySelectorAll('.btn-join').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var title = this.getAttribute('data-title');
+        if (joined.indexOf(title) !== -1) return;
+        joined.push(title);
+        try { localStorage.setItem('planet_joined_projects', JSON.stringify(joined)); } catch(e) {}
+        this.classList.add('joined');
+        this.textContent = '✓ Tu as rejoint ce projet';
+        // Increment people count visually
+        var peopleSpan = this.closest('.project-card').querySelector('.project-people');
+        var currentCount = parseInt(peopleSpan.textContent.match(/\d+/)[0]);
+        peopleSpan.innerHTML = '👥 ' + (currentCount + 1) + ' personnes';
+      });
+    });
+  }
+
+  window.filterProjects = render;
+  render();
+})();
+</script>
+<script src="js/planet-tutorial.js"></script>
+<script>PlanetTutorial.init('projets');</script>
+</body>
+</html>

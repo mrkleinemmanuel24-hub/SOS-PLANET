@@ -528,16 +528,17 @@ var PlanetTutorial = (function() {
     } else if (level <= 6) {
       navConfig = [
         { href: 'index.html', icon: '&#x1F3E0;', label: 'Accueil' },
-        { href: 'defis.html', icon: '&#x1F3C6;', label: 'Defis' },
-        { href: 'social.html', icon: '&#x1F465;', label: 'Social', minLevel: 5 },
+        { href: 'engagements.html', icon: '&#x2705;', label: 'Engagements' },
+        { href: 'projets.html', icon: '&#x1F331;', label: 'Projets' },
+        { href: 'evenements.html', icon: '&#x1F4C5;', label: 'Evenements', minLevel: 5 },
         { href: 'compteurs.html', icon: '&#x1F4CA;', label: 'Impact' }
       ];
     } else {
       navConfig = [
         { href: 'index.html', icon: '&#x1F3E0;', label: 'Accueil' },
-        { href: 'defis.html', icon: '&#x1F3C6;', label: 'Defis' },
-        { href: 'social.html', icon: '&#x1F465;', label: 'Social' },
-        { href: 'carte.html', icon: '&#x1F5FA;&#xFE0F;', label: 'Carte' },
+        { href: 'engagements.html', icon: '&#x2705;', label: 'Engagements' },
+        { href: 'projets.html', icon: '&#x1F331;', label: 'Projets' },
+        { href: 'evenements.html', icon: '&#x1F4C5;', label: 'Evenements' },
         { href: 'compteurs.html', icon: '&#x1F4CA;', label: 'Impact' }
       ];
     }

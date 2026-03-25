@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Evenements eco pres de chez toi</title>
+<meta name="description" content="Evenements ecologiques et solidaires pres de chez toi. Clean walks, repair cafes, ateliers, fresques du climat.">
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);--card-hover:rgba(16,185,129,0.15);
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.hero{text-align:center;padding:32px 20px 20px}
+.hero-emoji{font-size:3rem;display:block;margin-bottom:12px}
+.hero h2{font-size:1.6rem;font-weight:900;margin-bottom:8px}
+.hero p{color:var(--text-dim);font-size:.9rem;max-width:480px;margin:0 auto;line-height:1.5}
+
+.geo-banner{background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(59,130,246,0.15));border:1px solid var(--accent);border-radius:14px;padding:16px;margin:0 20px 20px;max-width:680px;margin-left:auto;margin-right:auto;text-align:center;display:flex;align-items:center;gap:12px;justify-content:center}
+.geo-banner span{font-size:.85rem;font-weight:600}
+.geo-btn{padding:8px 20px;border:none;border-radius:20px;background:var(--accent);color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* View toggle */
+.view-toggle{display:flex;gap:8px;padding:0 20px 16px;max-width:720px;margin:0 auto}
+.view-btn{padding:8px 18px;border-radius:20px;font-size:.8rem;font-weight:700;cursor:pointer;border:1px solid var(--card-border);background:var(--card);color:var(--text-dim);transition:all .2s;font-family:inherit}
+.view-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* Calendar */
+.calendar{padding:0 20px 20px;max-width:720px;margin:0 auto;display:none}
+.calendar.visible{display:block}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-header h3{font-size:1rem;font-weight:800}
+.cal-nav{background:none;border:1px solid var(--card-border);border-radius:8px;padding:6px 12px;color:var(--text);cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:600}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day-header{text-align:center;font-size:.65rem;font-weight:700;color:var(--text-dim);padding:6px 0}
+.cal-day{text-align:center;padding:10px 4px;border-radius:10px;font-size:.8rem;font-weight:600;cursor:default;position:relative;color:var(--text-dim)}
+.cal-day.has-event{background:rgba(16,185,129,0.15);color:var(--accent);cursor:pointer;font-weight:800}
+.cal-day.has-event:hover{background:rgba(16,185,129,0.3)}
+.cal-day.today{border:2px solid var(--gold);color:var(--gold)}
+.cal-dot{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--accent)}
+
+/* Event list */
+.events-list{padding:0 20px 20px;max-width:720px;margin:0 auto}
+.event-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:18px;margin-bottom:12px;transition:all .3s;display:flex;gap:16px;align-items:flex-start}
+.event-card:hover{border-color:var(--accent);background:var(--card-hover)}
+.event-date-box{flex-shrink:0;width:56px;text-align:center;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:12px;padding:8px 4px}
+.event-date-month{font-size:.6rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px}
+.event-date-day{font-size:1.4rem;font-weight:900;color:var(--accent);line-height:1.2}
+.event-date-dow{font-size:.6rem;color:var(--text-dim);font-weight:600}
+.event-info{flex:1;min-width:0}
+.event-title{font-size:1rem;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.event-desc{font-size:.82rem;color:var(--text-dim);line-height:1.5;margin-bottom:8px}
+.event-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:.75rem;color:var(--text-dim);margin-bottom:10px}
+.event-meta span{display:flex;align-items:center;gap:3px}
+.event-distance{color:var(--gold);font-weight:700}
+.btn-go{padding:8px 20px;border:none;border-radius:20px;background:var(--accent);color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-go:hover{background:var(--accent-light)}
+.btn-go.going{background:rgba(16,185,129,0.15);color:var(--accent);border:1px solid var(--accent)}
+
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-dim);font-size:.9rem}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Accueil</a>
+  <h1>Evenements</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <span class="hero-emoji">📅</span>
+  <h2>Evenements eco pres de chez toi</h2>
+  <p>Des centaines d'evenements chaque semaine partout en France. Rencontre des gens qui agissent.</p>
+</div>
+
+<div class="geo-banner" id="geo-banner">
+  <span>📍 Active la geolocalisation pour voir les evenements les plus proches</span>
+  <button class="geo-btn" onclick="requestGeo()">Localiser</button>
+</div>
+
+<div class="view-toggle">
+  <button class="view-btn active" id="btn-list" onclick="setView('list')">📋 Liste</button>
+  <button class="view-btn" id="btn-cal" onclick="setView('calendar')">📅 Calendrier</button>
+</div>
+
+<div class="calendar" id="calendar"></div>
+<div class="events-list" id="events-list"></div>
+
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="engagements.html"><span>✅</span>Engagements</a>
+  <a href="projets.html"><span>🌱</span>Projets</a>
+  <a href="evenements.html" class="active"><span>📅</span>Evenements</a>
+  <a href="compteurs.html"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-moderation.js"></script>
+<script src="js/cgu-gate.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var MONTHS_FR = ['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'];
+  var DAYS_FR = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  var DAYS_FULL = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+
+  // Generate dates starting from today
+  var today = new Date();
+  function addDays(d, n) { var r = new Date(d); r.setDate(r.getDate() + n); return r; }
+  function fmtDate(d) { return d.getDate() + ' ' + MONTHS_FR[d.getMonth()]; }
+  function fmtTime(h, m) { return (h < 10 ? '0' : '') + h + 'h' + (m ? (m < 10 ? '0' : '') + m : ''); }
+
+  var EVENTS = [
+    {emoji:'🧹',title:'Clean Walk Canal Saint-Martin',desc:'Ramassage de dechets convivial le long du canal. Gants et sacs fournis. Venez comme vous etes !',date:addDays(today,4),hour:10,min:0,city:'Paris',lat:48.8738,lng:2.3654,people:47},
+    {emoji:'🔧',title:'Repair Cafe Part-Dieu',desc:'Apportez vos objets casses : electromenager, velo, couture. Des reparateurs benevoles vous aident.',date:addDays(today,5),hour:14,min:0,city:'Lyon 3e',lat:45.7607,lng:4.8595,people:32},
+    {emoji:'🌿',title:'Atelier Zero Dechet',desc:'Fabriquez vos produits menagers, cosmetiques et emballages reutilisables. Tout le materiel est fourni.',date:addDays(today,8),hour:18,min:30,city:'Nantes',lat:47.2184,lng:-1.5536,people:24},
+    {emoji:'🍲',title:'Disco Soupe — Cuisine Anti-gaspi',desc:'On recupere les invendus du marche et on cuisine ensemble dans la bonne humeur, avec de la musique.',date:addDays(today,10),hour:19,min:0,city:'Bordeaux',lat:44.8378,lng:-0.5792,people:58},
+    {emoji:'🌍',title:'Fresque du Climat',desc:'3 heures pour comprendre le changement climatique de maniere ludique et scientifique. Tous niveaux.',date:addDays(today,11),hour:9,min:0,city:'Toulouse',lat:43.6047,lng:1.4442,people:36},
+    {emoji:'🌱',title:'Troc de graines printanier',desc:'Echange de graines, boutures et plants entre jardiniers. Amenez vos surplus !',date:addDays(today,12),hour:10,min:0,city:'Lille',lat:50.6292,lng:3.0573,people:19},
+    {emoji:'✊',title:'Marche pour le Climat',desc:'Marche pacifique pour demander des actions concretes pour le climat. Depart Place du Prado.',date:addDays(today,18),hour:14,min:0,city:'Marseille',lat:43.2965,lng:5.3698,people:412},
+    {emoji:'🪱',title:'Atelier Compost au Jardin Citoyen',desc:'Apprenez a composter vos dechets de cuisine. Demonstration et distribution de bacs.',date:addDays(today,15),hour:17,min:0,city:'Strasbourg',lat:48.5734,lng:7.7521,people:28},
+    {emoji:'🚲',title:'Velo-parade Nocturne',desc:'Balade a velo dans les rues de Nantes, eclairee et festive. Tous niveaux, allure tranquille.',date:addDays(today,6),hour:20,min:30,city:'Nantes',lat:47.2173,lng:-1.5534,people:87},
+    {emoji:'🧵',title:'Atelier Upcycling : Transformer un T-shirt',desc:'Amenez un vieux T-shirt, repartez avec un tote bag unique. Machines a coudre disponibles.',date:addDays(today,9),hour:14,min:30,city:'Lyon 7e',lat:45.7418,lng:4.8413,people:18},
+    {emoji:'🎬',title:'Cine-debat : Demain (2015)',desc:'Projection du documentaire suivie d\'un debat avec des acteurs locaux de la transition.',date:addDays(today,7),hour:19,min:30,city:'Paris',lat:48.8566,lng:2.3522,people:65},
+    {emoji:'🌻',title:'Plantation collective au parc',desc:'Planter des haies melliferes pour les pollinisateurs. Outils et plants fournis.',date:addDays(today,13),hour:9,min:30,city:'Bordeaux',lat:44.8414,lng:-0.5718,people:34},
+    {emoji:'🧘',title:'Yoga en plein air — Parc de la Tete d\'Or',desc:'Seance gratuite de yoga doux en pleine nature. Apportez votre tapis. Tous niveaux.',date:addDays(today,5),hour:10,min:0,city:'Lyon',lat:45.7769,lng:4.8557,people:42},
+    {emoji:'📖',title:'Gratiferia — Marche 100% gratuit',desc:'Amenez ce que vous voulez donner, prenez ce qui vous plait. Sans monnaie, sans troc.',date:addDays(today,19),hour:10,min:0,city:'Toulouse',lat:43.6000,lng:1.4333,people:156},
+    {emoji:'🧪',title:'Conference PFAS : Comprendre et agir',desc:'Des chercheurs expliquent les polluants eternels et comment s\'en proteger.',date:addDays(today,20),hour:18,min:0,city:'Strasbourg',lat:48.5800,lng:7.7500,people:73},
+    {emoji:'🐦',title:'Sortie Ornithologique au Parc de Sceaux',desc:'Observation des oiseaux avec jumelles pretees. Decouverte guidee par un naturaliste.',date:addDays(today,6),hour:8,min:0,city:'Paris',lat:48.7700,lng:2.3000,people:16},
+    {emoji:'♻️',title:'Atelier Faire ses Conserves',desc:'Conservez les legumes de saison pour l\'hiver. Bocaux et ustensiles sur place.',date:addDays(today,16),hour:14,min:0,city:'Lille',lat:50.6300,lng:3.0600,people:21},
+    {emoji:'🎸',title:'Concert Acoustique Eco-solidaire',desc:'Concert en plein air, entree libre. Buvette locale et zero dechet.',date:addDays(today,14),hour:19,min:0,city:'Marseille',lat:43.2955,lng:5.3750,people:189},
+    {emoji:'🌊',title:'Nettoyage des Plages du Prado',desc:'2 heures de ramassage suivi d\'un pique-nique zero dechet. Gants fournis.',date:addDays(today,11),hour:9,min:30,city:'Marseille',lat:43.2600,lng:5.3800,people:93},
+    {emoji:'🍃',title:'Balade Botanique en Foret',desc:'Reconnaitre les plantes sauvages comestibles. Sortie de 3h avec un ethnobotaniste.',date:addDays(today,17),hour:9,min:0,city:'Nantes',lat:47.2500,lng:-1.5800,people:15}
+  ];
+
+  // Sort events by date
+  EVENTS.sort(function(a, b) { return a.date - b.date; });
+
+  var userLat = null, userLng = null;
+  var currentView = 'list';
+  var going = [];
+  try { going = JSON.parse(localStorage.getItem('planet_event_going')) || []; } catch(e) {}
+
+  // Haversine distance in km
+  function distance(lat1, lng1, lat2, lng2) {
+    var R = 6371;
+    var dLat = (lat2 - lat1) * Math.PI / 180;
+    var dLng = (lng2 - lng1) * Math.PI / 180;
+    var a = Math.sin(dLat/2)*Math.sin(dLat/2) +
+      Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  }
+
+  window.requestGeo = function() {
+    if (!navigator.geolocation) { alert('Geolocalisation non disponible sur ce navigateur.'); return; }
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      userLat = pos.coords.latitude;
+      userLng = pos.coords.longitude;
+      document.getElementById('geo-banner').innerHTML = '<span>📍 Position detectee — evenements tries par distance</span>';
+      renderList();
+    }, function() {
+      document.getElementById('geo-banner').innerHTML = '<span>⚠️ Geolocalisation refusee — evenements tries par date</span>';
+    });
+  };
+
+  window.setView = function(view) {
+    currentView = view;
+    document.getElementById('btn-list').classList.toggle('active', view === 'list');
+    document.getElementById('btn-cal').classList.toggle('active', view === 'calendar');
+    document.getElementById('calendar').classList.toggle('visible', view === 'calendar');
+    document.getElementById('events-list').style.display = view === 'list' ? 'block' : 'none';
+    if (view === 'calendar') renderCalendar();
+  };
+
+  function renderList() {
+    var container = document.getElementById('events-list');
+    container.innerHTML = '';
+    var sorted = EVENTS.slice();
+    if (userLat !== null) {
+      sorted.sort(function(a, b) {
+        return distance(userLat, userLng, a.lat, a.lng) - distance(userLat, userLng, b.lat, b.lng);
+      });
+    }
+
+    sorted.forEach(function(evt, i) {
+      var d = evt.date;
+      var isGoing = going.indexOf(evt.title) !== -1;
+      var distStr = '';
+      if (userLat !== null) {
+        var km = distance(userLat, userLng, evt.lat, evt.lng);
+        distStr = '<span class="event-distance">📍 ' + (km < 1 ? (km * 1000).toFixed(0) + ' m' : km.toFixed(1) + ' km') + '</span>';
+      }
+
+      var card = document.createElement('div');
+      card.className = 'event-card';
+      card.innerHTML =
+        '<div class="event-date-box">' +
+          '<div class="event-date-month">' + MONTHS_FR[d.getMonth()].substring(0, 3) + '</div>' +
+          '<div class="event-date-day">' + d.getDate() + '</div>' +
+          '<div class="event-date-dow">' + DAYS_FR[d.getDay()] + '</div>' +
+        '</div>' +
+        '<div class="event-info">' +
+          '<div class="event-title">' + evt.emoji + ' ' + evt.title + '</div>' +
+          '<div class="event-desc">' + evt.desc + '</div>' +
+          '<div class="event-meta">' +
+            '<span>🕐 ' + DAYS_FULL[d.getDay()] + ' ' + fmtDate(d) + ' a ' + fmtTime(evt.hour, evt.min) + '</span>' +
+            '<span>📍 ' + evt.city + '</span>' +
+            distStr +
+            '<span>👥 ' + (evt.people + (isGoing ? 1 : 0)) + ' participants</span>' +
+          '</div>' +
+          '<button class="btn-go' + (isGoing ? ' going' : '') + '" data-title="' + evt.title.replace(/"/g,'&quot;') + '">' +
+          (isGoing ? "✓ J'y vais !" : "J'y vais") + '</button>' +
+        '</div>';
+      container.appendChild(card);
+    });
+
+    // Bind buttons
+    container.querySelectorAll('.btn-go').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var title = this.getAttribute('data-title');
+        if (going.indexOf(title) !== -1) return;
+        going.push(title);
+        try { localStorage.setItem('planet_event_going', JSON.stringify(going)); } catch(e) {}
+        this.classList.add('going');
+        this.textContent = "✓ J'y vais !";
+        // Increment participant count
+        var meta = this.closest('.event-info').querySelector('.event-meta');
+        var peopleSpan = meta.querySelectorAll('span');
+        var lastSpan = peopleSpan[peopleSpan.length - 1];
+        if (lastSpan && lastSpan.textContent.match(/participants/)) {
+          var n = parseInt(lastSpan.textContent.match(/\d+/)[0]);
+          lastSpan.innerHTML = '👥 ' + (n + 1) + ' participants';
+        }
+      });
+    });
+  }
+
+  function renderCalendar() {
+    var cal = document.getElementById('calendar');
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth();
+
+    var firstDay = new Date(year, month, 1).getDay();
+    var daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Event dates this month
+    var eventDays = {};
+    EVENTS.forEach(function(evt) {
+      if (evt.date.getMonth() === month && evt.date.getFullYear() === year) {
+        var d = evt.date.getDate();
+        if (!eventDays[d]) eventDays[d] = [];
+        eventDays[d].push(evt);
+      }
+    });
+
+    var html = '<div class="cal-header"><h3>' + MONTHS_FR[month] + ' ' + year + '</h3></div>';
+    html += '<div class="cal-grid">';
+    DAYS_FR.forEach(function(d) { html += '<div class="cal-day-header">' + d + '</div>'; });
+
+    // Empty cells before first day
+    for (var e = 0; e < firstDay; e++) { html += '<div class="cal-day"></div>'; }
+
+    for (var d = 1; d <= daysInMonth; d++) {
+      var isToday = d === now.getDate();
+      var hasEvent = eventDays[d];
+      var classes = 'cal-day' + (isToday ? ' today' : '') + (hasEvent ? ' has-event' : '');
+      html += '<div class="' + classes + '" ' + (hasEvent ? 'onclick="showDayEvents(' + d + ')"' : '') + '>' + d + (hasEvent ? '<div class="cal-dot"></div>' : '') + '</div>';
+    }
+    html += '</div>';
+    cal.innerHTML = html;
+  }
+
+  window.showDayEvents = function(day) {
+    setView('list');
+    // Scroll to that day's event
+  };
+
+  renderList();
+})();
+</script>
+<script src="js/planet-tutorial.js"></script>
+<script>PlanetTutorial.init('evenements');</script>
+</body>
+</html>

@@ -357,9 +357,9 @@ a{color:var(--accent);text-decoration:none}
   <div class="onboard-step active" id="step1">
     <img src="img/sos-planet.png" alt="SOS Planet" style="width:100px;height:100px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.15);object-fit:contain;margin:0 auto 12px;">
     <span class="earth-anim">🌍</span>
-    <h2>Pret a sauver la planete ?</h2>
-    <div class="counter-line">Rejoins 2.4 millions de personnes qui agissent au quotidien.</div>
-    <p>Un geste a la fois, ensemble on change tout.</p>
+    <h2>Bienvenue !</h2>
+    <div class="counter-line">Tu rejoins une communaute de 2.4 millions de personnes qui croient qu'ensemble, on peut tout changer. 🌍</div>
+    <p>Chaque geste compte. Le tien aussi. Un engagement a la fois, on construit un monde meilleur.</p>
     <button class="btn-primary" onclick="goStep(2)">C'est parti !</button>
   </div>
 
@@ -408,6 +408,24 @@ a{color:var(--accent);text-decoration:none}
     </div>
   </div>
 
+  <!-- Warm dashboard actions (projects, events, mentor) -->
+  <div id="warm-actions" style="padding:0 20px 16px;display:none">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <a href="projets.html" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:14px;padding:14px 8px;text-align:center;text-decoration:none;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+        <div style="font-size:1.4rem;margin-bottom:4px">🌱</div>
+        <div style="font-size:.7rem;font-weight:700;color:var(--accent);line-height:1.3">Projets pres de chez toi</div>
+      </a>
+      <a href="evenements.html" style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:14px;padding:14px 8px;text-align:center;text-decoration:none;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+        <div style="font-size:1.4rem;margin-bottom:4px">📅</div>
+        <div style="font-size:.7rem;font-weight:700;color:var(--gold);line-height:1.3" id="next-event-label">Prochain evenement</div>
+      </a>
+      <a href="mentorat.html" id="mentor-link" style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:14px;padding:14px 8px;text-align:center;text-decoration:none;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+        <div style="font-size:1.4rem;margin-bottom:4px">🤝</div>
+        <div style="font-size:.7rem;font-weight:700;color:#60A5FA;line-height:1.3" id="mentor-label">Trouve un parrain</div>
+      </a>
+    </div>
+  </div>
+
   <!-- Today's engagements -->
   <div class="today-section">
     <div class="today-title">Aujourd'hui, as-tu fait ca ?</div>
@@ -444,6 +462,9 @@ a{color:var(--accent);text-decoration:none}
   <div class="quick-section">
     <div class="quick-title">Actions rapides</div>
     <div class="quick-scroll">
+      <a href="projets.html" class="quick-action" style="border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.08)"><span class="quick-action-icon">🌱</span><div class="quick-action-name">Projets pres de chez toi</div></a>
+      <a href="evenements.html" class="quick-action" style="border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.08)"><span class="quick-action-icon">📅</span><div class="quick-action-name">Prochain evenement</div></a>
+      <a href="mentorat.html" class="quick-action" style="border-color:rgba(59,130,246,0.4);background:rgba(59,130,246,0.08)"><span class="quick-action-icon">🤝</span><div class="quick-action-name">Mentorat</div></a>
       <a href="engagements.html" class="quick-action"><span class="quick-action-icon">➕</span><div class="quick-action-name">Ajouter un engagement</div></a>
       <a href="pfas.html" class="quick-action"><span class="quick-action-icon">🚰</span><div class="quick-action-name">Verifier mon eau</div></a>
       <a href="echanges.html" class="quick-action"><span class="quick-action-icon">🔄</span><div class="quick-action-name">Echanger</div></a>
@@ -533,10 +554,10 @@ a{color:var(--accent);text-decoration:none}
   <!-- Community counter -->
   <div class="community-section">
     <div class="community-box">
-      <div class="community-label">Ensemble</div>
+      <div class="community-label">Ensemble, on a deja economise</div>
       <div class="community-number" id="community-counter">17 432 891</div>
-      <div class="community-unit">kg CO2 economises</div>
-      <div class="community-people"><strong>2.4M</strong> participants actifs</div>
+      <div class="community-unit">kg CO2 — et ca continue chaque seconde</div>
+      <div class="community-people"><strong>2.4M</strong> de personnes qui agissent au quotidien</div>
     </div>
   </div>
 
@@ -607,9 +628,9 @@ a{color:var(--accent);text-decoration:none}
 <!-- Bottom nav -->
 <nav class="bottom-nav">
   <a href="index.html" class="active"><span>🏠</span>Accueil</a>
-  <a href="defis.html"><span>🏆</span>Defis</a>
-  <a href="social.html"><span>👥</span>Social</a>
-  <a href="carte.html"><span>🗺️</span>Carte</a>
+  <a href="engagements.html"><span>✅</span>Engagements</a>
+  <a href="projets.html"><span>🌱</span>Projets</a>
+  <a href="evenements.html"><span>📅</span>Evenements</a>
   <a href="compteurs.html"><span>📊</span>Impact</a>
 </nav>
 
@@ -1345,6 +1366,18 @@ a{color:var(--accent);text-decoration:none}
     document.getElementById('onboarding').style.display = 'none';
     document.getElementById('dashboard').classList.add('active');
     renderDashboard();
+    // Warm actions for returning users
+    (function() {
+      var warmEl = document.getElementById('warm-actions');
+      if (warmEl) warmEl.style.display = 'block';
+      // Show mentor name if matched
+      var myMentor = null;
+      try { myMentor = JSON.parse(localStorage.getItem('planet_my_mentor')); } catch(e) {}
+      if (myMentor) {
+        var ml = document.getElementById('mentor-label');
+        if (ml) ml.textContent = '🌳 ' + myMentor.pseudo;
+      }
+    })();
     // Social features
     renderJourney();
     renderSocialFeed();

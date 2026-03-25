@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Mentorat & Parrainage</title>
+<meta name="description" content="Trouve un parrain ou une marraine pour t'accompagner dans tes engagements ecologiques.">
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);--card-hover:rgba(16,185,129,0.15);
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.hero{text-align:center;padding:32px 20px 28px}
+.hero-emoji{font-size:3.5rem;display:block;margin-bottom:16px}
+.hero h2{font-size:1.6rem;font-weight:900;margin-bottom:8px;line-height:1.2}
+.hero p{color:var(--text-dim);font-size:.9rem;max-width:480px;margin:0 auto;line-height:1.6}
+.hero-warm{margin-top:16px;padding:14px 20px;background:linear-gradient(135deg,rgba(251,191,36,0.1),rgba(16,185,129,0.1));border:1px solid rgba(251,191,36,0.2);border-radius:14px;font-size:.9rem;font-weight:600;color:var(--gold);max-width:400px;margin-left:auto;margin-right:auto}
+
+.section{padding:0 20px 24px;max-width:720px;margin:0 auto}
+.section-title{font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--card-border)}
+
+/* Mentor cards */
+.mentor-grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:540px){.mentor-grid{grid-template-columns:1fr 1fr}}
+
+.mentor-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:20px;transition:all .3s;position:relative}
+.mentor-card:hover{border-color:var(--accent);background:var(--card-hover)}
+.mentor-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.mentor-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(59,130,246,0.2));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:900;color:var(--accent);border:2px solid var(--accent);flex-shrink:0}
+.mentor-names{flex:1}
+.mentor-pseudo{font-size:1rem;font-weight:800;display:flex;align-items:center;gap:6px}
+.mentor-badge{font-size:.65rem;padding:2px 8px;border-radius:10px;background:rgba(251,191,36,0.15);color:var(--gold);font-weight:700;border:1px solid rgba(251,191,36,0.3)}
+.mentor-level{font-size:.75rem;color:var(--text-dim)}
+.mentor-spec{font-size:.85rem;color:var(--accent);font-weight:600;margin-bottom:6px}
+.mentor-details{display:flex;flex-wrap:wrap;gap:10px;font-size:.75rem;color:var(--text-dim);margin-bottom:14px}
+.mentor-details span{display:flex;align-items:center;gap:4px}
+.mentor-bio{font-size:.82rem;color:var(--text-dim);line-height:1.5;margin-bottom:14px;font-style:italic}
+.btn-mentor{width:100%;padding:10px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-mentor:hover{background:var(--accent-light)}
+.btn-mentor.requested{background:rgba(251,191,36,0.15);color:var(--gold);border:1px solid rgba(251,191,36,0.3)}
+.parraines-count{font-size:.7rem;color:var(--text-dim);margin-top:6px;text-align:center}
+
+/* Become mentor form */
+.become-section{background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(251,191,36,0.08));border:1px solid var(--accent);border-radius:20px;padding:28px;text-align:center;margin-bottom:24px}
+.become-section h3{font-size:1.2rem;font-weight:900;margin-bottom:8px}
+.become-section p{font-size:.85rem;color:var(--text-dim);margin-bottom:16px;line-height:1.5}
+.form-group{margin-bottom:14px;text-align:left}
+.form-group label{display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:var(--text-dim)}
+.form-input{width:100%;padding:12px 16px;border:1px solid var(--card-border);border-radius:12px;background:var(--card);color:var(--text);font-size:.9rem;font-family:inherit;outline:none}
+.form-input:focus{border-color:var(--accent)}
+.form-input::placeholder{color:var(--text-dim)}
+.form-select{width:100%;padding:12px 16px;border:1px solid var(--card-border);border-radius:12px;background:var(--card);color:var(--text);font-size:.9rem;font-family:inherit;outline:none;appearance:none;-webkit-appearance:none}
+.btn-become{padding:14px 36px;border:none;border-radius:30px;background:var(--gold);color:#0A1628;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-become:hover{transform:scale(1.05)}
+
+/* My mentoring */
+.my-mentor-box{background:var(--card);border:1px solid var(--gold);border-radius:16px;padding:20px;text-align:center;margin-bottom:20px;display:none}
+.my-mentor-box.visible{display:block}
+.my-mentor-box h4{font-size:1rem;font-weight:800;color:var(--gold);margin-bottom:8px}
+.my-mentor-box p{font-size:.85rem;color:var(--text-dim)}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Accueil</a>
+  <h1>Mentorat</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="hero">
+  <span class="hero-emoji">🤝</span>
+  <h2>Tu n'es pas seul(e).<br>Quelqu'un t'accompagne.</h2>
+  <p>Le mentorat, c'est simple : un membre experimente t'aide a progresser, a tenir tes engagements, a aller plus loin.</p>
+  <div class="hero-warm">"Les meilleurs changements naissent d'une rencontre." — 1 240 parrainages actifs</div>
+</div>
+
+<!-- My mentor box (if already matched) -->
+<div class="section">
+  <div class="my-mentor-box" id="my-mentor-box">
+    <h4>🌳 Ton parrain/ta marraine</h4>
+    <p id="my-mentor-name"></p>
+    <p style="font-size:.8rem;color:var(--accent);margin-top:6px">Tu peux le/la contacter via la communaute</p>
+  </div>
+</div>
+
+<!-- Find a mentor -->
+<div class="section">
+  <div class="section-title">🌳 Trouve un parrain</div>
+  <div class="mentor-grid" id="mentor-grid"></div>
+</div>
+
+<!-- Become a mentor -->
+<div class="section">
+  <div class="become-section" id="become-form">
+    <h3>🌳 Deviens parrain/marraine</h3>
+    <p>Tu as atteint le niveau Foret (500+ XP) ? Accompagne un debutant dans ses premiers pas. C'est gratifiant et ca renforce la communaute.</p>
+    <div class="form-group">
+      <label>Ton pseudo</label>
+      <input type="text" class="form-input" id="f-pseudo" placeholder="Ton pseudo SOS Planet" maxlength="20">
+    </div>
+    <div class="form-group">
+      <label>Ta specialite</label>
+      <select class="form-select" id="f-speciality">
+        <option value="Zero dechet">Zero dechet</option>
+        <option value="Potager urbain">Potager urbain</option>
+        <option value="Mobilite douce">Mobilite douce</option>
+        <option value="Alimentation durable">Alimentation durable</option>
+        <option value="Energie">Energie & climat</option>
+        <option value="Biodiversite">Biodiversite</option>
+        <option value="Mode responsable">Mode responsable</option>
+        <option value="Parentalite ecolo">Parentalite ecolo</option>
+        <option value="General">Un peu de tout !</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Disponibilite</label>
+      <select class="form-select" id="f-avail">
+        <option value="1 fois/semaine">1 fois par semaine</option>
+        <option value="2 fois/mois">2 fois par mois</option>
+        <option value="1 fois/mois">1 fois par mois</option>
+        <option value="Flexible">Flexible</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Un petit mot pour tes futur(e)s filleul(e)s</label>
+      <input type="text" class="form-input" id="f-bio" placeholder="Ex: J'adore partager mes astuces zero dechet !" maxlength="120">
+    </div>
+    <button class="btn-become" onclick="becomeMentor()">Devenir parrain/marraine</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="engagements.html"><span>✅</span>Engagements</a>
+  <a href="projets.html"><span>🌱</span>Projets</a>
+  <a href="evenements.html"><span>📅</span>Evenements</a>
+  <a href="compteurs.html"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-moderation.js"></script>
+<script src="js/cgu-gate.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var MENTORS = [
+    {pseudo:'EcoMarie',initial:'M',level:'Planete',levelNum:10,spec:'Zero dechet',city:'Paris',avail:'1 fois/semaine',bio:'10 ans de zero dechet, je partage tout ce que j\'ai appris avec joie.',parraines:8},
+    {pseudo:'VertPierre',initial:'P',level:'Foret',levelNum:9,spec:'Potager urbain',city:'Lyon',avail:'2 fois/mois',bio:'Mon balcon produit 40kg de legumes par an. Je t\'apprends comment !',parraines:5},
+    {pseudo:'NatureSophie',initial:'S',level:'Gardien',levelNum:10,spec:'Biodiversite',city:'Marseille',avail:'Flexible',bio:'Ornithologue amateur, je connais chaque oiseau de Provence.',parraines:12},
+    {pseudo:'VeloCamille',initial:'C',level:'Sequoia',levelNum:8,spec:'Mobilite douce',city:'Bordeaux',avail:'1 fois/semaine',bio:'Plus de voiture depuis 5 ans. Velotaf, velo cargo, tout est possible.',parraines:6},
+    {pseudo:'ChefThomas',initial:'T',level:'Foret',levelNum:9,spec:'Alimentation durable',city:'Nantes',avail:'2 fois/mois',bio:'Cuisine veggie, anti-gaspi, locale et de saison. Miam !',parraines:4},
+    {pseudo:'SolaireJean',initial:'J',level:'Sequoia',levelNum:8,spec:'Energie',city:'Toulouse',avail:'1 fois/mois',bio:'Ingenieur en energies renouvelables, j\'aide a comprendre les enjeux.',parraines:7},
+    {pseudo:'CoutureLeila',initial:'L',level:'Foret',levelNum:9,spec:'Mode responsable',city:'Lille',avail:'Flexible',bio:'Couturiere et adepte du seconde main. La mode peut etre ethique !',parraines:3},
+    {pseudo:'JardinRomain',initial:'R',level:'Sequoia',levelNum:8,spec:'Potager urbain',city:'Strasbourg',avail:'1 fois/semaine',bio:'Permaculteur urbain. Du compost au potager, je guide pas a pas.',parraines:9},
+    {pseudo:'EcoParentElsa',initial:'E',level:'Foret',levelNum:9,spec:'Parentalite ecolo',city:'Paris',avail:'2 fois/mois',bio:'Elever ses enfants en respectant la planete, c\'est un beau defi.',parraines:2},
+    {pseudo:'ClimateNicolas',initial:'N',level:'Planete',levelNum:10,spec:'General',city:'Lyon',avail:'Flexible',bio:'Animateur Fresque du Climat, je t\'aide a trouver TA voie ecolo.',parraines:15}
+  ];
+
+  // Check if user has a mentor already
+  var myMentor = null;
+  try { myMentor = JSON.parse(localStorage.getItem('planet_my_mentor')); } catch(e) {}
+  var requested = [];
+  try { requested = JSON.parse(localStorage.getItem('planet_mentor_requested')) || []; } catch(e) {}
+
+  if (myMentor) {
+    var box = document.getElementById('my-mentor-box');
+    box.classList.add('visible');
+    document.getElementById('my-mentor-name').textContent = myMentor.emoji + ' ' + myMentor.pseudo + ' — ' + myMentor.spec + ' (' + myMentor.city + ')';
+  }
+
+  // Render mentors
+  var grid = document.getElementById('mentor-grid');
+  MENTORS.forEach(function(m) {
+    var isRequested = requested.indexOf(m.pseudo) !== -1;
+    var isMyMentor = myMentor && myMentor.pseudo === m.pseudo;
+    var card = document.createElement('div');
+    card.className = 'mentor-card';
+    card.innerHTML =
+      '<div class="mentor-top">' +
+        '<div class="mentor-avatar">' + m.initial + '</div>' +
+        '<div class="mentor-names">' +
+          '<div class="mentor-pseudo">' + m.pseudo + ' <span class="mentor-badge">🌳 Mentor</span></div>' +
+          '<div class="mentor-level">' + m.level + ' — Niv. ' + m.levelNum + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="mentor-spec">💚 ' + m.spec + '</div>' +
+      '<div class="mentor-details">' +
+        '<span>📍 ' + m.city + '</span>' +
+        '<span>📅 ' + m.avail + '</span>' +
+      '</div>' +
+      '<div class="mentor-bio">"' + m.bio + '"</div>' +
+      '<button class="btn-mentor' + (isRequested || isMyMentor ? ' requested' : '') + '" data-pseudo="' + m.pseudo + '">' +
+      (isMyMentor ? '🌳 C\'est ton parrain/ta marraine' : isRequested ? '⏳ Demande envoyee' : 'Demander un parrainage') + '</button>' +
+      '<div class="parraines-count">' + m.parraines + ' filleul(e)s accompagne(e)s</div>';
+    grid.appendChild(card);
+  });
+
+  // Bind request buttons
+  grid.querySelectorAll('.btn-mentor').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var pseudo = this.getAttribute('data-pseudo');
+      if (requested.indexOf(pseudo) !== -1 || (myMentor && myMentor.pseudo === pseudo)) return;
+
+      // Find mentor
+      var mentor = MENTORS.find(function(m) { return m.pseudo === pseudo; });
+      if (!mentor) return;
+
+      // Save as "my mentor" (instant match for demo)
+      myMentor = { pseudo: mentor.pseudo, emoji: '🌳', spec: mentor.spec, city: mentor.city };
+      try {
+        localStorage.setItem('planet_my_mentor', JSON.stringify(myMentor));
+        requested.push(pseudo);
+        localStorage.setItem('planet_mentor_requested', JSON.stringify(requested));
+      } catch(e) {}
+
+      this.classList.add('requested');
+      this.textContent = '🌳 C\'est ton parrain/ta marraine';
+
+      // Show the box
+      var box = document.getElementById('my-mentor-box');
+      box.classList.add('visible');
+      document.getElementById('my-mentor-name').textContent = myMentor.emoji + ' ' + myMentor.pseudo + ' — ' + myMentor.spec + ' (' + myMentor.city + ')';
+
+      alert('Parrainage confirme ! ' + mentor.pseudo + ' est maintenant ton parrain/ta marraine. Bienvenue dans la communaute !');
+    });
+  });
+
+  // Become mentor
+  window.becomeMentor = function() {
+    var pseudo = document.getElementById('f-pseudo').value.trim();
+    var spec = document.getElementById('f-speciality').value;
+    var avail = document.getElementById('f-avail').value;
+    var bio = document.getElementById('f-bio').value.trim();
+
+    if (!pseudo) { alert('Indique ton pseudo !'); return; }
+    if (bio) {
+      var check = PlanetModeration.moderateContent(bio);
+      if (check.blocked) { alert(check.reason); return; }
+    }
+
+    var mentorData = { pseudo: pseudo, spec: spec, avail: avail, bio: bio || 'Pret(e) a accompagner !', date: new Date().toISOString() };
+    try { localStorage.setItem('planet_i_am_mentor', JSON.stringify(mentorData)); } catch(e) {}
+
+    document.getElementById('become-form').innerHTML =
+      '<h3>🌳 Tu es maintenant parrain/marraine !</h3>' +
+      '<p style="color:var(--accent);font-size:1rem;margin-top:12px;font-weight:700">' + pseudo + ' — ' + spec + '</p>' +
+      '<p style="color:var(--text-dim);font-size:.85rem;margin-top:8px">Les debutants pourront te trouver et te demander un parrainage. Merci pour ta generosite !</p>';
+  };
+
+})();
+</script>
+<script src="js/planet-tutorial.js"></script>
+<script>PlanetTutorial.init('mentorat');</script>
+</body>
+</html>
