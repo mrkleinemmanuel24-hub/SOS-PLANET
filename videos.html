@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>SOS Planet — Histoires inspirantes</title>
-<meta name="description" content="12 videos inspirantes sur l'entrepreneuriat a impact, l'ecologie au quotidien et la solidarite en France.">
+<meta name="description" content="30 videos inspirantes sur l'entrepreneuriat a impact et la solidarite en France — mod'emplois, T'CAP T'PRO, Agricourt, Le boeuf ethique, 1 2 3 soleil.">
 <meta name="theme-color" content="#0A1628">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -43,14 +43,15 @@ a{color:var(--accent);text-decoration:none}
 .vcard:hover{border-color:var(--accent);background:var(--card-hover);transform:translateY(-3px)}
 
 .vcard-thumb{width:100%;aspect-ratio:16/9;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;overflow:hidden}
+.vcard-thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
 .vcard-thumb .play-btn{
-  width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.2);
-  backdrop-filter:blur(8px);border:2px solid rgba(255,255,255,0.4);
+  width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(8px);border:2px solid rgba(255,255,255,0.5);
   display:flex;align-items:center;justify-content:center;
   font-size:1.6rem;color:#fff;transition:all .3s;cursor:pointer;
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
 }
-.vcard:hover .play-btn{background:rgba(255,255,255,0.35);transform:translate(-50%,-50%) scale(1.1)}
+.vcard:hover .play-btn{background:rgba(239,68,68,0.8);border-color:#fff;transform:translate(-50%,-50%) scale(1.1)}
 .vcard-thumb .thumb-emoji{font-size:2.5rem;position:relative;z-index:1;margin-bottom:20px}
 
 .vcard-badge{
@@ -109,8 +110,8 @@ a{color:var(--accent);text-decoration:none}
 
 <div class="hero">
   <span class="hero-emoji">📹</span>
-  <h2>Ils ont change le monde</h2>
-  <p>Des entrepreneurs a impact, des citoyens engages, des solutions concretes. 12 histoires qui prouvent que chacun peut agir.</p>
+  <h2>Ils changent le monde</h2>
+  <p>30 portraits d'entrepreneurs a impact en France. Insertion, circuits courts, elevage ethique, solidarite — des solutions concretes.</p>
 </div>
 
 <div class="tabs" id="tabs"></div>
@@ -118,8 +119,8 @@ a{color:var(--accent);text-decoration:none}
 <div class="videos-grid" id="videos-grid"></div>
 
 <div class="mod-banner">
-  <h3>Decouvre plus de projets a impact</h3>
-  <p>mod'emplois reference des centaines d'entrepreneurs et projets a impact en France. Comprendre, s'inspirer, agir.</p>
+  <h3>Decouvre mod'emplois</h3>
+  <p>30 videos, 6 projets a impact en France. Comprendre, s'inspirer, dupliquer, financer.</p>
   <div class="mod-banner-links">
     <a href="https://mod-emplois.fr" target="_blank" rel="noopener" class="mod-link-site">🌍 mod-emplois.fr</a>
     <a href="https://www.youtube.com/channel/UC47R2DIaLrmuxPtzdwf8QCw" target="_blank" rel="noopener" class="mod-link-yt">▶ Chaine YouTube</a>
@@ -140,106 +141,81 @@ a{color:var(--accent);text-decoration:none}
 (function() {
   'use strict';
 
-  var CATEGORIES = ['Tous', 'Entrepreneurs a impact', 'Ecologie au quotidien', 'Communaute & solidarite'];
+  var CATEGORIES = ['Tous', 'Portraits', 'Creer son projet', "T'CAP T'PRO", 'Agricourt', 'Le boeuf ethique', '1, 2, 3, soleil'];
   var currentCat = 'Tous';
 
   var VIDEOS = [
-    {
-      emoji: '🌍', title: 'La Fresque du Climat — Comprendre en 3 heures',
-      desc: "L'atelier qui change ta vision du monde. 3 heures pour comprendre le changement climatique.",
-      cat: 'Ecologie au quotidien',
-      search: 'fresque+du+climat',
-      gradient: 'linear-gradient(135deg,#0d7377,#14532d)',
-      badge: 'env'
-    },
-    {
-      emoji: '🥗', title: 'Le circuit court, c\'est quoi ?',
-      desc: "AMAP, marches locaux, producteurs : tout comprendre sur le circuit court en France.",
-      cat: 'Communaute & solidarite',
-      search: 'circuit+court+AMAP+explication',
-      gradient: 'linear-gradient(135deg,#92400e,#eab308)',
-      badge: 'ali'
-    },
-    {
-      emoji: '♻️', title: 'Zero dechet : par ou commencer',
-      desc: "5 premiers gestes simples pour reduire ses dechets au quotidien.",
-      cat: 'Ecologie au quotidien',
-      search: 'zero+dechet+debutant+france',
-      gradient: 'linear-gradient(135deg,#14532d,#059669)',
-      badge: 'env'
-    },
-    {
-      emoji: '🔧', title: 'Repair Cafe : on repare tout !',
-      desc: "Plutot que jeter, on repare ensemble. Decouvre le mouvement des Repair Cafes.",
-      cat: 'Communaute & solidarite',
-      search: 'repair+cafe+france+comment',
-      gradient: 'linear-gradient(135deg,#581c87,#a855f7)',
-      badge: 'com'
-    },
-    {
-      emoji: '🌱', title: 'Creer son jardin partage',
-      desc: "Du beton au potager : l'histoire de quartiers qui se transforment grace aux jardins partages.",
-      cat: 'Communaute & solidarite',
-      search: 'jardin+partage+urbain+france',
-      gradient: 'linear-gradient(135deg,#065f46,#34d399)',
-      badge: 'com'
-    },
-    {
-      emoji: '🏭', title: 'L\'economie circulaire expliquee',
-      desc: "Rien ne se perd, tout se transforme. Comprendre l'economie circulaire en quelques minutes.",
-      cat: 'Ecologie au quotidien',
-      search: 'economie+circulaire+explication',
-      gradient: 'linear-gradient(135deg,#1e3a5f,#0891b2)',
-      badge: 'env'
-    },
-    {
-      emoji: '🍽️', title: 'Disco Soupe : cuisiner contre le gaspi',
-      desc: "500 kg de legumes sauves en une soiree. Le mouvement anti-gaspillage qui rassemble.",
-      cat: 'Communaute & solidarite',
-      search: 'disco+soupe+anti+gaspillage',
-      gradient: 'linear-gradient(135deg,#9a3412,#f59e0b)',
-      badge: 'ali'
-    },
-    {
-      emoji: '🐝', title: 'Sauver les abeilles en ville',
-      desc: "L'apiculture urbaine, une solution ? Rencontre avec des apiculteurs citadins engages.",
-      cat: 'Ecologie au quotidien',
-      search: 'apiculture+urbaine+sauver+abeilles',
-      gradient: 'linear-gradient(135deg,#713f12,#facc15)',
-      badge: 'env'
-    },
-    {
-      emoji: '👕', title: 'La mode ethique, c\'est possible',
-      desc: "Acheter moins mais mieux. Tour d'horizon de la mode durable en France.",
-      cat: 'Ecologie au quotidien',
-      search: 'mode+ethique+france+durable',
-      gradient: 'linear-gradient(135deg,#831843,#ec4899)',
-      badge: 'env'
-    },
-    {
-      emoji: '🚲', title: 'Le velo change la ville',
-      desc: "Comment les cyclistes transforment nos rues. Mobilite douce et urbanisme.",
-      cat: 'Communaute & solidarite',
-      search: 'velo+ville+france+mobilite',
-      gradient: 'linear-gradient(135deg,#1e3a5f,#3b82f6)',
-      badge: 'com'
-    },
-    {
-      emoji: '🏡', title: 'Tiny house : vivre avec moins',
-      desc: "Moins de m2, plus de liberte. Temoignages de ceux qui ont choisi l'habitat leger.",
-      cat: 'Ecologie au quotidien',
-      search: 'tiny+house+france+temoignage',
-      gradient: 'linear-gradient(135deg,#365314,#84cc16)',
-      badge: 'env'
-    },
-    {
-      emoji: '🤝', title: 'mod\'emplois : des projets qui changent le monde',
-      desc: "Decouvre des entrepreneurs a impact en France. Initiatives, portraits, solutions concretes.",
-      cat: 'Entrepreneurs a impact',
-      search: 'mod+emplois+entrepreneur+impact',
-      gradient: 'linear-gradient(135deg,#7f1d1d,#ef4444)',
-      badge: 'ent'
-    }
+    // === PORTRAITS (standalone) ===
+    {id:'J9yz3gUpEvA', title:"Bienvenue au salon de beaute solidaire Josephine", cat:'Portraits', badge:'ent',
+     desc:"Un salon de beaute pas comme les autres : redonner confiance aux femmes en difficulte."},
+    {id:'Wk0rHr1Y0pM', title:"Alenvi : une alternative aux Ehpad est possible", cat:'Portraits', badge:'ent',
+     desc:"Repenser le soin aux personnes agees. Un modele humain, bienveillant, duplicable."},
+    {id:'qRIc-Ii185s', title:"Sciences et tech : susciter des vocations chez les jeunes filles", cat:'Portraits', badge:'ent',
+     desc:"Comment encourager les filles a se lancer dans les metiers scientifiques et tech."},
+
+    // === CRÉER SON PROJET (série générique) ===
+    {id:'Br5LT9DwVt0', title:"1. Presentation — Creer son projet a impact", cat:'Creer son projet', badge:'env',
+     desc:"Premiere etape : comprendre ce qu'est un projet a impact et comment se lancer."},
+    {id:'9Alzw3YmWM0', title:"2. De l'idee a la creation", cat:'Creer son projet', badge:'env',
+     desc:"Transformer une idee en projet concret. Methode et retours d'experience."},
+    {id:'e8pJbTx13ac', title:"2. Accompagnement", cat:'Creer son projet', badge:'env',
+     desc:"Se faire accompagner pour structurer son projet : incubateurs, mentors, reseaux."},
+    {id:'TVzxMLo5APQ', title:"3. Financement", cat:'Creer son projet', badge:'env',
+     desc:"Les cles du financement : subventions, crowdfunding, investisseurs a impact."},
+    {id:'D9GvJm7tZQ0', title:"4. Le financement (suite)", cat:'Creer son projet', badge:'env',
+     desc:"Approfondissement : monter son dossier, convaincre, perenniser ses ressources."},
+    {id:'bYYok4VC7Zs', title:"4. Conseils pratiques", cat:'Creer son projet', badge:'env',
+     desc:"Les conseils cles pour reussir son projet a impact social ou environnemental."},
+    {id:'zYYstBw4xhY', title:"5. Juridique", cat:'Creer son projet', badge:'env',
+     desc:"Association, SCIC, SCOP, SAS... Quel statut juridique pour son projet a impact ?"},
+    {id:'JtIBxt3gvDk', title:"1. Presentation (complement)", cat:'Creer son projet', badge:'env',
+     desc:"Complement de la serie : vision d'ensemble du parcours de creation."},
+    {id:'5RSU-hQuZBs', title:"3. Accompagnement (complement)", cat:'Creer son projet', badge:'env',
+     desc:"Se faire accompagner : les structures, les aides, les reseaux d'entraide."},
+
+    // === T'CAP T'PRO (insertion professionnelle) ===
+    {id:'HrGi-32W-1M', title:"T'CAP T'PRO — 1. Presentation", cat:"T'CAP T'PRO", badge:'com',
+     desc:"Decouverte du projet T'CAP T'PRO : insertion professionnelle des jeunes en difficulte."},
+    {id:'ApRjywk4S2o', title:"T'CAP T'PRO — 2. Duplicabilite", cat:"T'CAP T'PRO", badge:'com',
+     desc:"Comment dupliquer le modele T'CAP T'PRO dans d'autres territoires."},
+    {id:'7cK2uzyyuwI', title:"T'CAP T'PRO — 3. Accompagnement", cat:"T'CAP T'PRO", badge:'com',
+     desc:"L'accompagnement des jeunes : methode, outils, temoignages."},
+    {id:'TmCkqpWyQFU', title:"T'CAP T'PRO — 4. Financement", cat:"T'CAP T'PRO", badge:'com',
+     desc:"Financer un projet d'insertion : subventions, partenaires, modele economique."},
+    {id:'JXIYtPfyiII', title:"T'CAP T'PRO — 5. Juridique", cat:"T'CAP T'PRO", badge:'com',
+     desc:"Le cadre juridique de l'insertion professionnelle. Statuts et reglementations."},
+
+    // === AGRICOURT (circuits courts alimentaires) ===
+    {id:'pCfofSnnkxU', title:"Agricourt — 1. Presentation", cat:'Agricourt', badge:'ali',
+     desc:"Agricourt : des circuits courts pour reconnecter producteurs et consommateurs."},
+    {id:'G7c0IR0-WQ4', title:"Agricourt — 2. Duplicabilite", cat:'Agricourt', badge:'ali',
+     desc:"Dupliquer le modele Agricourt : guide pratique pour d'autres territoires."},
+    {id:'xUD74FPtLJw', title:"Agricourt — 3. Accompagnement", cat:'Agricourt', badge:'ali',
+     desc:"L'accompagnement des producteurs : de la ferme a l'assiette du consommateur."},
+    {id:'nOdl1WZZXcc', title:"Agricourt — 4. Financement", cat:'Agricourt', badge:'ali',
+     desc:"Comment financer un projet de circuit court alimentaire."},
+    {id:'UKqBK1Um4uI', title:"Agricourt — 5. Juridique", cat:'Agricourt', badge:'ali',
+     desc:"Le cadre juridique des circuits courts : normes, labels, reglementations."},
+
+    // === LE BOEUF ÉTHIQUE (élevage responsable) ===
+    {id:'H_eU23ut44E', title:"Le boeuf ethique — 1. Presentation", cat:'Le boeuf ethique', badge:'ali',
+     desc:"Le boeuf ethique : repenser l'elevage bovin pour le bien-etre animal et la planete."},
+    {id:'YykzhdYIm4Q', title:"Le boeuf ethique — 2. Duplicabilite", cat:'Le boeuf ethique', badge:'ali',
+     desc:"Comment essaimer le modele d'elevage ethique dans d'autres regions."},
+    {id:'zkusdcLhq2Q', title:"Le boeuf ethique — 3. Accompagnement", cat:'Le boeuf ethique', badge:'ali',
+     desc:"Accompagner les eleveurs vers des pratiques plus respectueuses."},
+    {id:'j1V-q7l5wpw', title:"Le boeuf ethique — 4. Financement", cat:'Le boeuf ethique', badge:'ali',
+     desc:"Le modele economique d'un elevage ethique : cout, prix juste, rentabilite."},
+    {id:'NGMIT81hIkM', title:"Le boeuf ethique — 5. Juridique", cat:'Le boeuf ethique', badge:'ali',
+     desc:"Normes sanitaires, labels, certifications : le cadre juridique de l'elevage ethique."},
+
+    // === 1, 2, 3, SOLEIL (garde d'enfants solidaire) ===
+    {id:'WLyu3NBRUaE', title:"1, 2, 3, soleil — 1. Presentation", cat:'1, 2, 3, soleil', badge:'com',
+     desc:"1, 2, 3, soleil : des solutions de garde d'enfants solidaires et accessibles."},
+    {id:'cx8NOhH8RGc', title:"1, 2, 3, soleil — 2. Duplicabilite", cat:'1, 2, 3, soleil', badge:'com',
+     desc:"Dupliquer le modele de garde solidaire dans d'autres quartiers."},
+    {id:'Sxa6wWPucwo', title:"1, 2, 3, soleil — 3. Accompagnement", cat:'1, 2, 3, soleil', badge:'com',
+     desc:"Accompagner les familles : formation, encadrement, lien social."}
   ];
 
   // Build tabs
@@ -253,7 +229,6 @@ a{color:var(--accent);text-decoration:none}
   });
 
   function render() {
-    // Update tabs
     document.querySelectorAll('.tab').forEach(function(t) {
       t.classList.toggle('active', t.textContent === currentCat);
     });
@@ -274,23 +249,24 @@ a{color:var(--accent);text-decoration:none}
     filtered.forEach(function(v) {
       var card = document.createElement('div');
       card.className = 'vcard';
+      var ytUrl = 'https://www.youtube.com/watch?v=' + v.id;
+      var thumbUrl = 'https://img.youtube.com/vi/' + v.id + '/mqdefault.jpg';
       card.innerHTML =
-        '<div class="vcard-thumb" style="background:' + v.gradient + '">' +
+        '<div class="vcard-thumb">' +
+          '<img src="' + thumbUrl + '" alt="' + v.title + '" loading="lazy">' +
           '<span class="vcard-badge ' + v.badge + '">' + v.cat + '</span>' +
-          '<span class="thumb-emoji">' + v.emoji + '</span>' +
           '<div class="play-btn">▶</div>' +
         '</div>' +
         '<div class="vcard-body">' +
           '<div class="vcard-title">' + v.title + '</div>' +
           '<div class="vcard-desc">' + v.desc + '</div>' +
-          '<a href="https://www.youtube.com/results?search_query=' + v.search + '" target="_blank" rel="noopener" class="vcard-link">▶ Regarder sur YouTube</a>' +
+          '<a href="' + ytUrl + '" target="_blank" rel="noopener" class="vcard-link">▶ Regarder sur YouTube</a>' +
         '</div>';
       grid.appendChild(card);
 
-      // Make the whole thumbnail clickable too
       card.querySelector('.vcard-thumb').style.cursor = 'pointer';
       card.querySelector('.vcard-thumb').addEventListener('click', function() {
-        window.open('https://www.youtube.com/results?search_query=' + v.search, '_blank');
+        window.open(ytUrl, '_blank');
       });
     });
   }
