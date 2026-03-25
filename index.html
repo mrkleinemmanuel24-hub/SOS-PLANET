@@ -615,6 +615,7 @@ a{color:var(--accent);text-decoration:none}
 
 <script src="js/planet-engine.js"></script>
 <script src="js/planet-social.js"></script>
+<script src="js/planet-tutorial.js"></script>
 <script>
 (function() {
   'use strict';
@@ -868,11 +869,23 @@ a{color:var(--accent);text-decoration:none}
       PlanetEngine.setEngagement(e.id, true, { co2: e.co2, domain: 'general' });
     });
 
+    // Promote tutorial level to 1 (onboarding complete)
+    if (window.PlanetTutorial) {
+      PlanetTutorial.setJourneyLevel(1);
+      PlanetTutorial.checkAndPromote();
+    }
+
     spawnConfetti(50, true);
     setTimeout(function() {
       document.getElementById('onboarding').style.display = 'none';
       document.getElementById('dashboard').classList.add('active');
       renderDashboard();
+      // Adapt nav + show tutorial
+      if (window.PlanetTutorial) {
+        PlanetTutorial.adaptBottomNav();
+        PlanetTutorial.addHelpButton('index');
+        PlanetTutorial.showTutorial('index');
+      }
     }, 600);
   };
 
@@ -971,6 +984,8 @@ a{color:var(--accent);text-decoration:none}
         saveUser(u);
         addXP(10);
         spawnConfetti(25, false);
+        // Track for progressive unlock
+        if (window.PlanetTutorial) PlanetTutorial.trackEngagementCheck();
         // Increment challenge
         incrementChallenge();
         // Check if all done
@@ -1277,6 +1292,52 @@ a{color:var(--accent);text-decoration:none}
     friendsContainer.innerHTML = fHtml;
   }
 
+  // ==== PROGRESSIVE VISIBILITY ====
+  function applyProgressiveVisibility() {
+    if (!window.PlanetTutorial) return;
+    var vis = PlanetTutorial.getHomepageVisibility();
+
+    // Quick actions section
+    var quickSections = document.querySelectorAll('.quick-section');
+    if (quickSections[0]) quickSections[0].style.display = vis.showQuickActions ? '' : 'none';
+    if (quickSections[1]) quickSections[1].style.display = vis.showDomains ? '' : 'none';
+
+    // Videos section
+    var videosSec = document.querySelector('.videos-section');
+    if (videosSec) videosSec.style.display = vis.showVideos ? '' : 'none';
+
+    // Community counter
+    var commSec = document.querySelector('.community-section');
+    if (commSec) commSec.style.display = vis.showCommunityCounter ? '' : 'none';
+
+    // Social feed (controlled by level)
+    var socialFeed = document.getElementById('social-feed-section');
+    if (socialFeed && !vis.showSocialFeed) socialFeed.style.display = 'none';
+
+    // Invite prompt
+    var invitePrompt = document.getElementById('invite-prompt');
+    if (invitePrompt && !vis.showInvitePrompt) invitePrompt.style.display = 'none';
+
+    // Personalized feed
+    var persoFeed = document.getElementById('personalized-feed');
+    if (persoFeed && !vis.showPersonalizedFeed) persoFeed.style.display = 'none';
+
+    // Beginner card
+    if (vis.showBeginnerCard) {
+      var cardHtml = PlanetTutorial.renderBeginnerCard();
+      if (cardHtml) {
+        var beginnerDiv = document.getElementById('beginner-card');
+        if (!beginnerDiv) {
+          beginnerDiv = document.createElement('div');
+          beginnerDiv.id = 'beginner-card';
+          var todaySec = document.querySelector('.today-section');
+          if (todaySec) todaySec.parentNode.insertBefore(beginnerDiv, todaySec);
+        }
+        beginnerDiv.innerHTML = '<div style="padding:0 20px">' + cardHtml + '</div>';
+      }
+    }
+  }
+
   // ==== INIT ====
   var user = getUser();
   if (user && user.pseudo) {
@@ -1290,6 +1351,11 @@ a{color:var(--accent);text-decoration:none}
     renderInvitePrompt();
     renderPersonalizedFeed();
     checkReminder();
+    // Progressive unlock system
+    if (window.PlanetTutorial) {
+      PlanetTutorial.init('index');
+      applyProgressiveVisibility();
+    }
   } else {
     // New user — show onboarding
     document.getElementById('onboarding').style.display = '';

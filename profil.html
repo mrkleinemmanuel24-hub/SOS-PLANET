@@ -179,6 +179,7 @@ a{color:var(--accent);text-decoration:none}
     <a href="partage.html" class="profile-action green">🎴 Voir ma carte de partage</a>
     <a href="tendances.html" class="profile-action gold">📈 Voir les tendances</a>
     <button class="profile-action red" onclick="resetProfile()">🗑️ Reinitialiser mon profil</button>
+    <button class="profile-action gold" onclick="unlockAllFeatures()" id="unlock-all-btn" style="display:none">🔓 Tout debloquer (demo)</button>
   </div>
 </div>
 
@@ -407,7 +408,41 @@ a{color:var(--accent);text-decoration:none}
   };
 
   render();
+
+  // Secret unlock button: visible on ?unlock=all or via triple-click on reset button
+  var resetBtn = document.querySelector('.profile-action.red');
+  var unlockBtn = document.getElementById('unlock-all-btn');
+  var tapCount = 0;
+  var tapTimer = null;
+  if (resetBtn && unlockBtn) {
+    // Show if ?unlock=all
+    if (window.location.search.indexOf('unlock=all') !== -1) {
+      unlockBtn.style.display = '';
+    }
+    // Triple-click to reveal
+    resetBtn.addEventListener('click', function(e) {
+      tapCount++;
+      if (tapTimer) clearTimeout(tapTimer);
+      tapTimer = setTimeout(function() { tapCount = 0; }, 1000);
+      if (tapCount >= 3) {
+        e.preventDefault();
+        e.stopPropagation();
+        unlockBtn.style.display = '';
+        tapCount = 0;
+      }
+    });
+  }
+
+  window.unlockAllFeatures = function() {
+    if (window.PlanetTutorial) {
+      PlanetTutorial.unlockAll();
+      alert('Tout est debloque ! Niveau 10 — Gardien.');
+      location.reload();
+    }
+  };
 })();
 </script>
+<script src="js/planet-tutorial.js"></script>
+<script>PlanetTutorial.init('profil');</script>
 </body>
 </html>
