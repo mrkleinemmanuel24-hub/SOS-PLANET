@@ -1,0 +1,354 @@
+// SOS Planet — Shared engagement data (280+ engagements, 30 domains)
+// Used by: engagements.html, game.html
+window.PLANET_DOMAINS = [
+    { id:'alimentation', name:'Alimentation', engagements:[
+      {id:'a1',title:'Reduire la viande a 2x/semaine',co2:700,water:200000,diff:'medium',source:'ADEME Agribalyse'},
+      {id:'a2',title:'Acheter fruits et legumes de saison',co2:150,water:0,diff:'easy',source:'ADEME'},
+      {id:'a3',title:'Supprimer le gaspillage alimentaire',co2:200,water:50000,diff:'medium',source:'ADEME Anti-gaspi'},
+      {id:'a4',title:'Composter mes dechets organiques',co2:80,water:0,diff:'easy',source:'ADEME Compostage'},
+      {id:'a5',title:'Cuisiner maison plutot que plats prepares',co2:120,water:0,diff:'medium',source:'ADEME'},
+      {id:'a6',title:'Boire l\'eau du robinet (pas de bouteilles)',co2:30,water:0,diff:'easy',source:'ADEME'},
+      {id:'a7',title:'Acheter en circuits courts (AMAP, marche)',co2:100,water:0,diff:'medium',source:'Reseau AMAP'},
+      {id:'a8',title:'Reduire les produits laitiers industriels',co2:300,water:100000,diff:'medium',source:'FAO'},
+      {id:'a9',title:'Privilegier le bio pour les fruits sensibles',co2:50,water:0,diff:'easy',source:'INAO / Agence Bio'},
+      {id:'a10',title:'Arreter le cafe en capsules',co2:25,water:0,diff:'easy',source:'ADEME'},
+      {id:'a11',title:'Planifier les repas de la semaine',co2:150,water:30000,diff:'easy',source:'ADEME Anti-gaspi'},
+      {id:'a12',title:'Cuisiner les restes',co2:100,water:20000,diff:'easy',source:'ADEME'},
+      {id:'a13',title:'Acheter du vrac (zero emballage)',co2:40,water:0,diff:'medium',source:'Reseau Vrac'}
+    ]},
+    { id:'mobilite', name:'Mobilite', engagements:[
+      {id:'m1',title:'Aller au travail a velo',co2:800,water:0,diff:'medium',source:'ADEME Base Carbone'},
+      {id:'m2',title:'Covoiturer quotidiennement',co2:600,water:0,diff:'medium',source:'ADEME'},
+      {id:'m3',title:'Remplacer 1 vol court par le train',co2:250,water:0,diff:'easy',source:'ADEME / SNCF'},
+      {id:'m4',title:'Teletravailler 2 jours/semaine',co2:400,water:0,diff:'easy',source:'ADEME Etude 2020'},
+      {id:'m5',title:'Conduire en ecoconduite',co2:300,water:0,diff:'easy',source:'ADEME'},
+      {id:'m6',title:'Verifier la pression des pneus chaque mois',co2:100,water:0,diff:'easy',source:'ADEME'},
+      {id:'m7',title:'Limiter la vitesse a 110 km/h sur autoroute',co2:250,water:0,diff:'easy',source:'ADEME / Convention Citoyenne'},
+      {id:'m8',title:'Grouper les deplacements en voiture',co2:150,water:0,diff:'easy',source:'ADEME'},
+      {id:'m9',title:'Marcher pour les trajets < 2 km',co2:200,water:0,diff:'easy',source:'ADEME'},
+      {id:'m10',title:'Prendre les transports en commun',co2:500,water:0,diff:'medium',source:'ADEME'},
+      {id:'m11',title:'Pas d\'avion pour les vacances cette annee',co2:1500,water:0,diff:'hard',source:'DGAC / Atmosfair'},
+      {id:'m12',title:'Passer a un vehicule electrique',co2:2000,water:0,diff:'hard',source:'ADEME ACV 2022'},
+      {id:'m13',title:'Utiliser un velo cargo pour les courses',co2:300,water:0,diff:'medium',source:'ADEME'}
+    ]},
+    { id:'logement', name:'Logement', engagements:[
+      {id:'l1',title:'Baisser le chauffage a 19C',co2:400,water:0,diff:'easy',source:'ADEME'},
+      {id:'l2',title:'Isoler les combles',co2:800,water:0,diff:'hard',source:'ADEME'},
+      {id:'l3',title:'Installer un thermostat programmable',co2:200,water:0,diff:'medium',source:'ADEME'},
+      {id:'l4',title:'Passer aux LED',co2:50,water:0,diff:'easy',source:'ADEME'},
+      {id:'l5',title:'Eteindre les appareils en veille',co2:80,water:0,diff:'easy',source:'ADEME'},
+      {id:'l6',title:'Laver le linge a 30C',co2:60,water:10000,diff:'easy',source:'ADEME'},
+      {id:'l7',title:'Secher le linge a l\'air libre',co2:120,water:0,diff:'easy',source:'ADEME'},
+      {id:'l8',title:'Installer des mousseurs sur les robinets',co2:20,water:30000,diff:'easy',source:'ADEME'},
+      {id:'l9',title:'Douche 5 min au lieu de bain',co2:100,water:50000,diff:'easy',source:'ADEME'},
+      {id:'l10',title:'Installer des panneaux solaires',co2:1500,water:0,diff:'hard',source:'PVGIS / ADEME'},
+      {id:'l11',title:'Passer a une pompe a chaleur',co2:1200,water:0,diff:'hard',source:'ADEME'},
+      {id:'l12',title:'Isoler les murs par l\'exterieur',co2:1000,water:0,diff:'hard',source:'ADEME'},
+      {id:'l13',title:'Cuisiner avec couvercle',co2:30,water:0,diff:'easy',source:'ADEME'}
+    ]},
+    { id:'consommation', name:'Consommation', engagements:[
+      {id:'c1',title:'Acheter d\'occasion plutot que neuf',co2:200,water:0,diff:'easy',source:'ADEME'},
+      {id:'c2',title:'Reparer plutot que jeter',co2:150,water:0,diff:'medium',source:'ADEME / Bonus Reparation'},
+      {id:'c3',title:'Attendre 48h avant chaque achat',co2:100,water:0,diff:'easy',source:'ADEME Suffit'},
+      {id:'c4',title:'Refuser les sacs et emballages inutiles',co2:20,water:0,diff:'easy',source:'ADEME'},
+      {id:'c5',title:'Garder son telephone 4+ ans',co2:30,water:0,diff:'medium',source:'ADEME ACV Numerique'},
+      {id:'c6',title:'Garder ses vetements 3+ ans',co2:80,water:50000,diff:'easy',source:'ADEME / ReFashion'},
+      {id:'c7',title:'Emprunter plutot qu\'acheter les objets rares',co2:50,water:0,diff:'easy',source:'ADEME'},
+      {id:'c8',title:'Louer plutot qu\'acheter le materiel de sport',co2:40,water:0,diff:'easy',source:'ADEME'},
+      {id:'c9',title:'Utiliser des cosmetiques solides',co2:15,water:5000,diff:'easy',source:'ADEME'},
+      {id:'c10',title:'Choisir des produits avec indice de reparabilite > 7',co2:60,water:0,diff:'medium',source:'Loi AGEC 2020'},
+      {id:'c11',title:'Eviter le Black Friday',co2:50,water:0,diff:'easy',source:'ADEME'},
+      {id:'c12',title:'Donner ce que je n\'utilise plus',co2:40,water:0,diff:'easy',source:'ADEME'},
+      {id:'c13',title:'Utiliser des piles rechargeables',co2:15,water:0,diff:'easy',source:'ADEME'}
+    ]},
+    { id:'eau', name:'Eau', engagements:[
+      {id:'e1',title:'Recuperer l\'eau de pluie pour le jardin',co2:10,water:40000,diff:'medium',source:'ADEME'},
+      {id:'e2',title:'Installer une chasse d\'eau double',co2:5,water:20000,diff:'medium',source:'ADEME'},
+      {id:'e3',title:'Arroser le soir (evaporation -50%)',co2:5,water:15000,diff:'easy',source:'ADEME'},
+      {id:'e4',title:'Paillage au jardin',co2:20,water:25000,diff:'easy',source:'ADEME'},
+      {id:'e5',title:'Fermer le robinet pendant le brossage',co2:3,water:8000,diff:'easy',source:'ADEME'},
+      {id:'e6',title:'Laver la voiture au seau (pas au jet)',co2:2,water:5000,diff:'easy',source:'ADEME'},
+      {id:'e7',title:'Remplir completement le lave-vaisselle',co2:20,water:8000,diff:'easy',source:'ADEME'},
+      {id:'e8',title:'Installer un regulateur de pression',co2:5,water:15000,diff:'medium',source:'ADEME'},
+      {id:'e9',title:'Verifier et reparer les fuites',co2:5,water:35000,diff:'medium',source:'ADEME (1 goutte/s = 15m3/an)'},
+      {id:'e10',title:'Utiliser de l\'eau froide pour les mains',co2:30,water:0,diff:'easy',source:'ADEME'},
+      {id:'e11',title:'Reduire l\'arrosage de la pelouse',co2:5,water:50000,diff:'easy',source:'ADEME'},
+      {id:'e12',title:'Privilegier plantes resistantes a la secheresse',co2:5,water:30000,diff:'medium',source:'ADEME'}
+    ]},
+    { id:'dechets', name:'Dechets', engagements:[
+      {id:'d1',title:'Trier tous mes dechets recyclables',co2:50,water:0,diff:'easy',source:'ADEME / Citeo'},
+      {id:'d2',title:'Composter les biodechets (obligation 2024)',co2:80,water:0,diff:'medium',source:'Loi AGEC'},
+      {id:'d3',title:'Passer au zero dechet (salle de bain)',co2:20,water:5000,diff:'medium',source:'Zero Waste France'},
+      {id:'d4',title:'Utiliser des sacs reutilisables',co2:10,water:0,diff:'easy',source:'ADEME'},
+      {id:'d5',title:'Refuser la pub papier (Stop Pub)',co2:15,water:0,diff:'easy',source:'ADEME (40 kg papier/foyer/an)'},
+      {id:'d6',title:'Apporter les DEEE en dechetterie',co2:30,water:0,diff:'easy',source:'ecosystem / ecologic'},
+      {id:'d7',title:'Donner les vetements uses (bornes Le Relais)',co2:25,water:20000,diff:'easy',source:'ReFashion'},
+      {id:'d8',title:'Reduire les emballages plastiques de 50%',co2:40,water:0,diff:'medium',source:'ADEME'},
+      {id:'d9',title:'Utiliser des contenants reutilisables',co2:15,water:0,diff:'easy',source:'ADEME'},
+      {id:'d10',title:'Participer a un Repair Cafe',co2:30,water:0,diff:'easy',source:'Repair Cafe France'},
+      {id:'d11',title:'Deposer les medicaments en pharmacie',co2:5,water:0,diff:'easy',source:'Cyclamed'},
+      {id:'d12',title:'Rapporter les piles usagees',co2:5,water:0,diff:'easy',source:'Corepile'}
+    ]},
+    { id:'biodiversite', name:'Biodiversite', engagements:[
+      {id:'b1',title:'Installer un hotel a insectes',co2:5,water:0,diff:'easy',source:'LPO'},
+      {id:'b2',title:'Planter des fleurs melliferes',co2:10,water:0,diff:'easy',source:'UNAF / abeilles'},
+      {id:'b3',title:'Laisser un coin sauvage dans le jardin',co2:15,water:0,diff:'easy',source:'LPO'},
+      {id:'b4',title:'Installer un nichoir a oiseaux',co2:5,water:0,diff:'easy',source:'LPO'},
+      {id:'b5',title:'Ne pas tondre en mai (No Mow May)',co2:10,water:5000,diff:'easy',source:'Plantlife / LPO'},
+      {id:'b6',title:'Signaler mes observations nature (iNaturalist)',co2:0,water:0,diff:'easy',source:'INPN'},
+      {id:'b7',title:'Participer au comptage des oiseaux (BirdLab)',co2:0,water:0,diff:'easy',source:'MNHN / LPO'},
+      {id:'b8',title:'Eviter les pesticides au jardin',co2:20,water:0,diff:'easy',source:'Loi Labbe'},
+      {id:'b9',title:'Planter une haie champetre',co2:50,water:0,diff:'hard',source:'Afac-Agroforesteries'},
+      {id:'b10',title:'Creer une mare naturelle',co2:10,water:0,diff:'hard',source:'SNPN'},
+      {id:'b11',title:'Semer des engrais verts',co2:20,water:0,diff:'medium',source:'ADEME'},
+      {id:'b12',title:'Proteger les herissons (passages dans clotures)',co2:0,water:0,diff:'easy',source:'LPO'}
+    ]},
+    { id:'numerique', name:'Numerique', engagements:[
+      {id:'n1',title:'Supprimer les emails inutiles',co2:10,water:0,diff:'easy',source:'ADEME'},
+      {id:'n2',title:'Desactiver la lecture video automatique',co2:20,water:0,diff:'easy',source:'The Shift Project'},
+      {id:'n3',title:'Garder mon smartphone 4+ ans',co2:30,water:0,diff:'medium',source:'ADEME ACV Num.'},
+      {id:'n4',title:'Utiliser le Wi-Fi plutot que la 4G/5G',co2:15,water:0,diff:'easy',source:'ADEME'},
+      {id:'n5',title:'Eteindre la box internet la nuit',co2:20,water:0,diff:'easy',source:'ADEME (200 kWh/an)'},
+      {id:'n6',title:'Reduire la qualite du streaming (720p)',co2:25,water:0,diff:'easy',source:'The Shift Project'},
+      {id:'n7',title:'Nettoyer le cloud (photos, fichiers)',co2:10,water:0,diff:'easy',source:'ADEME'},
+      {id:'n8',title:'Acheter du reconditionne',co2:50,water:0,diff:'easy',source:'Back Market / ADEME'},
+      {id:'n9',title:'Installer un bloqueur de pubs',co2:5,water:0,diff:'easy',source:'The Shift Project'},
+      {id:'n10',title:'Utiliser un moteur de recherche sobre (Ecosia)',co2:5,water:0,diff:'easy',source:'Ecosia'},
+      {id:'n11',title:'Desinstaller les apps inutilisees',co2:5,water:0,diff:'easy',source:'ADEME'},
+      {id:'n12',title:'Eviter le cloud pour le stockage local',co2:10,water:0,diff:'easy',source:'ADEME'}
+    ]},
+    { id:'education', name:'Education', engagements:[
+      {id:'ed1',title:'Lire un livre sur le climat ce mois',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'ed2',title:'Regarder un documentaire environnemental',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'ed3',title:'S\'inscrire a la Fresque du Climat',co2:0,water:0,diff:'easy',source:'Fresque du Climat'},
+      {id:'ed4',title:'Partager 1 info climat/semaine sur les reseaux',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'ed5',title:'Sensibiliser un enfant a la nature',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'ed6',title:'Suivre un MOOC environnement',co2:0,water:0,diff:'medium',source:'FUN-MOOC'},
+      {id:'ed7',title:'Calculer son empreinte carbone (SOS Carbone)',co2:0,water:0,diff:'easy',source:'ADEME / SOS Planet'},
+      {id:'ed8',title:'Apprendre a reconnaitre 10 oiseaux locaux',co2:0,water:0,diff:'easy',source:'LPO'},
+      {id:'ed9',title:'Visiter une ferme bio',co2:0,water:0,diff:'easy',source:'Agence Bio'},
+      {id:'ed10',title:'Lire les rapports du GIEC (resume pour decideurs)',co2:0,water:0,diff:'medium',source:'GIEC AR6'}
+    ]},
+    { id:'citoyen', name:'Citoyen', engagements:[
+      {id:'ci1',title:'Signer une petition environnementale',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'ci2',title:'Ecrire a son depute sur un sujet environnemental',co2:0,water:0,diff:'medium',source:'—'},
+      {id:'ci3',title:'Participer a un ramassage de dechets',co2:10,water:0,diff:'easy',source:'Surfrider / Clean Walk'},
+      {id:'ci4',title:'Adherer a une association environnementale',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'ci5',title:'Voter aux elections en evaluant les programmes climat',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'ci6',title:'Signaler une pollution (Sentinelles de la Nature)',co2:0,water:0,diff:'easy',source:'FNE'},
+      {id:'ci7',title:'Participer au budget participatif de ma commune',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'ci8',title:'Soutenir un projet de crowdfunding ecologique',co2:0,water:0,diff:'medium',source:'—'},
+      {id:'ci9',title:'Participer a un conseil de quartier',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'ci10',title:'Desinvestir des energies fossiles (banque ethique)',co2:500,water:0,diff:'medium',source:'Reclaim Finance / La Nef'}
+    ]},
+    { id:'travail', name:'Travail', engagements:[
+      {id:'t1',title:'Proposer le tri au bureau',co2:20,water:0,diff:'easy',source:'ADEME'},
+      {id:'t2',title:'Imprimer recto-verso uniquement',co2:10,water:0,diff:'easy',source:'ADEME'},
+      {id:'t3',title:'Apporter son mug (pas de gobelets)',co2:5,water:0,diff:'easy',source:'ADEME'},
+      {id:'t4',title:'Proposer un Plan Mobilite Employeur',co2:200,water:0,diff:'hard',source:'Loi LOM'},
+      {id:'t5',title:'Eteindre PC et ecrans le soir',co2:30,water:0,diff:'easy',source:'ADEME'},
+      {id:'t6',title:'Lunch box plutot que repas a emporter',co2:50,water:0,diff:'easy',source:'ADEME'},
+      {id:'t7',title:'Proposer 1 jour de teletravail supplementaire',co2:200,water:0,diff:'medium',source:'ADEME'},
+      {id:'t8',title:'Organiser un defi ecolo entre collegues',co2:50,water:0,diff:'medium',source:'—'},
+      {id:'t9',title:'Lancer une Fresque du Climat au bureau',co2:0,water:0,diff:'medium',source:'Fresque du Climat'},
+      {id:'t10',title:'Choisir un fournisseur d\'electricite verte',co2:300,water:0,diff:'medium',source:'ADEME / Enercoop'}
+    ]},
+    { id:'sante', name:'Sante', engagements:[
+      {id:'s1',title:'Marcher 30 min/jour (mobilite douce)',co2:100,water:0,diff:'easy',source:'OMS'},
+      {id:'s2',title:'Eviter les perturbateurs endocriniens',co2:10,water:0,diff:'medium',source:'ANSES'},
+      {id:'s3',title:'Verifier la qualite de mon eau (PFAS)',co2:0,water:0,diff:'easy',source:'ARS'},
+      {id:'s4',title:'Aerer 10 min/jour (qualite air interieur)',co2:0,water:0,diff:'easy',source:'ADEME / ANSES'},
+      {id:'s5',title:'Reduire les cosmetiques avec PFAS/parabens',co2:10,water:0,diff:'easy',source:'ANSES'},
+      {id:'s6',title:'Manger 5 fruits et legumes/jour',co2:50,water:0,diff:'easy',source:'PNNS'},
+      {id:'s7',title:'Faire du sport en exterieur (pas en salle climatisee)',co2:30,water:0,diff:'easy',source:'ADEME'},
+      {id:'s8',title:'Utiliser des produits menagers naturels',co2:15,water:0,diff:'easy',source:'ADEME / 60M Consommateurs'},
+      {id:'s9',title:'Rapporter mes medicaments non utilises',co2:5,water:0,diff:'easy',source:'Cyclamed'},
+      {id:'s10',title:'Choisir une alimentation anti-inflammatoire',co2:50,water:0,diff:'medium',source:'OMS / ANSES'}
+    ]},
+    { id:'animaux', name:'Animaux', engagements:[
+      {id:'an1',title:'Nourrir les oiseaux en hiver',co2:0,water:0,diff:'easy',source:'LPO'},
+      {id:'an2',title:'Adopter plutot qu\'acheter un animal',co2:0,water:0,diff:'medium',source:'SPA'},
+      {id:'an3',title:'Steriliser son chat (protection faune sauvage)',co2:0,water:0,diff:'medium',source:'LPO'},
+      {id:'an4',title:'Choisir une alimentation animale responsable',co2:50,water:0,diff:'medium',source:'ADEME'},
+      {id:'an5',title:'Signaler un animal en detresse (3115)',co2:0,water:0,diff:'easy',source:'SOS Animal'},
+      {id:'an6',title:'Respecter la faune sauvage (distance)',co2:0,water:0,diff:'easy',source:'OFB'},
+      {id:'an7',title:'Ramasser les dejections de son chien',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'an8',title:'Ne pas relacher d\'especes exotiques',co2:0,water:0,diff:'easy',source:'OFB'}
+    ]},
+    { id:'fetes', name:'Fetes', engagements:[
+      {id:'f1',title:'Cadeaux d\'occasion ou faits maison',co2:50,water:0,diff:'easy',source:'ADEME'},
+      {id:'f2',title:'Sapin naturel local (pas plastique)',co2:10,water:0,diff:'easy',source:'ADEME'},
+      {id:'f3',title:'Emballages reutilisables (furoshiki)',co2:5,water:0,diff:'easy',source:'ADEME'},
+      {id:'f4',title:'Repas de fete avec produits locaux',co2:30,water:0,diff:'easy',source:'ADEME'},
+      {id:'f5',title:'Limiter la decoration lumineuse (LED, minuterie)',co2:10,water:0,diff:'easy',source:'ADEME'},
+      {id:'f6',title:'Offrir des experiences plutot que des objets',co2:40,water:0,diff:'easy',source:'ADEME'},
+      {id:'f7',title:'Anniversaire zero dechet',co2:10,water:0,diff:'medium',source:'Zero Waste France'},
+      {id:'f8',title:'Halloween : deguisements recup',co2:5,water:0,diff:'easy',source:'ADEME'}
+    ]},
+    { id:'construction', name:'Construction', engagements:[
+      {id:'co1',title:'Choisir des materiaux biosources',co2:500,water:0,diff:'hard',source:'ADEME / RE2020'},
+      {id:'co2',title:'Isoler avant de chauffer',co2:800,water:0,diff:'hard',source:'ADEME'},
+      {id:'co3',title:'Installer une VMC double flux',co2:200,water:0,diff:'hard',source:'ADEME'},
+      {id:'co4',title:'Privilegier la renovation a la construction neuve',co2:1000,water:0,diff:'hard',source:'ADEME'},
+      {id:'co5',title:'Utiliser de la peinture naturelle',co2:20,water:0,diff:'easy',source:'ADEME'},
+      {id:'co6',title:'Recuperer les materiaux de demolition',co2:100,water:0,diff:'medium',source:'ADEME / RE2020'},
+      {id:'co7',title:'Toiture vegetalisee',co2:50,water:5000,diff:'hard',source:'ADEME'},
+      {id:'co8',title:'Orientation bioclimatique',co2:300,water:0,diff:'hard',source:'ADEME / RE2020'}
+    ]},
+    { id:'mode', name:'Mode', engagements:[
+      {id:'mo1',title:'Acheter en friperie/seconde main',co2:100,water:50000,diff:'easy',source:'ADEME / ReFashion'},
+      {id:'mo2',title:'Reparer ses vetements (couture basique)',co2:30,water:10000,diff:'easy',source:'ReFashion'},
+      {id:'mo3',title:'Choisir des fibres naturelles (lin, chanvre)',co2:40,water:20000,diff:'medium',source:'ADEME'},
+      {id:'mo4',title:'Boycotter la fast fashion',co2:200,water:100000,diff:'medium',source:'ADEME'},
+      {id:'mo5',title:'Organiser un troc de vetements',co2:30,water:10000,diff:'easy',source:'—'},
+      {id:'mo6',title:'Laver moins souvent (quand c\'est sale)',co2:30,water:10000,diff:'easy',source:'Levi\'s / ADEME'},
+      {id:'mo7',title:'Choisir des marques ethiques certifiees',co2:50,water:20000,diff:'medium',source:'GOTS / Fair Wear'},
+      {id:'mo8',title:'Louer pour les occasions speciales',co2:20,water:5000,diff:'easy',source:'ADEME'}
+    ]},
+    { id:'tourisme', name:'Tourisme', engagements:[
+      {id:'to1',title:'Vacances en France (pas d\'avion)',co2:1500,water:0,diff:'medium',source:'ADEME / DGAC'},
+      {id:'to2',title:'Hebergement eco-labellise (Cle Verte)',co2:100,water:10000,diff:'easy',source:'La Cle Verte'},
+      {id:'to3',title:'Randonnee plutot que parc a theme',co2:50,water:0,diff:'easy',source:'ADEME'},
+      {id:'to4',title:'Emporter gourde + couverts reutilisables',co2:10,water:0,diff:'easy',source:'ADEME'},
+      {id:'to5',title:'Respecter la reglementation des espaces naturels',co2:0,water:0,diff:'easy',source:'Parcs Nationaux'},
+      {id:'to6',title:'Compenser le vol si inevitable',co2:200,water:0,diff:'easy',source:'Gold Standard'},
+      {id:'to7',title:'Voyager hors saison (impact moindre)',co2:50,water:0,diff:'easy',source:'ATR'},
+      {id:'to8',title:'Slow tourism : moins de km, plus de temps',co2:300,water:0,diff:'medium',source:'ATR'}
+    ]},
+    { id:'finance', name:'Finance', engagements:[
+      {id:'fi1',title:'Ouvrir un compte dans une banque ethique',co2:500,water:0,diff:'medium',source:'Reclaim Finance'},
+      {id:'fi2',title:'Verifier que mon epargne ne finance pas le fossile',co2:300,water:0,diff:'medium',source:'Reclaim Finance'},
+      {id:'fi3',title:'Investir dans les energies renouvelables',co2:200,water:0,diff:'hard',source:'ADEME / Enerfip'},
+      {id:'fi4',title:'Crowdfunding pour projets ecolo locaux',co2:50,water:0,diff:'easy',source:'—'},
+      {id:'fi5',title:'Souscrire a un fournisseur vert (Enercoop)',co2:300,water:0,diff:'easy',source:'ADEME'},
+      {id:'fi6',title:'Reduire les achats impulsifs',co2:100,water:0,diff:'easy',source:'ADEME'},
+      {id:'fi7',title:'Eviter les livraisons express',co2:30,water:0,diff:'easy',source:'ADEME derniere mile'},
+      {id:'fi8',title:'Grouper les commandes en ligne',co2:20,water:0,diff:'easy',source:'ADEME'}
+    ]},
+    { id:'activisme', name:'Activisme', engagements:[
+      {id:'ac1',title:'Participer a une marche pour le climat',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'ac2',title:'Devenir benevole pour une asso ecolo',co2:0,water:0,diff:'medium',source:'—'},
+      {id:'ac3',title:'Organiser un evenement local',co2:0,water:0,diff:'hard',source:'—'},
+      {id:'ac4',title:'Lancer un defi ecolo en ligne',co2:0,water:0,diff:'medium',source:'—'},
+      {id:'ac5',title:'Interpeller une entreprise sur ses pratiques',co2:0,water:0,diff:'medium',source:'—'},
+      {id:'ac6',title:'Participer a une consultation publique',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'ac7',title:'Mentorer un jeune sur l\'ecologie',co2:0,water:0,diff:'medium',source:'—'},
+      {id:'ac8',title:'Creer un groupe local d\'action',co2:0,water:0,diff:'hard',source:'—'}
+    ]},
+    { id:'oceans', name:'Oceans', engagements:[
+      {id:'oc1',title:'Ramasser les dechets sur la plage',co2:5,water:0,diff:'easy',source:'Surfrider'},
+      {id:'oc2',title:'Ne pas jeter de megot par terre (1 megot = 500L eau polluee)',co2:5,water:500,diff:'easy',source:'Surfrider'},
+      {id:'oc3',title:'Choisir du poisson durable (label MSC)',co2:30,water:0,diff:'easy',source:'MSC / Mr Goodfish'},
+      {id:'oc4',title:'Eviter les microplastiques (cosmetiques, textiles)',co2:10,water:0,diff:'medium',source:'ANSES'},
+      {id:'oc5',title:'Soutenir une ONG ocean (Surfrider, Sea Shepherd)',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'oc6',title:'Ne pas relacher de ballons',co2:0,water:0,diff:'easy',source:'FNE'},
+      {id:'oc7',title:'Reduire la consommation de crevettes d\'elevage',co2:50,water:0,diff:'medium',source:'FAO'},
+      {id:'oc8',title:'Utiliser de la creme solaire ocean-friendly',co2:0,water:0,diff:'easy',source:'IUCN'}
+    ]},
+    { id:'seniors', name:'Seniors', engagements:[
+      {id:'se1',title:'Transmettre les savoirs ecologiques aux jeunes',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'se2',title:'Jardiner (potager, compost)',co2:50,water:0,diff:'easy',source:'ADEME'},
+      {id:'se3',title:'Marcher regulierement (sante + mobilite douce)',co2:50,water:0,diff:'easy',source:'OMS'},
+      {id:'se4',title:'Cuisiner avec les restes (savoir-faire)',co2:100,water:20000,diff:'easy',source:'ADEME'},
+      {id:'se5',title:'Reparer (couture, bricolage, conserves)',co2:50,water:0,diff:'easy',source:'ADEME'},
+      {id:'se6',title:'Participer a un SEL (Systeme d\'Echange Local)',co2:30,water:0,diff:'easy',source:'—'},
+      {id:'se7',title:'Donner les objets inutilises aux jeunes menages',co2:40,water:0,diff:'easy',source:'ADEME'}
+    ]},
+    { id:'ecole', name:'Ecole', engagements:[
+      {id:'ec1',title:'Gourde reutilisable a l\'ecole',co2:10,water:0,diff:'easy',source:'ADEME'},
+      {id:'ec2',title:'Gouter zero dechet',co2:15,water:0,diff:'easy',source:'Zero Waste'},
+      {id:'ec3',title:'Marcher ou velo pour l\'ecole',co2:100,water:0,diff:'easy',source:'ADEME'},
+      {id:'ec4',title:'Potager scolaire',co2:20,water:0,diff:'medium',source:'Jardinons a l\'ecole'},
+      {id:'ec5',title:'Eteindre les lumieres en sortant de classe',co2:10,water:0,diff:'easy',source:'ADEME'},
+      {id:'ec6',title:'Fournitures recyclees/recyclables',co2:10,water:0,diff:'easy',source:'ADEME'},
+      {id:'ec7',title:'Organiser un tri dans la cour',co2:15,water:0,diff:'easy',source:'Eco-Ecole'},
+      {id:'ec8',title:'Parrainer un arbre',co2:22,water:0,diff:'easy',source:'Reforest\'Action'}
+    ]},
+    { id:'pollinisateurs', name:'Pollinisateurs', engagements:[
+      {id:'po1',title:'Planter des fleurs melliferes (lavande, thym, bourrache)',co2:10,water:0,diff:'easy',source:'UNAF'},
+      {id:'po2',title:'Ne pas tondre avant fin mai',co2:10,water:5000,diff:'easy',source:'Plantlife / LPO'},
+      {id:'po3',title:'Installer un hotel a insectes',co2:5,water:0,diff:'easy',source:'LPO'},
+      {id:'po4',title:'Zero pesticide au jardin',co2:20,water:0,diff:'easy',source:'Loi Labbe'},
+      {id:'po5',title:'Parrainer une ruche',co2:0,water:0,diff:'easy',source:'Un toit pour les abeilles'},
+      {id:'po6',title:'Signaler les frelons asiatiques',co2:0,water:0,diff:'easy',source:'MNHN / INPN'},
+      {id:'po7',title:'Laisser des zones d\'eau (coupelles, mares)',co2:0,water:0,diff:'easy',source:'LPO'}
+    ]},
+    { id:'solidarite', name:'Solidarite', engagements:[
+      {id:'so1',title:'Donner des vetements chauds avant l\'hiver',co2:20,water:10000,diff:'easy',source:'Emmaüs'},
+      {id:'so2',title:'Cuisiner pour un voisin isole',co2:10,water:0,diff:'easy',source:'Voisins Solidaires'},
+      {id:'so3',title:'Donner du sang',co2:0,water:0,diff:'easy',source:'EFS'},
+      {id:'so4',title:'Parrainer un enfant defavorise',co2:0,water:0,diff:'medium',source:'—'},
+      {id:'so5',title:'Donner a une banque alimentaire',co2:20,water:0,diff:'easy',source:'Banque Alimentaire'},
+      {id:'so6',title:'Heberger temporairement une personne en difficulte',co2:0,water:0,diff:'hard',source:'SAMU Social'},
+      {id:'so7',title:'Participer a Giving Tuesday',co2:0,water:0,diff:'easy',source:'—'}
+    ]},
+    { id:'peche', name:'Peche', engagements:[
+      {id:'pe1',title:'Respecter les tailles minimales de capture',co2:0,water:0,diff:'easy',source:'IFREMER'},
+      {id:'pe2',title:'Pratiquer le no-kill (remise a l\'eau)',co2:0,water:0,diff:'easy',source:'FNPF'},
+      {id:'pe3',title:'Ramasser ses dechets au bord de l\'eau',co2:5,water:0,diff:'easy',source:'FNPF'},
+      {id:'pe4',title:'Utiliser des appats naturels',co2:0,water:0,diff:'easy',source:'FNPF'},
+      {id:'pe5',title:'Signaler les pollutions de cours d\'eau',co2:0,water:0,diff:'easy',source:'OFB'},
+      {id:'pe6',title:'Participer au suivi des populations piscicoles',co2:0,water:0,diff:'medium',source:'FNPF'}
+    ]},
+    { id:'montagne', name:'Montagne', engagements:[
+      {id:'mt1',title:'Rester sur les sentiers balises',co2:0,water:0,diff:'easy',source:'Parcs Nationaux'},
+      {id:'mt2',title:'Redescendre tous ses dechets',co2:5,water:0,diff:'easy',source:'Mountain Wilderness'},
+      {id:'mt3',title:'Covoiturer pour acceder aux stations',co2:100,water:0,diff:'easy',source:'ADEME'},
+      {id:'mt4',title:'Choisir des stations eco-labellisees',co2:50,water:5000,diff:'easy',source:'Flocon Vert'},
+      {id:'mt5',title:'Respecter la faune en hiver (bouquetins, chamois)',co2:0,water:0,diff:'easy',source:'OFB'},
+      {id:'mt6',title:'Privilegier ski de fond/raquettes au ski alpin',co2:30,water:5000,diff:'easy',source:'Mountain Wilderness'}
+    ]},
+    { id:'ville', name:'Ville', engagements:[
+      {id:'vi1',title:'Vegataliser son balcon/terrasse',co2:5,water:0,diff:'easy',source:'—'},
+      {id:'vi2',title:'Participer aux jardins partages',co2:20,water:0,diff:'easy',source:'—'},
+      {id:'vi3',title:'Utiliser les pistes cyclables',co2:200,water:0,diff:'easy',source:'ADEME'},
+      {id:'vi4',title:'Signaler les ilots de chaleur',co2:0,water:0,diff:'easy',source:'APUR'},
+      {id:'vi5',title:'Promouvoir la vegetation en pied d\'immeuble',co2:10,water:0,diff:'easy',source:'Mairie'},
+      {id:'vi6',title:'Demander des fontaines publiques',co2:5,water:0,diff:'easy',source:'—'},
+      {id:'vi7',title:'Soutenir le permis de vegetaliser',co2:5,water:0,diff:'easy',source:'Mairie de Paris'}
+    ]},
+    { id:'science', name:'Science', engagements:[
+      {id:'sc1',title:'Participer a un programme de science participative',co2:0,water:0,diff:'easy',source:'MNHN'},
+      {id:'sc2',title:'Installer une station meteo personnelle',co2:0,water:0,diff:'medium',source:'Infoclimat'},
+      {id:'sc3',title:'Contribuer a OpenStreetMap',co2:0,water:0,diff:'easy',source:'OSM'},
+      {id:'sc4',title:'Signaler especes sur iNaturalist',co2:0,water:0,diff:'easy',source:'iNaturalist'},
+      {id:'sc5',title:'Mesurer la qualite de l\'air (capteurs citoyens)',co2:0,water:0,diff:'medium',source:'Sensor.Community'},
+      {id:'sc6',title:'Soutenir la recherche publique (dons)',co2:0,water:0,diff:'easy',source:'—'}
+    ]},
+    { id:'sols', name:'Sols', engagements:[
+      {id:'sl1',title:'Ne jamais laisser le sol nu (paillage/couvre-sol)',co2:30,water:15000,diff:'easy',source:'ADEME'},
+      {id:'sl2',title:'Composter pour nourrir le sol',co2:80,water:0,diff:'easy',source:'ADEME'},
+      {id:'sl3',title:'Eviter le motoculteur (ne pas retourner le sol)',co2:10,water:0,diff:'easy',source:'Sol Vivant'},
+      {id:'sl4',title:'Planter des engrais verts',co2:20,water:0,diff:'easy',source:'ADEME'},
+      {id:'sl5',title:'Limiter l\'artificialisation (ZAN)',co2:100,water:0,diff:'hard',source:'Loi Climat Resilience'},
+      {id:'sl6',title:'Faire analyser son sol',co2:0,water:0,diff:'medium',source:'INRAE / labo sol'}
+    ]},
+    { id:'bruit', name:'Bruit', engagements:[
+      {id:'br1',title:'Rouler doucement en zone residentielle',co2:20,water:0,diff:'easy',source:'ADEME'},
+      {id:'br2',title:'Utiliser des outils de jardin electriques (pas thermiques)',co2:30,water:0,diff:'medium',source:'ADEME'},
+      {id:'br3',title:'Respecter les horaires de bricolage',co2:0,water:0,diff:'easy',source:'Prefectures'},
+      {id:'br4',title:'Signaler les nuisances sonores excessives',co2:0,water:0,diff:'easy',source:'ARS'},
+      {id:'br5',title:'Soutenir les zones de calme urbaines',co2:0,water:0,diff:'easy',source:'OMS'}
+    ]},
+    { id:'lumiere', name:'Lumiere', engagements:[
+      {id:'lu1',title:'Eteindre les lumieres exterieures apres 23h',co2:20,water:0,diff:'easy',source:'ANPCEN'},
+      {id:'lu2',title:'Installer des detecteurs de mouvement',co2:15,water:0,diff:'easy',source:'ADEME'},
+      {id:'lu3',title:'Signaler l\'eclairage public excessif',co2:10,water:0,diff:'easy',source:'ANPCEN'},
+      {id:'lu4',title:'Eteindre enseignes et vitrines la nuit',co2:30,water:0,diff:'easy',source:'Decret 2018'},
+      {id:'lu5',title:'Participer a Jour de la Nuit',co2:0,water:0,diff:'easy',source:'ANPCEN'}
+    ]},
+    { id:'chimie', name:'Chimie', engagements:[
+      {id:'ch1',title:'Utiliser du vinaigre blanc et bicarbonate',co2:10,water:5000,diff:'easy',source:'ADEME / 60M'},
+      {id:'ch2',title:'Lire les pictogrammes de danger',co2:0,water:0,diff:'easy',source:'INRS'},
+      {id:'ch3',title:'Rapporter les produits chimiques en dechetterie',co2:10,water:0,diff:'easy',source:'EcoDDS'},
+      {id:'ch4',title:'Choisir des peintures NF Environnement',co2:10,water:0,diff:'easy',source:'ADEME'},
+      {id:'ch5',title:'Eviter les bougies parfumees et encens',co2:5,water:0,diff:'easy',source:'ADEME / ANSES'}
+    ]},
+    { id:'findevie', name:'Fin de vie', engagements:[
+      {id:'fv1',title:'Opter pour des funerailles ecologiques',co2:100,water:0,diff:'hard',source:'—'},
+      {id:'fv2',title:'Don d\'organes (carte de donneur)',co2:0,water:0,diff:'easy',source:'—'},
+      {id:'fv3',title:'Testament ecologique (legs a une asso)',co2:0,water:0,diff:'medium',source:'—'},
+      {id:'fv4',title:'Choisir un cercueil en bois non traite',co2:20,water:0,diff:'medium',source:'—'},
+      {id:'fv5',title:'Cremation vs inhumation : choix informe',co2:30,water:0,diff:'medium',source:'ADEME estimation'}
+    ]}
+  ];

@@ -32,7 +32,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1p
 .coins-badge{display:flex;align-items:center;gap:3px;font-size:.75rem;font-weight:800;color:var(--green);background:rgba(16,185,129,.12);padding:3px 8px;border-radius:12px}
 
 /* XP Bar */
-.xp-section{padding:0 16px 8px}
+.xp-section{padding:0 16px 4px}
 .xp-row{display:flex;align-items:center;gap:6px;margin-bottom:2px}
 .xp-level{font-size:.65rem;font-weight:800;color:var(--gold);background:rgba(251,191,36,.15);padding:2px 8px;border-radius:8px;white-space:nowrap}
 .xp-bar-wrap{flex:1;height:12px;background:rgba(255,255,255,.06);border-radius:8px;overflow:hidden;position:relative}
@@ -41,6 +41,17 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1p
 @keyframes xp-pulse{0%{filter:brightness(1)}50%{filter:brightness(1.8)}100%{filter:brightness(1)}}
 .xp-bar::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.25) 0%,transparent 50%);border-radius:8px}
 .xp-text{font-size:.6rem;color:var(--dim);text-align:right;margin-top:1px}
+.xp-impact{font-size:.6rem;color:var(--green);font-weight:700;text-align:center;margin-top:2px;padding:2px 0}
+
+/* ===== HUB EXPLORER ===== */
+.hub-section{padding:4px 16px 10px}
+.hub-title{font-size:.7rem;font-weight:800;color:var(--dim);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.hub-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+.hub-scroll::-webkit-scrollbar{display:none}
+.hub-card{flex-shrink:0;width:90px;padding:10px 6px;background:var(--card);border:1px solid var(--card-b);border-radius:14px;text-align:center;text-decoration:none;color:var(--text);transition:all .2s;scroll-snap-align:start;cursor:pointer}
+.hub-card:active{transform:scale(.93);background:rgba(16,185,129,.08)}
+.hub-card .hub-icon{font-size:1.5rem;display:block;margin-bottom:3px}
+.hub-card .hub-label{font-size:.55rem;font-weight:700;color:var(--dim);line-height:1.2}
 
 /* ===== CANVAS PLANET ===== */
 .planet-zone{text-align:center;padding:0 0 12px;position:relative;touch-action:none}
@@ -103,10 +114,14 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1p
 .quest-emoji{font-size:1.8rem;width:46px;height:46px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border-radius:12px;flex-shrink:0}
 .quest-info{flex:1;min-width:0}
 .quest-title{font-size:.8rem;font-weight:700;line-height:1.3;margin-bottom:2px}
-.quest-meta{display:flex;gap:8px;align-items:center}
+.quest-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .quest-xp{font-size:.65rem;color:var(--gold);font-weight:800}
 .quest-coins{font-size:.65rem;color:var(--green);font-weight:700}
 .quest-cat{font-size:.55rem;color:var(--dim);background:rgba(255,255,255,.05);padding:1px 6px;border-radius:6px}
+.quest-diff{font-size:.5rem;font-weight:700;padding:1px 5px;border-radius:6px}
+.quest-diff.easy{color:#10B981;background:rgba(16,185,129,.12)}
+.quest-diff.medium{color:#FBBF24;background:rgba(251,191,36,.12)}
+.quest-diff.hard{color:#EF4444;background:rgba(239,68,68,.12)}
 .quest-btn{width:42px;height:42px;border:none;border-radius:50%;font-size:1rem;cursor:pointer;transition:all .2s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .quest-btn.do{background:var(--green);color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.3)}
 .quest-btn.do:active{transform:scale(.9);box-shadow:0 2px 6px rgba(16,185,129,.3)}
@@ -215,6 +230,20 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1p
       <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar" style="width:0%"></div></div>
     </div>
     <div class="xp-text" id="xp-text">0 / 100 XP</div>
+    <div class="xp-impact" id="xp-impact"></div>
+  </div>
+
+  <!-- Hub Explorer -->
+  <div class="hub-section">
+    <div class="hub-title">🧭 EXPLORER</div>
+    <div class="hub-scroll">
+      <a class="hub-card" href="pfas.html"><span class="hub-icon">🧪</span><span class="hub-label">PFAS</span></a>
+      <a class="hub-card" href="alertes.html"><span class="hub-icon">🚨</span><span class="hub-label">Alertes</span></a>
+      <a class="hub-card" href="echanges.html"><span class="hub-icon">🔄</span><span class="hub-label">Echanges</span></a>
+      <a class="hub-card" href="engagements.html"><span class="hub-icon">📋</span><span class="hub-label">400 Gestes</span></a>
+      <a class="hub-card" href="defis.html"><span class="hub-icon">🏆</span><span class="hub-label">Defis</span></a>
+      <a class="hub-card" href="compteurs.html"><span class="hub-icon">📊</span><span class="hub-label">Impact</span></a>
+    </div>
   </div>
 
   <!-- Planet Canvas -->
@@ -280,12 +309,48 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1p
   <a href="projets.html"><span>🌱</span>Projets</a>
 </nav>
 
+<!-- External shared data and engine -->
+<script src="js/planet-data.js"></script>
+<script src="js/planet-engine.js"></script>
+
 <script>
 (function(){
 'use strict';
 
 // ============================================================
-// GAME DATA
+// FLATTEN REAL ENGAGEMENT DATA FROM PLANET_DOMAINS
+// ============================================================
+var ALL_ENGAGEMENTS = [];
+var DOMAIN_EMOJIS = {
+  alimentation:'🥗',mobilite:'🚲',logement:'🏠',consommation:'🛒',eau:'💧',
+  dechets:'♻️',biodiversite:'🌿',numerique:'📱',education:'📖',citoyen:'🏛️',
+  travail:'💼',sante:'❤️',animaux:'🐾',fetes:'🎁',construction:'🏗️',
+  mode:'👕',tourisme:'✈️',finance:'💰',activisme:'✊',oceans:'🌊',
+  seniors:'👴',ecole:'🎒',pollinisateurs:'🐝',solidarite:'🤝',peche:'🎣',
+  montagne:'🏔️',ville:'🏙️',science:'🔬',sols:'🌱',bruit:'🔇',
+  lumiere:'💡',chimie:'🧪',findevie:'🕊️'
+};
+
+if(window.PLANET_DOMAINS){
+  window.PLANET_DOMAINS.forEach(function(domain){
+    domain.engagements.forEach(function(eng){
+      ALL_ENGAGEMENTS.push({
+        id: eng.id,
+        title: eng.title,
+        co2: eng.co2,
+        water: eng.water,
+        diff: eng.diff,
+        source: eng.source,
+        domain: domain.id,
+        domainName: domain.name,
+        emoji: DOMAIN_EMOJIS[domain.id] || '🌍'
+      });
+    });
+  });
+}
+
+// ============================================================
+// GAME DATA (levels, creatures, bosses, garden, shop, wheel)
 // ============================================================
 
 var LEVELS = [
@@ -312,49 +377,6 @@ var CREATURES = [
   {e:'🔮',n:'Phoenix',l:20}
 ];
 
-var QUESTS = [
-  {e:'🚶',t:'Marche 15 min dehors',xp:25,c:5,cat:'Mobilite'},
-  {e:'🥗',t:'Un repas 100% vegetal',xp:30,c:8,cat:'Alimentation'},
-  {e:'🚿',t:'Douche chrono 4 min',xp:20,c:5,cat:'Eau'},
-  {e:'📦',t:'Refuse un plastique',xp:20,c:5,cat:'Dechets'},
-  {e:'🛒',t:'Achete un produit local',xp:25,c:6,cat:'Alimentation'},
-  {e:'🔌',t:'Debranche 3 appareils en veille',xp:15,c:4,cat:'Energie'},
-  {e:'🌳',t:'Photographie un arbre inconnu',xp:20,c:5,cat:'Nature'},
-  {e:'♻️',t:'Trie 5 dechets correctement',xp:20,c:5,cat:'Dechets'},
-  {e:'🚲',t:'Fais un trajet a velo',xp:30,c:8,cat:'Mobilite'},
-  {e:'💡',t:'Zero lumieres inutiles 1 heure',xp:15,c:4,cat:'Energie'},
-  {e:'🥕',t:'Cuisine legumes de saison',xp:25,c:6,cat:'Alimentation'},
-  {e:'📱',t:'Supprime 50 vieux mails',xp:15,c:4,cat:'Numerique'},
-  {e:'🌱',t:'Plante une graine (pour de vrai)',xp:35,c:10,cat:'Nature'},
-  {e:'🎒',t:'Emmene ton sac reutilisable',xp:15,c:3,cat:'Dechets'},
-  {e:'☕',t:'Utilise ta tasse reutilisable',xp:15,c:3,cat:'Dechets'},
-  {e:'📖',t:'Lis 5 min sur le climat',xp:20,c:5,cat:'Culture'},
-  {e:'👕',t:'Porte un vetement de seconde main',xp:20,c:5,cat:'Mode'},
-  {e:'🗑️',t:'Ramasse 3 dechets dans la rue',xp:25,c:8,cat:'Nature'},
-  {e:'🎮',t:'Defie un pote sur un geste ecolo',xp:30,c:8,cat:'Social'},
-  {e:'🌍',t:'Partage un fait eco sur les reseaux',xp:20,c:5,cat:'Social'},
-  {e:'🏃',t:'Zero moteur pour aller au boulot',xp:30,c:8,cat:'Mobilite'},
-  {e:'🔋',t:'Charge ton tel a 80% max',xp:15,c:3,cat:'Numerique'},
-  {e:'🧤',t:'Repare un objet au lieu de le jeter',xp:35,c:10,cat:'Dechets'},
-  {e:'🍎',t:'Zero gaspi : mange tes restes',xp:25,c:6,cat:'Alimentation'},
-  {e:'🌸',t:'5 min a observer la nature dehors',xp:15,c:3,cat:'Nature'},
-  {e:'🐦',t:'Identifie 2 oiseaux autour de toi',xp:25,c:6,cat:'Nature'},
-  {e:'🧊',t:'Baisse le chauffage de 1 degre',xp:20,c:5,cat:'Energie'},
-  {e:'🌿',t:'Fais pousser une herbe aromatique',xp:30,c:8,cat:'Nature'},
-  {e:'🎁',t:'Offre un cadeau fait maison',xp:30,c:10,cat:'Social'},
-  {e:'🚄',t:'Train au lieu de voiture',xp:40,c:12,cat:'Mobilite'},
-  {e:'🤝',t:'Prete un outil a un voisin',xp:25,c:6,cat:'Social'},
-  {e:'🏷️',t:'Verifie le label avant d\'acheter',xp:15,c:3,cat:'Alimentation'},
-  {e:'🗞️',t:'Desabonne 3 newsletters inutiles',xp:15,c:3,cat:'Numerique'},
-  {e:'💧',t:'Recupere de l\'eau de pluie',xp:25,c:6,cat:'Eau'},
-  {e:'🧹',t:'Tri : donne ou recycle 3 objets',xp:25,c:6,cat:'Dechets'},
-  {e:'🎵',t:'Ecoute un podcast eco en marchant',xp:20,c:5,cat:'Culture'},
-  {e:'🥤',t:'Eau du robinet toute la journee',xp:15,c:3,cat:'Eau'},
-  {e:'📦',t:'Commande en point relais',xp:20,c:5,cat:'Mobilite'},
-  {e:'🧴',t:'Utilise un produit rechargeable',xp:20,c:5,cat:'Dechets'},
-  {e:'🧊',t:'Pas de clim aujourd\'hui',xp:20,c:5,cat:'Energie'}
-];
-
 var BOSSES = [
   {e:'🌳',t:'Foret Collective',d:'Plantez 100 arbres ensemble !',g:100,r:200,rc:50},
   {e:'🚲',t:'Semaine Sans Moteur',d:'500 km parcourus sans voiture !',g:500,r:150,rc:40},
@@ -364,11 +386,11 @@ var BOSSES = [
 ];
 
 var GARDEN_PLANTS = [
-  {e:'🌱',n:'Herbe',time:60,xp:10,c:5,cost:0},      // 1 min
-  {e:'🌻',n:'Tournesol',time:300,xp:25,c:12,cost:10}, // 5 min
-  {e:'🌹',n:'Rose',time:900,xp:50,c:25,cost:25},      // 15 min
-  {e:'🌴',n:'Palmier',time:1800,xp:80,c:40,cost:40},  // 30 min
-  {e:'🍎',n:'Pommier',time:3600,xp:120,c:60,cost:60}  // 1h
+  {e:'🌱',n:'Herbe',time:60,xp:10,c:5,cost:0},
+  {e:'🌻',n:'Tournesol',time:300,xp:25,c:12,cost:10},
+  {e:'🌹',n:'Rose',time:900,xp:50,c:25,cost:25},
+  {e:'🌴',n:'Palmier',time:1800,xp:80,c:40,cost:40},
+  {e:'🍎',n:'Pommier',time:3600,xp:120,c:60,cost:60}
 ];
 
 var SHOP_ITEMS = [
@@ -402,20 +424,38 @@ var LB = [
 ];
 
 // ============================================================
-// STATE
+// STATE — synced with PlanetEngine
 // ============================================================
 
-var S = JSON.parse(localStorage.getItem('sp-game2') || 'null') || {
+var S = JSON.parse(localStorage.getItem('sp-game3') || 'null') || {
   xp:0, coins:20, streak:0, lastDay:null,
-  quests:[], done:[], bossHp:0, bossIdx:0,
+  quests:[], questIds:[], done:[], bossHp:0, bossIdx:0,
   garden:[null,null,null,null,null,null,null,null],
   ownedSeeds:[0], ownedDeco:[], achievements:[],
-  totalQ:0, spinDay:null
+  totalQ:0, spinDay:null,
+  totalCO2:0, totalWater:0
 };
-function save(){localStorage.setItem('sp-game2',JSON.stringify(S))}
+
+// Sync XP from PlanetEngine on load (real CO2 saved = XP base)
+function syncFromEngine(){
+  if(typeof PlanetEngine !== 'undefined'){
+    var counters = PlanetEngine.getPersonalCounters();
+    // If engine has more CO2 saved, use that as base XP
+    if(counters.co2 > 0){
+      var engineXP = Math.round(counters.co2);
+      if(engineXP > S.xp) S.xp = engineXP;
+      S.totalCO2 = counters.co2;
+      S.totalWater = counters.water;
+    }
+    // Sync streak from engine
+    if(counters.streak > S.streak) S.streak = counters.streak;
+  }
+}
+
+function save(){localStorage.setItem('sp-game3',JSON.stringify(S))}
 
 // ============================================================
-// AUDIO ENGINE
+// AUDIO ENGINE (8 sounds)
 // ============================================================
 var actx;
 function A(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx}
@@ -509,6 +549,12 @@ function confetti(n){
   }
 }
 
+function formatWater(liters){
+  if(liters>=1000000) return (liters/1000000).toFixed(1)+'M L';
+  if(liters>=1000) return (liters/1000).toFixed(1)+'k L';
+  return Math.round(liters)+' L';
+}
+
 // ============================================================
 // GAIN XP / COINS
 // ============================================================
@@ -555,13 +601,12 @@ function drawWheel(){
     ctx.fillText(WHEEL_PRIZES[i].e,r*.6,4);ctx.font='bold 9px system-ui';ctx.fillText(WHEEL_PRIZES[i].label,r*.6,16);
     ctx.restore();
   }
-  // center
   ctx.beginPath();ctx.arc(r,r,18,0,Math.PI*2);ctx.fillStyle='#0A0E1A';ctx.fill();
   ctx.beginPath();ctx.arc(r,r,16,0,Math.PI*2);ctx.fillStyle='#FBBF24';ctx.fill();
 }
 
 function showWheel(){
-  if(S.spinDay===today())return; // already spun
+  if(S.spinDay===today())return;
   drawWheel();
   document.getElementById('spin-overlay').classList.add('show');
   document.getElementById('spin-result').classList.remove('show');
@@ -574,7 +619,7 @@ window.spinWheel=function(){
   snd('spin');
   var idx=Math.floor(Math.random()*WHEEL_PRIZES.length);
   var arc=360/WHEEL_PRIZES.length;
-  var deg=3600+360-idx*arc-arc/2; // land on prize
+  var deg=3600+360-idx*arc-arc/2;
   var cv=document.getElementById('wheel-canvas');
   cv.style.transform='rotate('+deg+'deg)';
   S.spinDay=today();save();
@@ -602,7 +647,6 @@ function initPlanet(){
   var cv=document.getElementById('planet-canvas');
   pCtx=cv.getContext('2d');
   cv.addEventListener('click',function(ev){
-    // Tap planet = small XP reward (max 3x per day)
     var taps=parseInt(sessionStorage.getItem('ptaps')||'0');
     if(taps>=5)return;
     sessionStorage.setItem('ptaps',''+(taps+1));
@@ -617,23 +661,21 @@ function drawPlanet(){
   var ctx=pCtx,lvl=getLvl();
   ctx.clearRect(0,0,pW,pH);
 
-  // Planet body
   var cx=pW/2,cy=pH/2,r=100;
   var grad=ctx.createRadialGradient(cx-25,cy-25,20,cx,cy,r);
 
-  // Colors by level
   var planetColors=[
-    ['#8B8B8B','#5B5B5B','#3A3A3A'],          // 0 grey rock
-    ['#6B8B5E','#4B6043','#2A3B22'],          // 1 moss
-    ['#4D9B4D','#2D7028','#1A4D1A'],          // 2 green
-    ['#3D8B3D','#1A6B1A','#0D4D0D'],          // 3 forest
-    ['#2D8B5E','#1A6B4D','#1565A0'],          // 4 river
-    ['#1A6B8B','#0C4D6B','#1565C0'],          // 5 ocean
-    ['#4D8B3D','#6B8B14','#D4A017'],          // 6 savane
-    ['#0D7B3D','#0B5E2A','#2D8B2D'],          // 7 jungle
-    ['#1B8B50','#8B6914','#3B82F6'],          // 8 continent
-    ['#15915D','#2563EB','#D4A017'],          // 9 green planet
-    ['#10B981','#3B82F6','#FBBF24']           // 10 galaxy
+    ['#8B8B8B','#5B5B5B','#3A3A3A'],
+    ['#6B8B5E','#4B6043','#2A3B22'],
+    ['#4D9B4D','#2D7028','#1A4D1A'],
+    ['#3D8B3D','#1A6B1A','#0D4D0D'],
+    ['#2D8B5E','#1A6B4D','#1565A0'],
+    ['#1A6B8B','#0C4D6B','#1565C0'],
+    ['#4D8B3D','#6B8B14','#D4A017'],
+    ['#0D7B3D','#0B5E2A','#2D8B2D'],
+    ['#1B8B50','#8B6914','#3B82F6'],
+    ['#15915D','#2563EB','#D4A017'],
+    ['#10B981','#3B82F6','#FBBF24']
   ][Math.min(lvl,10)];
 
   grad.addColorStop(0,planetColors[0]);grad.addColorStop(.6,planetColors[1]);grad.addColorStop(1,planetColors[2]);
@@ -747,14 +789,12 @@ function renderGarden(){
 }
 
 window.plantSeed=function(idx){
-  // Pick best available seed
   var available=S.ownedSeeds.slice();
   if(available.length===0){toast('🌱','Pas de graines !','Achete-en dans la boutique');return}
-  var seedIdx=available[available.length-1]; // best seed
+  var seedIdx=available[available.length-1];
   var plant=GARDEN_PLANTS[seedIdx];
   if(plant.cost>0&&S.coins<plant.cost){toast('🌿','Pas assez de pieces !','Il te faut '+plant.cost+' 🌿');return}
   S.garden[idx]={type:seedIdx,planted:Date.now()};
-  // Remove one seed if not free
   if(seedIdx>0){var si=S.ownedSeeds.lastIndexOf(seedIdx);if(si!==-1)S.ownedSeeds.splice(si,1)}
   save();snd('plant');vibrate(20);renderGarden();
 };
@@ -772,18 +812,42 @@ window.harvestSlot=function(idx){
   renderGarden();
 };
 
-// Auto refresh garden timers
 setInterval(renderGarden,5000);
 
 // ============================================================
-// QUESTS
+// QUESTS — REAL DATA from PLANET_DOMAINS
 // ============================================================
-function getQuests(){
+function pickDailyQuests(){
   var d=today();
-  if(S.quests.length===3&&S.lastDay===d)return S.quests;
-  var pool=QUESTS.slice(),picked=[];
-  for(var i=0;i<3;i++){var r=Math.floor(Math.random()*pool.length);picked.push(pool.splice(r,1)[0])}
-  S.quests=picked;S.done=[];S.lastDay=d;save();return picked;
+  // If already picked today, return existing
+  if(S.questIds && S.questIds.length===3 && S.lastDay===d) return;
+
+  // Pick 3 random engagements with CO2 > 0 for meaningful XP
+  var pool = ALL_ENGAGEMENTS.filter(function(eng){ return eng.co2 > 0; });
+  if(pool.length < 3) pool = ALL_ENGAGEMENTS.slice(); // fallback
+
+  var picked = [];
+  var usedIds = {};
+  while(picked.length < 3 && pool.length > 0){
+    var idx = Math.floor(Math.random() * pool.length);
+    var eng = pool[idx];
+    if(!usedIds[eng.id]){
+      usedIds[eng.id] = true;
+      picked.push(eng);
+    }
+    pool.splice(idx, 1);
+  }
+
+  S.quests = picked;
+  S.questIds = picked.map(function(e){ return e.id; });
+  S.done = [];
+  S.lastDay = d;
+  save();
+}
+
+function getQuests(){
+  pickDailyQuests();
+  return S.quests;
 }
 
 function renderQuests(){
@@ -792,11 +856,16 @@ function renderQuests(){
     (S.done.length===3?'<span class="quest-bonus">COMBO +50 XP !</span>':'')+'</div>';
   q.forEach(function(quest,i){
     var done=S.done.indexOf(i)!==-1;
+    // XP = CO2 saved from the engagement (real kg CO2 values)
+    var xp = quest.co2 || 10;
+    // Coins = water saved / 1000 (real water values), minimum 3
+    var coins = quest.water > 0 ? Math.max(3, Math.round(quest.water / 1000)) : Math.max(3, Math.round(xp / 10));
     html+='<div class="quest-card'+(done?' done':'')+'" id="quest-'+i+'">'+
-      '<div class="quest-emoji">'+quest.e+'</div>'+
-      '<div class="quest-info"><div class="quest-title">'+quest.t+'</div>'+
-      '<div class="quest-meta"><span class="quest-xp">+'+quest.xp+' XP</span><span class="quest-coins">+'+quest.c+' 🌿</span>'+
-      '<span class="quest-cat">'+quest.cat+'</span></div></div>'+
+      '<div class="quest-emoji">'+quest.emoji+'</div>'+
+      '<div class="quest-info"><div class="quest-title">'+quest.title+'</div>'+
+      '<div class="quest-meta"><span class="quest-xp">+'+xp+' XP ('+xp+' kg CO2)</span><span class="quest-coins">+'+coins+' 🌿</span>'+
+      '<span class="quest-cat">'+quest.domainName+'</span>'+
+      '<span class="quest-diff '+quest.diff+'">'+quest.diff+'</span></div></div>'+
       (done?'<div class="quest-check">✓</div>':'<button class="quest-btn do" onclick="doQuest('+i+',event)">✓</button>')+
     '</div>';
   });
@@ -808,13 +877,32 @@ window.doQuest=function(i,ev){
   S.done.push(i);
   var d=today();
   if(S.lastDay!==d){S.streak=S.lastDay===yesterday()?S.streak+1:1;S.lastDay=d}
-  S.totalQ++;save();
-  var q=S.quests[i];
+  S.totalQ++;
+
+  var quest=S.quests[i];
+  var xp = quest.co2 || 10;
+  var coins = quest.water > 0 ? Math.max(3, Math.round(quest.water / 1000)) : Math.max(3, Math.round(xp / 10));
+
+  // Track real impact
+  S.totalCO2 += quest.co2;
+  S.totalWater += quest.water;
+  save();
+
+  // Sync with PlanetEngine
+  if(typeof PlanetEngine !== 'undefined'){
+    PlanetEngine.setEngagement(quest.id, true, {
+      co2: quest.co2,
+      water: quest.water,
+      domain: quest.domain
+    });
+  }
+
   var r=ev.target.getBoundingClientRect();
-  gainXP(q.xp,r.left,r.top);
-  gainCoins(q.c,r.left,r.top+20);
+  gainXP(xp,r.left,r.top);
+  gainCoins(coins,r.left,r.top+20);
   shake();vibrate(60);
   renderQuests();
+
   // Combo bonus
   if(S.done.length===3){
     setTimeout(function(){
@@ -847,13 +935,10 @@ window.attackBoss=function(ev){
   var r=ev.target.getBoundingClientRect();
   floatXP('-'+dmg+' HP',r.left+r.width/2,r.top-20);
   particles(r.left+r.width/2,r.top,'#8B5CF6',12);
-  // Flash
   var flash=document.getElementById('boss-flash');
   if(flash){flash.style.opacity='1';setTimeout(function(){flash.style.opacity='0'},100)}
-  // Boss HP bar animation
   var bar=document.getElementById('boss-hp-bar');
   if(bar){bar.classList.add('hit');setTimeout(function(){bar.classList.remove('hit')},300)}
-  // Boss sprite shake
   var sprite=document.getElementById('boss-sprite');
   if(sprite){sprite.style.transform='scale(1.2) rotate(5deg)';setTimeout(function(){sprite.style.transform=''},200)}
 
@@ -939,7 +1024,7 @@ function renderLB(){
 }
 
 window.shareGame=function(){
-  var t='Rejoins SOS Planet ! Je suis niveau '+(getLvl()+1)+' ('+LEVELS[getLvl()].n+'). On sauve la planete en jouant !';
+  var t='Rejoins SOS Planet ! Je suis niveau '+(getLvl()+1)+' ('+LEVELS[getLvl()].n+'). J\'ai sauve '+Math.round(S.totalCO2)+' kg CO2 ! On sauve la planete en jouant !';
   if(navigator.share)navigator.share({title:'SOS Planet — Le Jeu',text:t,url:location.href});
   else{navigator.clipboard.writeText(t+' '+location.href);toast('📋','Lien copie !','Envoie-le a tes potes')}
 };
@@ -953,7 +1038,6 @@ function showLvlUp(idx){
   document.getElementById('lvlup-emoji').textContent=lv.e;
   document.getElementById('lvlup-title').textContent='NIVEAU '+lv.n.toUpperCase()+' !';
   document.getElementById('lvlup-sub').textContent='Ta planete evolue !';
-  // Check creature unlock
   var newCreature=CREATURES.find(function(c){return c.l===(idx+1)});
   document.getElementById('lvlup-unlock').textContent=newCreature?'Nouvelle creature : '+newCreature.e+' '+newCreature.n+' !':'';
   document.getElementById('lvlup').classList.add('show');
@@ -1005,13 +1089,35 @@ function updateUI(){
   si.textContent=S.streak>0?'🔥':'💤';
   document.getElementById('streak').className='streak-badge'+(S.streak>0?'':' dead');
   document.getElementById('planet-label').textContent=lv.e+' '+lv.n+(lvl<10?' — prochain : '+LEVELS[lvl+1].e+' '+LEVELS[lvl+1].n:'  MAX !');
+
+  // Show real impact stats
+  var impactEl = document.getElementById('xp-impact');
+  if(impactEl){
+    var co2 = S.totalCO2 || 0;
+    var water = S.totalWater || 0;
+    // Also sync from PlanetEngine if available
+    if(typeof PlanetEngine !== 'undefined'){
+      var counters = PlanetEngine.getPersonalCounters();
+      if(counters.co2 > co2) co2 = counters.co2;
+      if(counters.water > water) water = counters.water;
+    }
+    if(co2 > 0 || water > 0){
+      var parts = [];
+      if(co2 > 0) parts.push(co2 >= 1000 ? (co2/1000).toFixed(1)+' t CO2' : Math.round(co2)+' kg CO2');
+      if(water > 0) parts.push(formatWater(water)+' eau');
+      impactEl.textContent = 'Tu as sauve '+parts.join(' et ')+' !';
+    } else {
+      impactEl.textContent = 'Complete des quetes pour sauver la planete !';
+    }
+  }
 }
 
 // ============================================================
 // INIT
 // ============================================================
+syncFromEngine();
 checkStreak();
-getQuests();
+pickDailyQuests();
 initPlanet();
 renderTabs();
 renderQuests();
