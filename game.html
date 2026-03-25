@@ -3,752 +3,1029 @@
 <head>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <title>SOS Planet — Le Jeu</title>
-<meta name="description" content="Sauve ta planete en jouant ! Quetes quotidiennes, creatures a debloquer, boss collectifs, leaderboard entre amis.">
 <meta name="theme-color" content="#0A0E1A">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#0A0E1A;--card:rgba(255,255,255,0.06);--card-b:rgba(255,255,255,0.1);
   --green:#10B981;--gold:#FBBF24;--red:#EF4444;--blue:#3B82F6;--purple:#8B5CF6;
-  --pink:#EC4899;--text:#E8E4DC;--dim:#6B7280;--xp-bar:#059669;
+  --pink:#EC4899;--orange:#F97316;--text:#E8E4DC;--dim:#6B7280;
 }
-body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 
-/* Stars background */
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 30% 70%,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 50% 10%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 70% 40%,rgba(255,255,255,.2),transparent),radial-gradient(1px 1px at 90% 80%,rgba(255,255,255,.4),transparent),radial-gradient(1.5px 1.5px at 15% 55%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 85% 15%,rgba(255,255,255,.3),transparent),radial-gradient(1.5px 1.5px at 45% 85%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 65% 60%,rgba(255,255,255,.2),transparent),radial-gradient(1px 1px at 25% 35%,rgba(255,255,255,.35),transparent);pointer-events:none;z-index:0}
+/* Animated stars */
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 30% 70%,rgba(255,255,255,.3),transparent),radial-gradient(1.5px 1.5px at 50% 10%,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 70% 40%,rgba(255,255,255,.3),transparent),radial-gradient(1.5px 1.5px at 90% 80%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 15% 55%,rgba(255,255,255,.4),transparent),radial-gradient(1.5px 1.5px at 85% 15%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 45% 85%,rgba(255,255,255,.3),transparent);pointer-events:none;z-index:0;animation:star-twinkle 4s ease-in-out infinite alternate}
+@keyframes star-twinkle{0%{opacity:.7}100%{opacity:1}}
 
-.app{position:relative;z-index:1;max-width:430px;margin:0 auto;padding:0 0 100px}
+.app{position:relative;z-index:1;max-width:430px;margin:0 auto;padding:0 0 90px}
+.app.shake{animation:screen-shake .4s ease}
+@keyframes screen-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 
 /* Top bar */
-.topbar{display:flex;align-items:center;padding:14px 16px;gap:10px}
-.topbar a{font-size:.8rem;font-weight:600;color:var(--green)}
-.topbar h1{flex:1;text-align:center;font-size:.95rem;font-weight:800;letter-spacing:-.02em}
-.streak-badge{display:flex;align-items:center;gap:4px;font-size:.8rem;font-weight:800;color:var(--gold);background:rgba(251,191,36,.12);padding:4px 10px;border-radius:14px}
+.topbar{display:flex;align-items:center;padding:12px 16px;gap:8px}
+.topbar a{font-size:.75rem;font-weight:600;color:var(--green);text-decoration:none}
+.topbar h1{flex:1;text-align:center;font-size:.85rem;font-weight:800;letter-spacing:-.02em}
+.streak-badge{display:flex;align-items:center;gap:4px;font-size:.75rem;font-weight:800;color:var(--gold);background:rgba(251,191,36,.12);padding:3px 8px;border-radius:12px}
 .streak-badge.dead{color:var(--dim);background:rgba(255,255,255,.05)}
+.coins-badge{display:flex;align-items:center;gap:3px;font-size:.75rem;font-weight:800;color:var(--green);background:rgba(16,185,129,.12);padding:3px 8px;border-radius:12px}
 
 /* XP Bar */
-.xp-section{padding:0 16px;margin-bottom:16px}
-.xp-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-.xp-level{font-size:.7rem;font-weight:800;color:var(--gold);background:rgba(251,191,36,.15);padding:3px 10px;border-radius:10px;white-space:nowrap}
-.xp-bar-wrap{flex:1;height:10px;background:rgba(255,255,255,.08);border-radius:8px;overflow:hidden;position:relative}
-.xp-bar{height:100%;background:linear-gradient(90deg,var(--green),var(--gold));border-radius:8px;transition:width .6s cubic-bezier(.4,0,.2,1);position:relative}
-.xp-bar::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 60%,rgba(255,255,255,.3));border-radius:8px}
-.xp-text{font-size:.65rem;color:var(--dim);text-align:right}
+.xp-section{padding:0 16px 8px}
+.xp-row{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.xp-level{font-size:.65rem;font-weight:800;color:var(--gold);background:rgba(251,191,36,.15);padding:2px 8px;border-radius:8px;white-space:nowrap}
+.xp-bar-wrap{flex:1;height:12px;background:rgba(255,255,255,.06);border-radius:8px;overflow:hidden;position:relative}
+.xp-bar{height:100%;background:linear-gradient(90deg,var(--green),#34D399,var(--gold));border-radius:8px;transition:width .8s cubic-bezier(.4,0,.2,1);position:relative}
+.xp-bar.pulse{animation:xp-pulse .5s ease}
+@keyframes xp-pulse{0%{filter:brightness(1)}50%{filter:brightness(1.8)}100%{filter:brightness(1)}}
+.xp-bar::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.25) 0%,transparent 50%);border-radius:8px}
+.xp-text{font-size:.6rem;color:var(--dim);text-align:right;margin-top:1px}
 
-/* Planet zone */
-.planet-zone{text-align:center;padding:10px 0 20px;position:relative}
-.planet-wrap{width:220px;height:220px;margin:0 auto;position:relative}
-.planet-canvas{width:220px;height:220px;border-radius:50%;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(16,185,129,.2),0 0 120px rgba(16,185,129,.05);transition:box-shadow .5s}
-.planet-canvas.glow{box-shadow:0 0 80px rgba(251,191,36,.4),0 0 160px rgba(16,185,129,.15)}
-.planet-surface{width:100%;height:100%;border-radius:50%;position:relative;overflow:hidden;transition:background 1s}
-.planet-name{font-size:.85rem;font-weight:700;margin-top:10px;color:var(--dim)}
-.planet-creatures{position:absolute;inset:0;pointer-events:none}
-.creature{position:absolute;font-size:1.6rem;animation:creature-float 3s ease-in-out infinite;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
-@keyframes creature-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+/* ===== CANVAS PLANET ===== */
+.planet-zone{text-align:center;padding:0 0 12px;position:relative;touch-action:none}
+#planet-canvas{display:block;margin:0 auto;cursor:pointer;border-radius:50%}
+.planet-label{font-size:.75rem;font-weight:700;color:var(--dim);margin-top:6px}
 
-/* Tabs */
-.game-tabs{display:flex;gap:4px;padding:0 16px;margin-bottom:16px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* Floating +XP */
+.float-xp{position:fixed;font-size:1.2rem;font-weight:900;color:var(--gold);pointer-events:none;z-index:9999;text-shadow:0 2px 8px rgba(0,0,0,.5);animation:float-up 1.2s ease-out forwards}
+@keyframes float-up{0%{opacity:1;transform:translateY(0) scale(1)}60%{opacity:1;transform:translateY(-60px) scale(1.2)}100%{opacity:0;transform:translateY(-100px) scale(.8)}}
+
+/* ===== DAILY SPIN WHEEL ===== */
+.spin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .4s}
+.spin-overlay.show{opacity:1;pointer-events:auto}
+.spin-title{font-size:1.1rem;font-weight:900;color:var(--gold);margin-bottom:16px;text-align:center}
+.spin-subtitle{font-size:.75rem;color:var(--dim);margin-bottom:20px;text-align:center}
+.wheel-wrap{position:relative;width:280px;height:280px}
+#wheel-canvas{width:280px;height:280px;transition:transform 4s cubic-bezier(.17,.67,.12,.99)}
+.wheel-pointer{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:2rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5));z-index:2}
+.spin-btn{margin-top:24px;padding:16px 48px;border:none;border-radius:30px;background:linear-gradient(135deg,var(--gold),var(--orange));color:#000;font-size:1rem;font-weight:900;cursor:pointer;letter-spacing:.02em;box-shadow:0 4px 20px rgba(251,191,36,.4);transition:transform .2s}
+.spin-btn:active{transform:scale(.95)}
+.spin-result{margin-top:16px;font-size:1.2rem;font-weight:900;color:var(--gold);opacity:0;transition:opacity .4s}
+.spin-result.show{opacity:1}
+.spin-close{margin-top:12px;padding:10px 30px;border:2px solid rgba(255,255,255,.2);background:none;color:var(--text);font-size:.8rem;font-weight:700;border-radius:20px;cursor:pointer;opacity:0;transition:opacity .4s}
+.spin-close.show{opacity:1}
+
+/* ===== GARDEN ===== */
+.garden-section{padding:0 16px 16px}
+.garden-title{font-size:.75rem;font-weight:800;color:var(--dim);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.garden-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.garden-slot{aspect-ratio:1;background:var(--card);border:1px solid var(--card-b);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;cursor:pointer;position:relative;overflow:hidden;transition:all .3s;user-select:none}
+.garden-slot:active{transform:scale(.93)}
+.garden-slot.empty{border-style:dashed;border-color:rgba(255,255,255,.1)}
+.garden-slot .slot-emoji{font-size:1.8rem;transition:transform .3s}
+.garden-slot.ready .slot-emoji{animation:bounce-ready .6s ease infinite}
+@keyframes bounce-ready{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.garden-slot .slot-timer{font-size:.55rem;font-weight:700;color:var(--dim)}
+.garden-slot.ready{border-color:var(--gold);background:rgba(251,191,36,.08)}
+.garden-slot.ready .slot-timer{color:var(--gold)}
+.garden-slot .slot-progress{position:absolute;bottom:0;left:0;height:3px;background:var(--green);border-radius:0 0 14px 14px;transition:width 1s linear}
+
+/* ===== TABS ===== */
+.game-tabs{display:flex;gap:4px;padding:0 16px;margin-bottom:12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .game-tabs::-webkit-scrollbar{display:none}
-.gtab{padding:8px 16px;border-radius:20px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;border:1px solid var(--card-b);background:var(--card);color:var(--dim);transition:all .2s;user-select:none}
+.gtab{padding:7px 14px;border-radius:20px;font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap;border:1px solid var(--card-b);background:var(--card);color:var(--dim);transition:all .2s;user-select:none;position:relative}
+.gtab:active{transform:scale(.95)}
 .gtab.active{background:var(--green);color:#fff;border-color:var(--green)}
-.gtab .notif{display:inline-block;width:7px;height:7px;background:var(--red);border-radius:50%;margin-left:4px;vertical-align:middle}
+.gtab .notif{position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--bg)}
 
 /* Panels */
 .panel{display:none;padding:0 16px}
 .panel.active{display:block}
 
-/* Daily Quests */
-.quest-card{background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:center;transition:all .3s;position:relative;overflow:hidden}
-.quest-card.done{opacity:.5;border-color:var(--green)}
-.quest-card.done::after{content:'✓';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:1.4rem;color:var(--green);font-weight:900}
-.quest-emoji{font-size:2rem;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border-radius:12px;flex-shrink:0}
+/* ===== QUEST CARDS ===== */
+.quest-header{font-size:.7rem;font-weight:800;color:var(--dim);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.quest-bonus{font-size:.65rem;color:var(--gold);font-weight:700;background:rgba(251,191,36,.1);padding:2px 8px;border-radius:8px}
+.quest-card{background:var(--card);border:1px solid var(--card-b);border-radius:16px;padding:14px;margin-bottom:8px;display:flex;gap:10px;align-items:center;transition:all .3s;position:relative;overflow:hidden}
+.quest-card:active{transform:scale(.98)}
+.quest-card.done{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.06)}
+.quest-card.done .quest-check{display:flex}
+.quest-emoji{font-size:1.8rem;width:46px;height:46px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border-radius:12px;flex-shrink:0}
 .quest-info{flex:1;min-width:0}
-.quest-title{font-size:.85rem;font-weight:700;line-height:1.3;margin-bottom:3px}
-.quest-reward{font-size:.7rem;color:var(--gold);font-weight:700}
-.quest-btn{padding:8px 18px;border:none;border-radius:20px;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;flex-shrink:0}
-.quest-btn.do{background:var(--green);color:#fff}
-.quest-btn.do:hover{background:#059669;transform:scale(1.05)}
-.quest-btn.done-btn{background:rgba(255,255,255,.05);color:var(--dim);cursor:default}
+.quest-title{font-size:.8rem;font-weight:700;line-height:1.3;margin-bottom:2px}
+.quest-meta{display:flex;gap:8px;align-items:center}
+.quest-xp{font-size:.65rem;color:var(--gold);font-weight:800}
+.quest-coins{font-size:.65rem;color:var(--green);font-weight:700}
+.quest-cat{font-size:.55rem;color:var(--dim);background:rgba(255,255,255,.05);padding:1px 6px;border-radius:6px}
+.quest-btn{width:42px;height:42px;border:none;border-radius:50%;font-size:1rem;cursor:pointer;transition:all .2s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.quest-btn.do{background:var(--green);color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.3)}
+.quest-btn.do:active{transform:scale(.9);box-shadow:0 2px 6px rgba(16,185,129,.3)}
+.quest-check{display:none;width:42px;height:42px;align-items:center;justify-content:center;font-size:1.4rem;color:var(--green);flex-shrink:0}
 
-/* Boss */
-.boss-card{background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(236,72,153,.1));border:1px solid rgba(139,92,246,.25);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px}
-.boss-emoji{font-size:3.5rem;display:block;margin-bottom:10px;animation:boss-pulse 2s ease-in-out infinite}
-@keyframes boss-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-.boss-title{font-size:1.1rem;font-weight:900;color:var(--purple);margin-bottom:4px}
-.boss-desc{font-size:.8rem;color:var(--dim);margin-bottom:14px;line-height:1.4}
-.boss-progress{height:14px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;margin-bottom:8px;position:relative}
-.boss-bar{height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:10px;transition:width .5s}
-.boss-count{font-size:.7rem;color:var(--dim)}
-.boss-reward{margin-top:12px;padding:8px 16px;background:rgba(251,191,36,.1);border-radius:10px;display:inline-block;font-size:.75rem;font-weight:700;color:var(--gold)}
-.boss-contrib-btn{margin-top:12px;padding:10px 24px;border:none;border-radius:20px;background:var(--purple);color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;display:block;width:100%}
+/* ===== BOSS ===== */
+.boss-card{background:linear-gradient(135deg,rgba(139,92,246,.12),rgba(236,72,153,.08));border:1.5px solid rgba(139,92,246,.2);border-radius:18px;padding:20px;text-align:center;margin-bottom:12px;position:relative;overflow:hidden}
+.boss-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(139,92,246,.15),transparent 70%);pointer-events:none}
+.boss-emoji{font-size:3.5rem;display:block;margin-bottom:8px;animation:boss-idle 3s ease-in-out infinite;position:relative}
+@keyframes boss-idle{0%,100%{transform:translateY(0) scale(1)}25%{transform:translateY(-4px) scale(1.02)}75%{transform:translateY(2px) scale(.99)}}
+.boss-hp-label{font-size:.65rem;font-weight:800;color:var(--purple);margin-bottom:4px;letter-spacing:.05em}
+.boss-title{font-size:1rem;font-weight:900;color:var(--text);margin-bottom:4px}
+.boss-desc{font-size:.75rem;color:var(--dim);margin-bottom:14px;line-height:1.4}
+.boss-hp-bar{height:16px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;margin-bottom:6px;position:relative}
+.boss-hp{height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:10px;transition:width .6s cubic-bezier(.4,0,.2,1);position:relative}
+.boss-hp::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.2) 0%,transparent 50%);border-radius:10px}
+.boss-hp.hit{animation:boss-hit .3s ease}
+@keyframes boss-hit{0%{filter:brightness(1)}50%{filter:brightness(2)}100%{filter:brightness(1)}}
+.boss-count{font-size:.65rem;color:var(--dim);margin-bottom:12px}
+.boss-attack-btn{padding:14px 0;border:none;border-radius:14px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-size:.9rem;font-weight:800;cursor:pointer;width:100%;letter-spacing:.02em;box-shadow:0 4px 20px rgba(139,92,246,.3);transition:all .2s;position:relative;overflow:hidden}
+.boss-attack-btn:active{transform:scale(.96)}
+.boss-attack-btn .btn-flash{position:absolute;inset:0;background:rgba(255,255,255,.3);opacity:0;transition:opacity .1s}
+.boss-reward{margin-top:10px;padding:6px 14px;background:rgba(251,191,36,.08);border-radius:10px;display:inline-block;font-size:.7rem;font-weight:700;color:var(--gold)}
 
-/* Collection */
-.collect-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.collect-item{background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:12px 6px;text-align:center;transition:all .3s}
-.collect-item.unlocked{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.08)}
-.collect-item.locked{opacity:.3;filter:grayscale(1)}
-.collect-emoji{font-size:2rem;display:block;margin-bottom:4px}
-.collect-name{font-size:.6rem;font-weight:700;color:var(--dim)}
+/* ===== SHOP ===== */
+.shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.shop-item{background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:14px;text-align:center;transition:all .3s;cursor:pointer}
+.shop-item:active{transform:scale(.96)}
+.shop-item.owned{border-color:var(--green);opacity:.5}
+.shop-emoji{font-size:2.2rem;display:block;margin-bottom:6px}
+.shop-name{font-size:.75rem;font-weight:700;margin-bottom:4px}
+.shop-price{font-size:.7rem;font-weight:800;color:var(--green)}
+.shop-owned{font-size:.65rem;color:var(--green)}
+
+/* ===== COLLECTION ===== */
+.collect-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.collect-item{background:var(--card);border:1px solid var(--card-b);border-radius:12px;padding:10px 4px;text-align:center;transition:all .3s}
+.collect-item.unlocked{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.06)}
+.collect-item.locked{opacity:.25;filter:grayscale(1)}
+.collect-item.unlocked:active{transform:scale(.9)}
+.collect-emoji{font-size:1.8rem;display:block;margin-bottom:2px}
+.collect-name{font-size:.55rem;font-weight:700;color:var(--dim)}
 .collect-item.unlocked .collect-name{color:var(--text)}
-.collect-req{font-size:.55rem;color:var(--gold);margin-top:2px}
+.collect-req{font-size:.5rem;color:var(--gold);margin-top:1px}
 
-/* Leaderboard */
-.lb-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border:1px solid var(--card-b);border-radius:12px;margin-bottom:8px}
-.lb-item.me{border-color:var(--green);background:rgba(16,185,129,.08)}
-.lb-rank{font-size:1.2rem;font-weight:900;width:30px;text-align:center;flex-shrink:0}
-.lb-rank.gold{color:var(--gold)}
-.lb-rank.silver{color:#C0C0C0}
-.lb-rank.bronze{color:#CD7F32}
-.lb-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+/* ===== LEADERBOARD ===== */
+.lb-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card);border:1px solid var(--card-b);border-radius:12px;margin-bottom:6px;transition:all .3s}
+.lb-item.me{border-color:var(--green);background:rgba(16,185,129,.06)}
+.lb-rank{font-size:1.1rem;font-weight:900;width:28px;text-align:center;flex-shrink:0}
+.lb-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;background:rgba(255,255,255,.06)}
 .lb-info{flex:1;min-width:0}
-.lb-name{font-size:.8rem;font-weight:700}
-.lb-xp{font-size:.7rem;color:var(--dim)}
-.lb-level{font-size:.65rem;color:var(--gold);font-weight:700;padding:2px 8px;background:rgba(251,191,36,.1);border-radius:8px}
+.lb-name{font-size:.75rem;font-weight:700}
+.lb-xp{font-size:.65rem;color:var(--dim)}
+.lb-lvl{font-size:.6rem;color:var(--gold);font-weight:700;padding:2px 6px;background:rgba(251,191,36,.1);border-radius:6px}
+.invite-btn{display:block;width:100%;padding:12px;border:2px solid var(--green);background:transparent;color:var(--green);border-radius:14px;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:12px;transition:all .2s}
+.invite-btn:active{background:var(--green);color:#fff}
 
-/* Achievement popup */
-.achieve-popup{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-120px);background:linear-gradient(135deg,rgba(251,191,36,.2),rgba(16,185,129,.15));border:1px solid rgba(251,191,36,.4);backdrop-filter:blur(20px);padding:14px 24px;border-radius:16px;z-index:9999;text-align:center;transition:transform .5s cubic-bezier(.34,1.56,.64,1);pointer-events:none;max-width:320px}
-.achieve-popup.show{transform:translateX(-50%) translateY(0)}
-.achieve-popup .ach-emoji{font-size:2rem;display:block}
-.achieve-popup .ach-text{font-size:.85rem;font-weight:700;color:var(--gold);margin-top:4px}
-.achieve-popup .ach-sub{font-size:.7rem;color:var(--dim)}
-
-/* Level up overlay */
-.lvlup{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:10000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
+/* ===== LEVEL UP ===== */
+.lvlup{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10001;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
 .lvlup.show{opacity:1;pointer-events:auto}
-.lvlup-box{text-align:center;animation:lvlup-pop .5s cubic-bezier(.34,1.56,.64,1)}
-@keyframes lvlup-pop{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
-.lvlup-emoji{font-size:5rem;display:block;margin-bottom:12px}
-.lvlup-title{font-size:1.6rem;font-weight:900;color:var(--gold)}
-.lvlup-sub{font-size:.9rem;color:var(--dim);margin:8px 0 20px}
-.lvlup-btn{padding:14px 40px;border:none;border-radius:30px;background:var(--green);color:#fff;font-size:1rem;font-weight:700;cursor:pointer}
+.lvlup-inner{text-align:center;animation:lvlup-pop .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes lvlup-pop{0%{transform:scale(0) rotate(-10deg);opacity:0}100%{transform:scale(1) rotate(0deg);opacity:1}}
+.lvlup-emoji{font-size:5rem;display:block;margin-bottom:8px;animation:lvlup-bounce 1s ease infinite}
+@keyframes lvlup-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.lvlup-title{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lvlup-sub{font-size:.85rem;color:var(--dim);margin:6px 0 8px}
+.lvlup-unlock{font-size:.8rem;color:var(--green);font-weight:700;margin-bottom:16px}
+.lvlup-btn{padding:14px 48px;border:none;border-radius:30px;background:linear-gradient(135deg,var(--gold),var(--orange));color:#000;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 4px 20px rgba(251,191,36,.4)}
 
-/* Confetti */
-.confetti{position:fixed;top:-10px;width:8px;height:8px;z-index:10001;border-radius:2px;pointer-events:none;animation:conf-fall 1.8s ease-out forwards}
-@keyframes conf-fall{0%{opacity:1;transform:translateY(0) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+/* ===== PARTICLES ===== */
+.particle{position:fixed;pointer-events:none;z-index:9998;border-radius:50%}
+.confetti{position:fixed;top:-10px;z-index:10002;pointer-events:none;animation:conf-fall 2s ease-out forwards}
+@keyframes conf-fall{0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1)}100%{opacity:0;transform:translateY(100vh) rotate(720deg) scale(.3)}}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,.9);border:1px solid var(--gold);border-radius:16px;padding:16px 24px;z-index:9999;text-align:center;transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.toast.show{transform:translate(-50%,-50%) scale(1)}
+.toast-emoji{font-size:2.2rem;display:block;margin-bottom:4px}
+.toast-text{font-size:.85rem;font-weight:800;color:var(--gold)}
+.toast-sub{font-size:.7rem;color:var(--dim);margin-top:2px}
 
 /* Bottom nav */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,26,.95);backdrop-filter:blur(12px);border-top:1px solid var(--card-b);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
-.bottom-nav a.active{color:var(--green)}
-.bottom-nav a span{font-size:1.2rem}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,26,.96);backdrop-filter:blur(12px);border-top:1px solid var(--card-b);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bnav a{flex:1;text-align:center;padding:7px 4px 5px;font-size:.55rem;font-weight:600;color:var(--dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:1px;transition:color .2s}
+.bnav a.active{color:var(--green)}
+.bnav a span{font-size:1.15rem}
 
-/* Invite */
-.invite-section{text-align:center;padding:20px;margin-top:12px}
-.invite-btn{padding:12px 28px;border:2px solid var(--green);background:transparent;color:var(--green);border-radius:24px;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s}
-.invite-btn:hover{background:var(--green);color:#fff}
-
-/* Footer */
-.game-footer{text-align:center;padding:30px 16px;font-size:.6rem;color:var(--dim);line-height:1.6}
+.game-footer{text-align:center;padding:24px 16px;font-size:.55rem;color:var(--dim);line-height:1.5}
 </style>
 </head>
 <body>
 
-<div class="app">
+<div class="app" id="app">
+  <!-- Top bar -->
   <div class="topbar">
-    <a href="index.html">&#8592; Accueil</a>
-    <h1>SOS Planet — Le Jeu</h1>
-    <div class="streak-badge" id="streak"><span id="streak-icon">🔥</span> <span id="streak-num">0</span>j</div>
+    <a href="index.html">&#8592;</a>
+    <div class="coins-badge" id="coins-badge">🌿 <span id="coins-num">0</span></div>
+    <h1>SOS Planet</h1>
+    <div class="streak-badge" id="streak"><span id="streak-icon">🔥</span> <span id="streak-num">0</span></div>
   </div>
 
   <!-- XP Bar -->
   <div class="xp-section">
     <div class="xp-row">
-      <div class="xp-level" id="level-badge">Niv. 1 — Graine</div>
+      <div class="xp-level" id="level-badge">Niv. 1</div>
       <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar" style="width:0%"></div></div>
     </div>
     <div class="xp-text" id="xp-text">0 / 100 XP</div>
   </div>
 
-  <!-- Planet -->
-  <div class="planet-zone">
-    <div class="planet-wrap">
-      <div class="planet-canvas" id="planet">
-        <div class="planet-surface" id="planet-surface"></div>
-        <div class="planet-creatures" id="planet-creatures"></div>
-      </div>
-    </div>
-    <div class="planet-name" id="planet-name">Ta planete : un caillou gris</div>
+  <!-- Planet Canvas -->
+  <div class="planet-zone" id="planet-zone">
+    <canvas id="planet-canvas" width="440" height="300"></canvas>
+    <div class="planet-label" id="planet-label">Touche ta planete !</div>
+  </div>
+
+  <!-- Garden -->
+  <div class="garden-section">
+    <div class="garden-title">🌱 TON JARDIN <span style="margin-left:auto;font-size:.6rem;color:var(--green)" id="garden-hint">Plante → Attends → Recolte !</span></div>
+    <div class="garden-grid" id="garden-grid"></div>
   </div>
 
   <!-- Tabs -->
   <div class="game-tabs" id="game-tabs"></div>
 
-  <!-- Quetes du jour -->
+  <!-- Panels -->
   <div class="panel" id="panel-quests"></div>
-
-  <!-- Boss -->
   <div class="panel" id="panel-boss"></div>
-
-  <!-- Collection -->
+  <div class="panel" id="panel-shop"></div>
   <div class="panel" id="panel-collection"></div>
-
-  <!-- Leaderboard -->
   <div class="panel" id="panel-leaderboard"></div>
 </div>
 
-<!-- Achievement popup -->
-<div class="achieve-popup" id="achieve-popup">
-  <span class="ach-emoji" id="ach-emoji"></span>
-  <div class="ach-text" id="ach-text"></div>
-  <div class="ach-sub" id="ach-sub"></div>
+<!-- Spin wheel overlay -->
+<div class="spin-overlay" id="spin-overlay">
+  <div class="spin-title">🎰 Roue quotidienne !</div>
+  <div class="spin-subtitle">Tourne la roue pour gagner ton bonus du jour</div>
+  <div class="wheel-wrap">
+    <div class="wheel-pointer">🔻</div>
+    <canvas id="wheel-canvas" width="280" height="280"></canvas>
+  </div>
+  <button class="spin-btn" id="spin-btn" onclick="spinWheel()">TOURNER !</button>
+  <div class="spin-result" id="spin-result"></div>
+  <button class="spin-close" id="spin-close" onclick="closeWheel()">Continuer</button>
 </div>
 
-<!-- Level up overlay -->
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast-emoji" id="toast-emoji"></span>
+  <div class="toast-text" id="toast-text"></div>
+  <div class="toast-sub" id="toast-sub"></div>
+</div>
+
+<!-- Level up -->
 <div class="lvlup" id="lvlup">
-  <div class="lvlup-box">
+  <div class="lvlup-inner">
     <span class="lvlup-emoji" id="lvlup-emoji"></span>
     <div class="lvlup-title" id="lvlup-title"></div>
     <div class="lvlup-sub" id="lvlup-sub"></div>
-    <button class="lvlup-btn" onclick="closeLevelUp()">Trop bien !</button>
+    <div class="lvlup-unlock" id="lvlup-unlock"></div>
+    <button class="lvlup-btn" onclick="closeLvlUp()">TROP BIEN !</button>
   </div>
 </div>
 
 <!-- Bottom nav -->
-<nav class="bottom-nav">
+<nav class="bnav">
   <a href="index.html"><span>🏠</span>Accueil</a>
   <a href="game.html" class="active"><span>🎮</span>Jouer</a>
-  <a href="engagements.html"><span>📋</span>400 gestes</a>
-  <a href="communaute.html"><span>👥</span>Communaute</a>
-  <a href="carte.html"><span>🗺️</span>Carte</a>
+  <a href="engagements.html"><span>📋</span>Gestes</a>
+  <a href="videos.html"><span>📹</span>Videos</a>
+  <a href="projets.html"><span>🌱</span>Projets</a>
 </nav>
 
 <script>
 (function(){
 'use strict';
 
-// ===== GAME DATA =====
+// ============================================================
+// GAME DATA
+// ============================================================
 
 var LEVELS = [
-  {name:'Graine',     emoji:'🌱', xp:0,    planet:'#6B7280', desc:'un caillou gris'},
-  {name:'Pousse',     emoji:'🌿', xp:100,  planet:'#4B6043', desc:'les premieres mousses'},
-  {name:'Bourgeon',   emoji:'🌳', xp:300,  planet:'#2D5016', desc:'des arbres apparaissent'},
-  {name:'Foret',      emoji:'🌲', xp:600,  planet:'#1A4D1A', desc:'une foret dense'},
-  {name:'Riviere',    emoji:'💧', xp:1000, planet:'#0E4D40', desc:'des rivieres coulent'},
-  {name:'Ocean',      emoji:'🌊', xp:1600, planet:'#0C3547', desc:'un ocean bleu'},
-  {name:'Savane',     emoji:'🦁', xp:2400, planet:'#2E6B34', desc:'la savane grouille de vie'},
-  {name:'Jungle',     emoji:'🦜', xp:3500, planet:'#0B5E2A', desc:'une jungle luxuriante'},
-  {name:'Continent',  emoji:'🏔️', xp:5000, planet:'#1B7340', desc:'des continents fertiles'},
-  {name:'Planete',    emoji:'🌍', xp:7000, planet:'#107A4E', desc:'une planete vivante'},
-  {name:'Galaxie',    emoji:'✨', xp:10000,planet:'#0D8B5E', desc:'tu rayonnes dans la galaxie'}
+  {n:'Graine',     e:'🌱', xp:0},
+  {n:'Pousse',     e:'🌿', xp:100},
+  {n:'Bourgeon',   e:'🌳', xp:300},
+  {n:'Foret',      e:'🌲', xp:600},
+  {n:'Riviere',    e:'💧', xp:1000},
+  {n:'Ocean',      e:'🌊', xp:1600},
+  {n:'Savane',     e:'🦁', xp:2400},
+  {n:'Jungle',     e:'🦜', xp:3500},
+  {n:'Continent',  e:'🏔️', xp:5000},
+  {n:'Planete Verte',e:'🌍',xp:7000},
+  {n:'Galaxie',    e:'✨', xp:10000}
 ];
 
 var CREATURES = [
-  {emoji:'🐝',name:'Abeille',lvl:2},
-  {emoji:'🐸',name:'Grenouille',lvl:3},
-  {emoji:'🦔',name:'Herisson',lvl:4},
-  {emoji:'🐿️',name:'Ecureuil',lvl:5},
-  {emoji:'🦊',name:'Renard',lvl:6},
-  {emoji:'🦉',name:'Chouette',lvl:7},
-  {emoji:'🦌',name:'Cerf',lvl:8},
-  {emoji:'🐬',name:'Dauphin',lvl:9},
-  {emoji:'🦅',name:'Aigle',lvl:10},
-  {emoji:'🐋',name:'Baleine',lvl:11},
-  {emoji:'🐺',name:'Loup',lvl:12},
-  {emoji:'🐻',name:'Ours',lvl:13},
-  {emoji:'🐆',name:'Leopard',lvl:14},
-  {emoji:'🦁',name:'Lion',lvl:15},
-  {emoji:'🐘',name:'Elephant',lvl:16},
-  {emoji:'🐼',name:'Panda',lvl:17},
-  {emoji:'🦄',name:'Licorne',lvl:18},
-  {emoji:'🐉',name:'Dragon',lvl:19},
-  {emoji:'🔮',name:'Phoenix',lvl:20}
+  {e:'🐝',n:'Abeille',l:2},{e:'🐸',n:'Grenouille',l:3},{e:'🦔',n:'Herisson',l:4},
+  {e:'🐿️',n:'Ecureuil',l:5},{e:'🦊',n:'Renard',l:6},{e:'🦉',n:'Chouette',l:7},
+  {e:'🦌',n:'Cerf',l:8},{e:'🐬',n:'Dauphin',l:9},{e:'🦅',n:'Aigle',l:10},
+  {e:'🐋',n:'Baleine',l:11},{e:'🐺',n:'Loup',l:12},{e:'🐻',n:'Ours',l:13},
+  {e:'🐆',n:'Leopard',l:14},{e:'🦁',n:'Lion',l:15},{e:'🐘',n:'Elephant',l:16},
+  {e:'🐼',n:'Panda',l:17},{e:'🦄',n:'Licorne',l:18},{e:'🐉',n:'Dragon',l:19},
+  {e:'🔮',n:'Phoenix',l:20}
 ];
 
-var QUEST_POOL = [
-  {emoji:'🚶',title:'Marche 15 min au lieu de prendre la voiture',xp:25,cat:'mobilite'},
-  {emoji:'🥗',title:'Mange un repas 100% vegetal',xp:30,cat:'alimentation'},
-  {emoji:'🚿',title:'Douche de 4 minutes chrono',xp:20,cat:'eau'},
-  {emoji:'📦',title:'Refuse un emballage plastique',xp:20,cat:'dechets'},
-  {emoji:'🛒',title:'Achete un produit local au marche',xp:25,cat:'alimentation'},
-  {emoji:'🔌',title:'Debranche 3 appareils en veille',xp:15,cat:'energie'},
-  {emoji:'🌳',title:'Photographie un arbre que tu n\'avais jamais remarque',xp:20,cat:'nature'},
-  {emoji:'♻️',title:'Trie correctement 5 dechets aujourd\'hui',xp:20,cat:'dechets'},
-  {emoji:'🚲',title:'Fais un trajet a velo (ou trottinette)',xp:30,cat:'mobilite'},
-  {emoji:'💡',title:'Eteins toutes les lumieres inutiles pendant 1h',xp:15,cat:'energie'},
-  {emoji:'🧴',title:'Utilise un produit rechargeable',xp:20,cat:'dechets'},
-  {emoji:'🥕',title:'Cuisine avec des legumes de saison',xp:25,cat:'alimentation'},
-  {emoji:'📱',title:'Supprime 50 mails (ca pollue !)',xp:15,cat:'numerique'},
-  {emoji:'🌱',title:'Plante quelque chose (graine, herbe, fleur)',xp:35,cat:'nature'},
-  {emoji:'🎒',title:'Emmene ton sac reutilisable',xp:15,cat:'dechets'},
-  {emoji:'🧊',title:'Ne mets pas la clim aujourd\'hui',xp:20,cat:'energie'},
-  {emoji:'☕',title:'Utilise ta tasse reutilisable',xp:15,cat:'dechets'},
-  {emoji:'📖',title:'Lis un article sur le climat (5 min)',xp:20,cat:'culture'},
-  {emoji:'👕',title:'Porte un vetement de seconde main',xp:20,cat:'mode'},
-  {emoji:'🗑️',title:'Ramasse 3 dechets dans la rue',xp:25,cat:'dechets'},
-  {emoji:'🥤',title:'Bois de l\'eau du robinet (pas de bouteille)',xp:15,cat:'eau'},
-  {emoji:'🎮',title:'Defie un ami sur un geste ecolo',xp:30,cat:'social'},
-  {emoji:'🧹',title:'Fais du tri dans tes affaires (donne ou recycle)',xp:25,cat:'dechets'},
-  {emoji:'🌍',title:'Partage un fait eco sur les reseaux',xp:20,cat:'social'},
-  {emoji:'🏃',title:'Va au boulot/a l\'ecole sans moteur',xp:30,cat:'mobilite'},
-  {emoji:'🔋',title:'Charge ton tel a 80% max (preserve la batterie)',xp:15,cat:'numerique'},
-  {emoji:'🧤',title:'Repare un objet casse au lieu de le jeter',xp:35,cat:'dechets'},
-  {emoji:'🎵',title:'Ecoute un podcast eco pendant un trajet',xp:20,cat:'culture'},
-  {emoji:'🍎',title:'Zero gaspi : mange tes restes',xp:25,cat:'alimentation'},
-  {emoji:'🌸',title:'Prends 5 min pour observer la nature dehors',xp:15,cat:'nature'},
-  {emoji:'🐦',title:'Identifie 2 oiseaux differents autour de toi',xp:25,cat:'nature'},
-  {emoji:'🧊',title:'Baisse le chauffage de 1 degre',xp:20,cat:'energie'},
-  {emoji:'📦',title:'Commande en point relais (pas a domicile)',xp:20,cat:'mobilite'},
-  {emoji:'🌿',title:'Fais pousser une herbe aromatique',xp:30,cat:'nature'},
-  {emoji:'🎁',title:'Offre un cadeau fait maison',xp:30,cat:'dechets'},
-  {emoji:'🚄',title:'Choisis le train au lieu de l\'avion',xp:40,cat:'mobilite'},
-  {emoji:'🤝',title:'Aide un voisin avec un outil (pret, pas achat)',xp:25,cat:'social'},
-  {emoji:'🏷️',title:'Verifie le label d\'un produit avant d\'acheter',xp:15,cat:'alimentation'},
-  {emoji:'🗞️',title:'Desabonne-toi de 3 newsletters inutiles',xp:15,cat:'numerique'},
-  {emoji:'💧',title:'Recupere l\'eau de pluie (meme un verre !)',xp:25,cat:'eau'}
+var QUESTS = [
+  {e:'🚶',t:'Marche 15 min dehors',xp:25,c:5,cat:'Mobilite'},
+  {e:'🥗',t:'Un repas 100% vegetal',xp:30,c:8,cat:'Alimentation'},
+  {e:'🚿',t:'Douche chrono 4 min',xp:20,c:5,cat:'Eau'},
+  {e:'📦',t:'Refuse un plastique',xp:20,c:5,cat:'Dechets'},
+  {e:'🛒',t:'Achete un produit local',xp:25,c:6,cat:'Alimentation'},
+  {e:'🔌',t:'Debranche 3 appareils en veille',xp:15,c:4,cat:'Energie'},
+  {e:'🌳',t:'Photographie un arbre inconnu',xp:20,c:5,cat:'Nature'},
+  {e:'♻️',t:'Trie 5 dechets correctement',xp:20,c:5,cat:'Dechets'},
+  {e:'🚲',t:'Fais un trajet a velo',xp:30,c:8,cat:'Mobilite'},
+  {e:'💡',t:'Zero lumieres inutiles 1 heure',xp:15,c:4,cat:'Energie'},
+  {e:'🥕',t:'Cuisine legumes de saison',xp:25,c:6,cat:'Alimentation'},
+  {e:'📱',t:'Supprime 50 vieux mails',xp:15,c:4,cat:'Numerique'},
+  {e:'🌱',t:'Plante une graine (pour de vrai)',xp:35,c:10,cat:'Nature'},
+  {e:'🎒',t:'Emmene ton sac reutilisable',xp:15,c:3,cat:'Dechets'},
+  {e:'☕',t:'Utilise ta tasse reutilisable',xp:15,c:3,cat:'Dechets'},
+  {e:'📖',t:'Lis 5 min sur le climat',xp:20,c:5,cat:'Culture'},
+  {e:'👕',t:'Porte un vetement de seconde main',xp:20,c:5,cat:'Mode'},
+  {e:'🗑️',t:'Ramasse 3 dechets dans la rue',xp:25,c:8,cat:'Nature'},
+  {e:'🎮',t:'Defie un pote sur un geste ecolo',xp:30,c:8,cat:'Social'},
+  {e:'🌍',t:'Partage un fait eco sur les reseaux',xp:20,c:5,cat:'Social'},
+  {e:'🏃',t:'Zero moteur pour aller au boulot',xp:30,c:8,cat:'Mobilite'},
+  {e:'🔋',t:'Charge ton tel a 80% max',xp:15,c:3,cat:'Numerique'},
+  {e:'🧤',t:'Repare un objet au lieu de le jeter',xp:35,c:10,cat:'Dechets'},
+  {e:'🍎',t:'Zero gaspi : mange tes restes',xp:25,c:6,cat:'Alimentation'},
+  {e:'🌸',t:'5 min a observer la nature dehors',xp:15,c:3,cat:'Nature'},
+  {e:'🐦',t:'Identifie 2 oiseaux autour de toi',xp:25,c:6,cat:'Nature'},
+  {e:'🧊',t:'Baisse le chauffage de 1 degre',xp:20,c:5,cat:'Energie'},
+  {e:'🌿',t:'Fais pousser une herbe aromatique',xp:30,c:8,cat:'Nature'},
+  {e:'🎁',t:'Offre un cadeau fait maison',xp:30,c:10,cat:'Social'},
+  {e:'🚄',t:'Train au lieu de voiture',xp:40,c:12,cat:'Mobilite'},
+  {e:'🤝',t:'Prete un outil a un voisin',xp:25,c:6,cat:'Social'},
+  {e:'🏷️',t:'Verifie le label avant d\'acheter',xp:15,c:3,cat:'Alimentation'},
+  {e:'🗞️',t:'Desabonne 3 newsletters inutiles',xp:15,c:3,cat:'Numerique'},
+  {e:'💧',t:'Recupere de l\'eau de pluie',xp:25,c:6,cat:'Eau'},
+  {e:'🧹',t:'Tri : donne ou recycle 3 objets',xp:25,c:6,cat:'Dechets'},
+  {e:'🎵',t:'Ecoute un podcast eco en marchant',xp:20,c:5,cat:'Culture'},
+  {e:'🥤',t:'Eau du robinet toute la journee',xp:15,c:3,cat:'Eau'},
+  {e:'📦',t:'Commande en point relais',xp:20,c:5,cat:'Mobilite'},
+  {e:'🧴',t:'Utilise un produit rechargeable',xp:20,c:5,cat:'Dechets'},
+  {e:'🧊',t:'Pas de clim aujourd\'hui',xp:20,c:5,cat:'Energie'}
 ];
 
 var BOSSES = [
-  {emoji:'🌳',title:'Foret Collective',desc:'Plantez 100 arbres ensemble cette semaine.',goal:100,reward:'Badge Foret Legendaire',xp:200},
-  {emoji:'🚲',title:'Semaine Sans Moteur',desc:'500 km parcourus sans voiture par la communaute.',goal:500,reward:'Badge Roue Verte',xp:150},
-  {emoji:'♻️',title:'Zero Plastique',desc:'1000 emballages refuses collectivement.',goal:1000,reward:'Badge Ocean Propre',xp:250},
-  {emoji:'🍽️',title:'Le Grand Vegetal',desc:'300 repas vegetaux cette semaine.',goal:300,reward:'Badge Chef Vert',xp:180},
-  {emoji:'⚡',title:'Blackout Challenge',desc:'200 heures d\'appareils debranchees.',goal:200,reward:'Badge Econome',xp:160}
+  {e:'🌳',t:'Foret Collective',d:'Plantez 100 arbres ensemble !',g:100,r:200,rc:50},
+  {e:'🚲',t:'Semaine Sans Moteur',d:'500 km parcourus sans voiture !',g:500,r:150,rc:40},
+  {e:'♻️',t:'Zero Plastique',d:'1000 plastiques refuses !',g:1000,r:250,rc:60},
+  {e:'🍽️',t:'Le Grand Vegetal',d:'300 repas vege cette semaine !',g:300,r:180,rc:45},
+  {e:'⚡',t:'Blackout Challenge',d:'200h d\'appareils debranchees !',g:200,r:160,rc:40}
 ];
 
-var LEADERBOARD = [
-  {name:'Toi',avatar:'🧑',xp:0,me:true},
-  {name:'Lea',avatar:'👩‍🦰',xp:2340},
-  {name:'Kylian',avatar:'🧑‍🦱',xp:1890},
-  {name:'Amira',avatar:'👩',xp:1650},
-  {name:'Lucas',avatar:'👦',xp:1420},
-  {name:'Jade',avatar:'👧',xp:1180},
-  {name:'Noah',avatar:'🧒',xp:980},
-  {name:'Emma',avatar:'👩‍🦳',xp:750},
-  {name:'Enzo',avatar:'👨‍🦲',xp:520},
-  {name:'Chloe',avatar:'👱‍♀️',xp:310}
+var GARDEN_PLANTS = [
+  {e:'🌱',n:'Herbe',time:60,xp:10,c:5,cost:0},      // 1 min
+  {e:'🌻',n:'Tournesol',time:300,xp:25,c:12,cost:10}, // 5 min
+  {e:'🌹',n:'Rose',time:900,xp:50,c:25,cost:25},      // 15 min
+  {e:'🌴',n:'Palmier',time:1800,xp:80,c:40,cost:40},  // 30 min
+  {e:'🍎',n:'Pommier',time:3600,xp:120,c:60,cost:60}  // 1h
 ];
 
-// ===== STATE =====
-var state = JSON.parse(localStorage.getItem('sos-planet-game') || 'null') || {
-  xp: 0,
-  streak: 0,
-  lastPlay: null,
-  todayQuests: [],
-  todayDone: [],
-  bossProgress: 0,
-  bossIndex: 0,
-  achievements: [],
-  totalQuests: 0
+var SHOP_ITEMS = [
+  {e:'🌻',n:'Graines Tournesol',price:10,type:'seed',seedIdx:1},
+  {e:'🌹',n:'Graines Rose',price:25,type:'seed',seedIdx:2},
+  {e:'🌴',n:'Graines Palmier',price:40,type:'seed',seedIdx:3},
+  {e:'🍎',n:'Graines Pommier',price:60,type:'seed',seedIdx:4},
+  {e:'🎨',n:'Aura Doree',price:100,type:'deco',id:'gold-aura'},
+  {e:'🌈',n:'Arc-en-ciel',price:150,type:'deco',id:'rainbow'},
+  {e:'💫',n:'Etoiles Filantes',price:80,type:'deco',id:'shooting-stars'},
+  {e:'🛸',n:'OVNI Ami',price:200,type:'deco',id:'ufo'}
+];
+
+var WHEEL_PRIZES = [
+  {label:'+20 XP',xp:20,c:0,e:'⭐'},
+  {label:'+10 🌿',xp:0,c:10,e:'🌿'},
+  {label:'+50 XP',xp:50,c:0,e:'🔥'},
+  {label:'+25 🌿',xp:0,c:25,e:'💰'},
+  {label:'+30 XP',xp:30,c:0,e:'✨'},
+  {label:'+5 🌿',xp:0,c:5,e:'🍀'},
+  {label:'JACKPOT !',xp:100,c:50,e:'🎰'},
+  {label:'+15 XP',xp:15,c:0,e:'💎'}
+];
+
+var LB = [
+  {n:'Toi',a:'🧑',me:true},
+  {n:'Lea',a:'👩‍🦰',x:2340},{n:'Kylian',a:'🧑‍🦱',x:1890},
+  {n:'Amira',a:'👩',x:1650},{n:'Lucas',a:'👦',x:1420},
+  {n:'Jade',a:'👧',x:1180},{n:'Noah',a:'🧒',x:980},
+  {n:'Emma',a:'👩‍🦳',x:750},{n:'Enzo',a:'👨‍🦲',x:520},{n:'Chloe',a:'👱‍♀️',x:310}
+];
+
+// ============================================================
+// STATE
+// ============================================================
+
+var S = JSON.parse(localStorage.getItem('sp-game2') || 'null') || {
+  xp:0, coins:20, streak:0, lastDay:null,
+  quests:[], done:[], bossHp:0, bossIdx:0,
+  garden:[null,null,null,null,null,null,null,null],
+  ownedSeeds:[0], ownedDeco:[], achievements:[],
+  totalQ:0, spinDay:null
+};
+function save(){localStorage.setItem('sp-game2',JSON.stringify(S))}
+
+// ============================================================
+// AUDIO ENGINE
+// ============================================================
+var actx;
+function A(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx}
+
+function snd(type){
+  var c=A(),o=c.createOscillator(),g=c.createGain();
+  o.connect(g);g.connect(c.destination);
+  var t=c.currentTime;
+  if(type==='xp'){
+    o.type='sine';o.frequency.setValueAtTime(660,t);o.frequency.exponentialRampToValueAtTime(1320,t+.08);
+    g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);o.start(t);o.stop(t+.2);
+  } else if(type==='coin'){
+    o.type='sine';o.frequency.setValueAtTime(1047,t);o.frequency.setValueAtTime(1319,t+.06);
+    g.gain.setValueAtTime(.1,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.start(t);o.stop(t+.18);
+  } else if(type==='lvl'){
+    o.type='sine';[523,659,784,1047].forEach(function(f,i){o.frequency.setValueAtTime(f,t+i*.1)});
+    g.gain.setValueAtTime(.15,t);g.gain.exponentialRampToValueAtTime(.001,t+.6);o.start(t);o.stop(t+.6);
+  } else if(type==='hit'){
+    o.type='sawtooth';o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(600,t+.05);
+    o.frequency.exponentialRampToValueAtTime(100,t+.15);
+    g.gain.setValueAtTime(.08,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);o.start(t);o.stop(t+.2);
+  } else if(type==='harvest'){
+    o.type='sine';o.frequency.setValueAtTime(880,t);o.frequency.setValueAtTime(1100,t+.05);
+    o.frequency.setValueAtTime(1320,t+.1);o.frequency.setValueAtTime(1760,t+.15);
+    g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.35);o.start(t);o.stop(t+.35);
+  } else if(type==='plant'){
+    o.type='sine';o.frequency.setValueAtTime(440,t);o.frequency.exponentialRampToValueAtTime(660,t+.1);
+    g.gain.setValueAtTime(.08,t);g.gain.exponentialRampToValueAtTime(.001,t+.15);o.start(t);o.stop(t+.15);
+  } else if(type==='spin'){
+    o.type='triangle';o.frequency.setValueAtTime(300,t);
+    for(var i=0;i<20;i++){o.frequency.setValueAtTime(300+i*40,t+i*.15)}
+    g.gain.setValueAtTime(.06,t);g.gain.exponentialRampToValueAtTime(.001,t+3);o.start(t);o.stop(t+3);
+  } else if(type==='win'){
+    o.type='sine';[523,659,784,1047,1319].forEach(function(f,i){o.frequency.setValueAtTime(f,t+i*.08)});
+    g.gain.setValueAtTime(.15,t);g.gain.exponentialRampToValueAtTime(.001,t+.6);o.start(t);o.stop(t+.6);
+  }
+}
+
+function vibrate(ms){if(navigator.vibrate)navigator.vibrate(ms)}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function getLvl(){for(var i=LEVELS.length-1;i>=0;i--)if(S.xp>=LEVELS[i].xp)return i;return 0}
+function today(){return new Date().toISOString().slice(0,10)}
+function yesterday(){return new Date(Date.now()-864e5).toISOString().slice(0,10)}
+
+function floatXP(txt,x,y){
+  var el=document.createElement('div');el.className='float-xp';el.textContent=txt;
+  el.style.left=x+'px';el.style.top=y+'px';document.body.appendChild(el);
+  setTimeout(function(){el.remove()},1300);
+}
+
+function toast(emoji,text,sub){
+  var t=document.getElementById('toast');
+  document.getElementById('toast-emoji').textContent=emoji;
+  document.getElementById('toast-text').textContent=text;
+  document.getElementById('toast-sub').textContent=sub||'';
+  t.classList.add('show');setTimeout(function(){t.classList.remove('show')},1800);
+}
+
+function shake(){var a=document.getElementById('app');a.classList.add('shake');setTimeout(function(){a.classList.remove('shake')},400)}
+
+function particles(x,y,color,count){
+  for(var i=0;i<(count||12);i++){
+    var p=document.createElement('div');p.className='particle';
+    p.style.left=x+'px';p.style.top=y+'px';p.style.width=p.style.height=(3+Math.random()*5)+'px';
+    p.style.background=color||'#FBBF24';
+    var angle=Math.random()*Math.PI*2,speed=60+Math.random()*80;
+    var dx=Math.cos(angle)*speed,dy=Math.sin(angle)*speed;
+    document.body.appendChild(p);
+    p.animate([
+      {transform:'translate(0,0) scale(1)',opacity:1},
+      {transform:'translate('+dx+'px,'+dy+'px) scale(0)',opacity:0}
+    ],{duration:600+Math.random()*400,easing:'ease-out'});
+    setTimeout(function(el){el.remove()}.bind(null,p),1100);
+  }
+}
+
+function confetti(n){
+  var colors=['#10B981','#FBBF24','#EF4444','#3B82F6','#8B5CF6','#EC4899','#F97316'];
+  for(var i=0;i<(n||40);i++){
+    var c=document.createElement('div');c.className='confetti';
+    c.style.left=Math.random()*100+'%';
+    c.style.background=colors[i%colors.length];
+    c.style.width=c.style.height=(5+Math.random()*8)+'px';
+    c.style.borderRadius=Math.random()>.5?'50%':'2px';
+    c.style.animationDelay=Math.random()*.6+'s';
+    document.body.appendChild(c);
+    setTimeout(function(el){el.remove()}.bind(null,c),2800);
+  }
+}
+
+// ============================================================
+// GAIN XP / COINS
+// ============================================================
+function gainXP(amount,cx,cy){
+  var old=getLvl();
+  S.xp+=amount;save();
+  snd('xp');vibrate(30);
+  if(cx&&cy){floatXP('+'+amount+' XP',cx,cy);particles(cx,cy,'#FBBF24',8)}
+  var xpBar=document.getElementById('xp-bar');xpBar.classList.add('pulse');
+  setTimeout(function(){xpBar.classList.remove('pulse')},500);
+  updateUI();
+  if(getLvl()>old)setTimeout(function(){showLvlUp(getLvl())},500);
+}
+
+function gainCoins(amount,cx,cy){
+  S.coins+=amount;save();
+  snd('coin');vibrate(20);
+  if(cx&&cy){floatXP('+'+amount+' 🌿',cx,cy);particles(cx,cy,'#10B981',6)}
+  updateUI();
+}
+
+// ============================================================
+// STREAK
+// ============================================================
+function checkStreak(){
+  var d=today();
+  if(S.lastDay===d)return;
+  if(S.lastDay===yesterday()){/* continues on quest */}
+  else if(S.lastDay&&S.lastDay!==d){S.streak=0;save()}
+}
+
+// ============================================================
+// DAILY SPIN WHEEL
+// ============================================================
+var wheelDrawn=false;
+function drawWheel(){
+  if(wheelDrawn)return;wheelDrawn=true;
+  var cv=document.getElementById('wheel-canvas'),ctx=cv.getContext('2d');
+  var n=WHEEL_PRIZES.length,arc=Math.PI*2/n,r=140;
+  var colors=['#10B981','#FBBF24','#8B5CF6','#EC4899','#3B82F6','#F97316','#EF4444','#14B8A6'];
+  for(var i=0;i<n;i++){
+    ctx.beginPath();ctx.moveTo(r,r);ctx.arc(r,r,r,i*arc,(i+1)*arc);ctx.fillStyle=colors[i%colors.length];ctx.fill();
+    ctx.save();ctx.translate(r,r);ctx.rotate(i*arc+arc/2);ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.textAlign='center';
+    ctx.fillText(WHEEL_PRIZES[i].e,r*.6,4);ctx.font='bold 9px system-ui';ctx.fillText(WHEEL_PRIZES[i].label,r*.6,16);
+    ctx.restore();
+  }
+  // center
+  ctx.beginPath();ctx.arc(r,r,18,0,Math.PI*2);ctx.fillStyle='#0A0E1A';ctx.fill();
+  ctx.beginPath();ctx.arc(r,r,16,0,Math.PI*2);ctx.fillStyle='#FBBF24';ctx.fill();
+}
+
+function showWheel(){
+  if(S.spinDay===today())return; // already spun
+  drawWheel();
+  document.getElementById('spin-overlay').classList.add('show');
+  document.getElementById('spin-result').classList.remove('show');
+  document.getElementById('spin-close').classList.remove('show');
+}
+
+window.spinWheel=function(){
+  var btn=document.getElementById('spin-btn');
+  if(btn.disabled)return;btn.disabled=true;
+  snd('spin');
+  var idx=Math.floor(Math.random()*WHEEL_PRIZES.length);
+  var arc=360/WHEEL_PRIZES.length;
+  var deg=3600+360-idx*arc-arc/2; // land on prize
+  var cv=document.getElementById('wheel-canvas');
+  cv.style.transform='rotate('+deg+'deg)';
+  S.spinDay=today();save();
+  setTimeout(function(){
+    var prize=WHEEL_PRIZES[idx];
+    snd('win');vibrate(100);confetti(30);
+    if(prize.xp)S.xp+=prize.xp;
+    if(prize.c)S.coins+=prize.c;
+    save();updateUI();
+    document.getElementById('spin-result').textContent=prize.e+' '+prize.label+' !';
+    document.getElementById('spin-result').classList.add('show');
+    document.getElementById('spin-close').classList.add('show');
+  },4200);
 };
 
-function save() { localStorage.setItem('sos-planet-game', JSON.stringify(state)); }
+window.closeWheel=function(){
+  document.getElementById('spin-overlay').classList.remove('show');
+};
 
-// ===== AUDIO =====
-var audioCtx;
-function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-
-function playSound(type) {
-  initAudio();
-  var osc = audioCtx.createOscillator();
-  var gain = audioCtx.createGain();
-  osc.connect(gain); gain.connect(audioCtx.destination);
-  if (type === 'xp') {
-    osc.type = 'sine'; osc.frequency.setValueAtTime(523, audioCtx.currentTime);
-    osc.frequency.linearRampToValueAtTime(784, audioCtx.currentTime + 0.1);
-    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-  } else if (type === 'levelup') {
-    osc.type = 'sine';
-    [523, 659, 784, 1047].forEach(function(f, i) {
-      var t = audioCtx.currentTime + i * 0.12;
-      osc.frequency.setValueAtTime(f, t);
-    });
-    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.6);
-  } else if (type === 'boss') {
-    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-    osc.frequency.linearRampToValueAtTime(600, audioCtx.currentTime + 0.15);
-    osc.frequency.linearRampToValueAtTime(400, audioCtx.currentTime + 0.3);
-    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.4);
-  }
-}
-
-// ===== LEVEL CALC =====
-function getLevel() {
-  for (var i = LEVELS.length - 1; i >= 0; i--) {
-    if (state.xp >= LEVELS[i].xp) return {idx: i, data: LEVELS[i]};
-  }
-  return {idx: 0, data: LEVELS[0]};
-}
-
-function getXpProgress() {
-  var lv = getLevel();
-  var next = LEVELS[lv.idx + 1];
-  if (!next) return {pct: 100, current: state.xp, needed: state.xp};
-  var base = lv.data.xp;
-  var needed = next.xp - base;
-  var current = state.xp - base;
-  return {pct: Math.min(100, Math.round(current / needed * 100)), current: current, needed: needed};
-}
-
-// ===== STREAK =====
-function checkStreak() {
-  var today = new Date().toISOString().slice(0, 10);
-  var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-  if (state.lastPlay === today) return;
-  if (state.lastPlay === yesterday) {
-    // streak continues, will increment when quest done
-  } else if (state.lastPlay && state.lastPlay !== today) {
-    state.streak = 0; // streak broken
-  }
-}
-
-function updateStreakDisplay() {
-  var el = document.getElementById('streak');
-  var num = document.getElementById('streak-num');
-  var icon = document.getElementById('streak-icon');
-  num.textContent = state.streak;
-  if (state.streak >= 7) { icon.textContent = '🔥'; el.className = 'streak-badge'; }
-  else if (state.streak >= 3) { icon.textContent = '🔥'; el.className = 'streak-badge'; }
-  else if (state.streak > 0) { icon.textContent = '🔥'; el.className = 'streak-badge'; }
-  else { icon.textContent = '💤'; el.className = 'streak-badge dead'; }
-}
-
-// ===== DAILY QUESTS =====
-function getDailyQuests() {
-  var today = new Date().toISOString().slice(0, 10);
-  if (state.todayQuests.length === 3 && state.lastPlay && state.lastPlay.slice(0,10) === today) {
-    return state.todayQuests;
-  }
-  // New day: pick 3 random quests
-  var pool = QUEST_POOL.slice();
-  var picked = [];
-  for (var i = 0; i < 3; i++) {
-    var r = Math.floor(Math.random() * pool.length);
-    picked.push(pool.splice(r, 1)[0]);
-  }
-  state.todayQuests = picked;
-  state.todayDone = [];
-  save();
-  return picked;
-}
-
-// ===== GAIN XP =====
-function gainXP(amount) {
-  var oldLevel = getLevel().idx;
-  state.xp += amount;
-  save();
-  var newLevel = getLevel().idx;
-  updateUI();
-  playSound('xp');
-  if (newLevel > oldLevel) {
-    setTimeout(function() { showLevelUp(LEVELS[newLevel]); }, 400);
-  }
-  // Check achievements
-  checkAchievements();
-}
-
-// ===== QUEST COMPLETION =====
-function completeQuest(idx) {
-  if (state.todayDone.indexOf(idx) !== -1) return;
-  state.todayDone.push(idx);
-  var today = new Date().toISOString().slice(0, 10);
-  if (state.lastPlay !== today) {
-    if (state.lastPlay === new Date(Date.now() - 86400000).toISOString().slice(0, 10)) {
-      state.streak++;
-    } else {
-      state.streak = 1;
-    }
-    state.lastPlay = today;
-  }
-  state.totalQuests++;
-  save();
-  var quest = state.todayQuests[idx];
-  gainXP(quest.xp);
-  showAchievement(quest.emoji, '+' + quest.xp + ' XP', quest.title);
-  renderQuests();
-
-  // All 3 done today?
-  if (state.todayDone.length === 3) {
-    setTimeout(function() {
-      gainXP(50); // bonus
-      showAchievement('⭐', 'COMBO +50 XP', '3 quetes terminees !');
-    }, 1500);
-  }
-}
-
-// ===== BOSS =====
-function contributeBoss() {
-  state.bossProgress += 1 + Math.floor(Math.random() * 5);
-  var boss = BOSSES[state.bossIndex % BOSSES.length];
-  if (state.bossProgress >= boss.goal) {
-    state.bossProgress = 0;
-    state.bossIndex++;
-    save();
-    gainXP(boss.xp);
-    playSound('boss');
-    showAchievement('🏆', 'BOSS VAINCU !', boss.reward);
-  } else {
-    save();
-    playSound('xp');
-  }
-  renderBoss();
-}
-
-// ===== ACHIEVEMENTS =====
-function checkAchievements() {
-  var checks = [
-    {id:'first',cond:state.totalQuests>=1,emoji:'🎯',text:'Premier pas'},
-    {id:'streak3',cond:state.streak>=3,emoji:'🔥',text:'3 jours de suite'},
-    {id:'streak7',cond:state.streak>=7,emoji:'💪',text:'1 semaine !'},
-    {id:'quests10',cond:state.totalQuests>=10,emoji:'⚡',text:'10 quetes'},
-    {id:'quests50',cond:state.totalQuests>=50,emoji:'🌟',text:'50 quetes'},
-    {id:'lvl5',cond:getLevel().idx>=4,emoji:'🏅',text:'Niveau Riviere'},
-    {id:'lvl10',cond:getLevel().idx>=10,emoji:'👑',text:'Galaxie !'}
-  ];
-  checks.forEach(function(a) {
-    if (a.cond && state.achievements.indexOf(a.id) === -1) {
-      state.achievements.push(a.id);
-      save();
-      setTimeout(function() {
-        showAchievement(a.emoji, 'SUCCES DEBLOQUE', a.text);
-      }, 2000);
-    }
+// ============================================================
+// PLANET CANVAS
+// ============================================================
+var pCtx,pW=440,pH=300;
+function initPlanet(){
+  var cv=document.getElementById('planet-canvas');
+  pCtx=cv.getContext('2d');
+  cv.addEventListener('click',function(ev){
+    // Tap planet = small XP reward (max 3x per day)
+    var taps=parseInt(sessionStorage.getItem('ptaps')||'0');
+    if(taps>=5)return;
+    sessionStorage.setItem('ptaps',''+(taps+1));
+    var r=cv.getBoundingClientRect();
+    gainXP(5,ev.clientX,ev.clientY);
+    particles(ev.clientX,ev.clientY,'#10B981',10);
   });
 }
 
-// ===== UI UPDATES =====
-function showAchievement(emoji, text, sub) {
-  var el = document.getElementById('achieve-popup');
-  document.getElementById('ach-emoji').textContent = emoji;
-  document.getElementById('ach-text').textContent = text;
-  document.getElementById('ach-sub').textContent = sub || '';
-  el.classList.add('show');
-  setTimeout(function() { el.classList.remove('show'); }, 2500);
+function drawPlanet(){
+  if(!pCtx)return;
+  var ctx=pCtx,lvl=getLvl();
+  ctx.clearRect(0,0,pW,pH);
+
+  // Planet body
+  var cx=pW/2,cy=pH/2,r=100;
+  var grad=ctx.createRadialGradient(cx-25,cy-25,20,cx,cy,r);
+
+  // Colors by level
+  var planetColors=[
+    ['#8B8B8B','#5B5B5B','#3A3A3A'],          // 0 grey rock
+    ['#6B8B5E','#4B6043','#2A3B22'],          // 1 moss
+    ['#4D9B4D','#2D7028','#1A4D1A'],          // 2 green
+    ['#3D8B3D','#1A6B1A','#0D4D0D'],          // 3 forest
+    ['#2D8B5E','#1A6B4D','#1565A0'],          // 4 river
+    ['#1A6B8B','#0C4D6B','#1565C0'],          // 5 ocean
+    ['#4D8B3D','#6B8B14','#D4A017'],          // 6 savane
+    ['#0D7B3D','#0B5E2A','#2D8B2D'],          // 7 jungle
+    ['#1B8B50','#8B6914','#3B82F6'],          // 8 continent
+    ['#15915D','#2563EB','#D4A017'],          // 9 green planet
+    ['#10B981','#3B82F6','#FBBF24']           // 10 galaxy
+  ][Math.min(lvl,10)];
+
+  grad.addColorStop(0,planetColors[0]);grad.addColorStop(.6,planetColors[1]);grad.addColorStop(1,planetColors[2]);
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
+
+  // Atmosphere glow
+  var atm=ctx.createRadialGradient(cx,cy,r-5,cx,cy,r+20);
+  atm.addColorStop(0,'rgba(16,185,129,0)');
+  atm.addColorStop(.5,'rgba(16,185,129,'+(0.05+lvl*0.02)+')');
+  atm.addColorStop(1,'rgba(16,185,129,0)');
+  ctx.beginPath();ctx.arc(cx,cy,r+20,0,Math.PI*2);ctx.fillStyle=atm;ctx.fill();
+
+  // Surface details based on level
+  if(lvl>=1) drawTrees(ctx,cx,cy,r,Math.min(lvl*3,20));
+  if(lvl>=4) drawWater(ctx,cx,cy,r);
+  if(lvl>=6) drawClouds(ctx,cx,cy,r);
+
+  // Creatures orbiting
+  var unlocked=CREATURES.filter(function(c){return(getLvl()+1)>=c.l});
+  var showing=unlocked.slice(-4);
+  var t=Date.now()/2000;
+  showing.forEach(function(c,i){
+    var angle=t+i*(Math.PI*2/showing.length);
+    var ox=cx+Math.cos(angle)*(r+25);
+    var oy=cy+Math.sin(angle)*30+Math.sin(t*1.5+i)*8;
+    ctx.font='24px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(c.e,ox,oy);
+  });
+
+  // Decorations
+  if(S.ownedDeco.indexOf('gold-aura')!==-1){
+    var ag=ctx.createRadialGradient(cx,cy,r,cx,cy,r+35);
+    ag.addColorStop(0,'rgba(251,191,36,0.1)');ag.addColorStop(.5,'rgba(251,191,36,0.05)');ag.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(cx,cy,r+35,0,Math.PI*2);ctx.fillStyle=ag;ctx.fill();
+  }
+  if(S.ownedDeco.indexOf('shooting-stars')!==-1){
+    for(var s=0;s<3;s++){
+      var sx=50+Math.sin(t*2+s*2)*180,sy=20+Math.cos(t*1.5+s*3)*40;
+      ctx.beginPath();ctx.arc(sx,sy,2,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.7)';ctx.fill();
+      ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+15,sy+8);ctx.strokeStyle='rgba(255,255,255,.3)';ctx.lineWidth=1;ctx.stroke();
+    }
+  }
+  if(S.ownedDeco.indexOf('rainbow')!==-1){
+    ctx.beginPath();ctx.arc(cx,cy+60,130,Math.PI,0);ctx.lineWidth=4;
+    var rg=ctx.createLinearGradient(cx-130,0,cx+130,0);
+    rg.addColorStop(0,'#EF4444');rg.addColorStop(.17,'#F97316');rg.addColorStop(.33,'#FBBF24');
+    rg.addColorStop(.5,'#10B981');rg.addColorStop(.67,'#3B82F6');rg.addColorStop(.83,'#6366F1');rg.addColorStop(1,'#8B5CF6');
+    ctx.strokeStyle=rg;ctx.stroke();
+  }
+  if(S.ownedDeco.indexOf('ufo')!==-1){
+    var ux=cx+Math.cos(t*0.8)*120,uy=cy-80+Math.sin(t)*15;
+    ctx.font='20px serif';ctx.fillText('🛸',ux,uy);
+  }
+
+  requestAnimationFrame(drawPlanet);
 }
 
-function showLevelUp(level) {
-  playSound('levelup');
-  spawnConfetti();
-  document.getElementById('lvlup-emoji').textContent = level.emoji;
-  document.getElementById('lvlup-title').textContent = 'Niveau ' + level.name + ' !';
-  document.getElementById('lvlup-sub').textContent = 'Ta planete evolue : ' + level.desc;
+function drawTrees(ctx,cx,cy,r,count){
+  var seed=42;function rng(){seed=(seed*16807)%2147483647;return(seed-1)/2147483646}
+  for(var i=0;i<count;i++){
+    var a=rng()*Math.PI*2,d=rng()*r*.7;
+    var tx=cx+Math.cos(a)*d,ty=cy+Math.sin(a)*d;
+    ctx.fillStyle='#0D5016';ctx.beginPath();
+    ctx.moveTo(tx,ty-8);ctx.lineTo(tx-4,ty+2);ctx.lineTo(tx+4,ty+2);ctx.fill();
+  }
+}
+
+function drawWater(ctx,cx,cy,r){
+  ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();
+  ctx.fillStyle='rgba(37,99,235,0.25)';
+  ctx.beginPath();ctx.ellipse(cx+30,cy+20,40,25,0.3,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx-40,cy-10,25,15,-0.2,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+function drawClouds(ctx,cx,cy,r){
+  var t=Date.now()/8000;
+  ctx.save();ctx.beginPath();ctx.arc(cx,cy,r+5,0,Math.PI*2);ctx.clip();
+  ctx.fillStyle='rgba(255,255,255,0.15)';
+  for(var i=0;i<3;i++){
+    var a=t+i*2.1;
+    ctx.beginPath();ctx.ellipse(cx+Math.cos(a)*r*.6,cy-r*.3+i*20,30,10,0,0,Math.PI*2);ctx.fill();
+  }
+  ctx.restore();
+}
+
+// ============================================================
+// GARDEN
+// ============================================================
+function renderGarden(){
+  var html='';
+  S.garden.forEach(function(slot,i){
+    if(!slot){
+      html+='<div class="garden-slot empty" onclick="plantSeed('+i+')"><span class="slot-emoji">+</span><span class="slot-timer">Planter</span></div>';
+    } else {
+      var elapsed=(Date.now()-slot.planted)/1000;
+      var plant=GARDEN_PLANTS[slot.type];
+      var ready=elapsed>=plant.time;
+      var pct=Math.min(100,elapsed/plant.time*100);
+      var stages=['🌱','🌿',plant.e];
+      var stage=ready?2:pct>50?1:0;
+      var timeLeft=Math.max(0,Math.ceil(plant.time-elapsed));
+      var tStr=timeLeft>60?Math.ceil(timeLeft/60)+'min':timeLeft+'s';
+      html+='<div class="garden-slot'+(ready?' ready':'')+'" onclick="'+(ready?'harvestSlot('+i+')':'')+'">'+
+        '<span class="slot-emoji">'+stages[stage]+'</span>'+
+        '<span class="slot-timer">'+(ready?'RECOLTER !':tStr)+'</span>'+
+        '<div class="slot-progress" style="width:'+pct+'%"></div></div>';
+    }
+  });
+  document.getElementById('garden-grid').innerHTML=html;
+}
+
+window.plantSeed=function(idx){
+  // Pick best available seed
+  var available=S.ownedSeeds.slice();
+  if(available.length===0){toast('🌱','Pas de graines !','Achete-en dans la boutique');return}
+  var seedIdx=available[available.length-1]; // best seed
+  var plant=GARDEN_PLANTS[seedIdx];
+  if(plant.cost>0&&S.coins<plant.cost){toast('🌿','Pas assez de pieces !','Il te faut '+plant.cost+' 🌿');return}
+  S.garden[idx]={type:seedIdx,planted:Date.now()};
+  // Remove one seed if not free
+  if(seedIdx>0){var si=S.ownedSeeds.lastIndexOf(seedIdx);if(si!==-1)S.ownedSeeds.splice(si,1)}
+  save();snd('plant');vibrate(20);renderGarden();
+};
+
+window.harvestSlot=function(idx){
+  var slot=S.garden[idx];if(!slot)return;
+  var plant=GARDEN_PLANTS[slot.type];
+  S.garden[idx]=null;save();
+  snd('harvest');vibrate(50);shake();
+  var r=document.getElementById('garden-grid').children[idx].getBoundingClientRect();
+  gainXP(plant.xp,r.left+r.width/2,r.top);
+  gainCoins(plant.c,r.left+r.width/2,r.top+30);
+  particles(r.left+r.width/2,r.top+r.height/2,'#10B981',15);
+  toast(plant.e,'+'+plant.xp+' XP  +'+plant.c+' 🌿','Recolte !');
+  renderGarden();
+};
+
+// Auto refresh garden timers
+setInterval(renderGarden,5000);
+
+// ============================================================
+// QUESTS
+// ============================================================
+function getQuests(){
+  var d=today();
+  if(S.quests.length===3&&S.lastDay===d)return S.quests;
+  var pool=QUESTS.slice(),picked=[];
+  for(var i=0;i<3;i++){var r=Math.floor(Math.random()*pool.length);picked.push(pool.splice(r,1)[0])}
+  S.quests=picked;S.done=[];S.lastDay=d;save();return picked;
+}
+
+function renderQuests(){
+  var q=getQuests();
+  var html='<div class="quest-header"><span>QUETES DU JOUR ('+S.done.length+'/3)</span>'+
+    (S.done.length===3?'<span class="quest-bonus">COMBO +50 XP !</span>':'')+'</div>';
+  q.forEach(function(quest,i){
+    var done=S.done.indexOf(i)!==-1;
+    html+='<div class="quest-card'+(done?' done':'')+'" id="quest-'+i+'">'+
+      '<div class="quest-emoji">'+quest.e+'</div>'+
+      '<div class="quest-info"><div class="quest-title">'+quest.t+'</div>'+
+      '<div class="quest-meta"><span class="quest-xp">+'+quest.xp+' XP</span><span class="quest-coins">+'+quest.c+' 🌿</span>'+
+      '<span class="quest-cat">'+quest.cat+'</span></div></div>'+
+      (done?'<div class="quest-check">✓</div>':'<button class="quest-btn do" onclick="doQuest('+i+',event)">✓</button>')+
+    '</div>';
+  });
+  document.getElementById('panel-quests').innerHTML=html;
+}
+
+window.doQuest=function(i,ev){
+  if(S.done.indexOf(i)!==-1)return;
+  S.done.push(i);
+  var d=today();
+  if(S.lastDay!==d){S.streak=S.lastDay===yesterday()?S.streak+1:1;S.lastDay=d}
+  S.totalQ++;save();
+  var q=S.quests[i];
+  var r=ev.target.getBoundingClientRect();
+  gainXP(q.xp,r.left,r.top);
+  gainCoins(q.c,r.left,r.top+20);
+  shake();vibrate(60);
+  renderQuests();
+  // Combo bonus
+  if(S.done.length===3){
+    setTimeout(function(){
+      gainXP(50,window.innerWidth/2,window.innerHeight/2);
+      confetti(40);toast('⭐','COMBO BONUS !','+50 XP pour 3/3 quetes');
+    },1000);
+  }
+};
+
+// ============================================================
+// BOSS
+// ============================================================
+function renderBoss(){
+  var b=BOSSES[S.bossIdx%BOSSES.length];
+  var pct=Math.min(100,Math.round(S.bossHp/b.g*100));
+  document.getElementById('panel-boss').innerHTML=
+    '<div class="boss-card"><div class="boss-hp-label">DEFI COLLECTIF</div>'+
+    '<span class="boss-emoji" id="boss-sprite">'+b.e+'</span>'+
+    '<div class="boss-title">'+b.t+'</div><div class="boss-desc">'+b.d+'</div>'+
+    '<div class="boss-hp-bar"><div class="boss-hp" id="boss-hp-bar" style="width:'+pct+'%"></div></div>'+
+    '<div class="boss-count">'+S.bossHp+' / '+b.g+' — '+pct+'%</div>'+
+    '<button class="boss-attack-btn" onclick="attackBoss(event)"><span class="btn-flash" id="boss-flash"></span>⚔️ ATTAQUER !</button>'+
+    '<div class="boss-reward">Recompense : +'+b.r+' XP  +'+b.rc+' 🌿</div></div>';
+}
+
+window.attackBoss=function(ev){
+  var dmg=1+Math.floor(Math.random()*8);
+  S.bossHp+=dmg;
+  snd('hit');vibrate(80);shake();
+  var r=ev.target.getBoundingClientRect();
+  floatXP('-'+dmg+' HP',r.left+r.width/2,r.top-20);
+  particles(r.left+r.width/2,r.top,'#8B5CF6',12);
+  // Flash
+  var flash=document.getElementById('boss-flash');
+  if(flash){flash.style.opacity='1';setTimeout(function(){flash.style.opacity='0'},100)}
+  // Boss HP bar animation
+  var bar=document.getElementById('boss-hp-bar');
+  if(bar){bar.classList.add('hit');setTimeout(function(){bar.classList.remove('hit')},300)}
+  // Boss sprite shake
+  var sprite=document.getElementById('boss-sprite');
+  if(sprite){sprite.style.transform='scale(1.2) rotate(5deg)';setTimeout(function(){sprite.style.transform=''},200)}
+
+  var b=BOSSES[S.bossIdx%BOSSES.length];
+  if(S.bossHp>=b.g){
+    S.bossHp=0;S.bossIdx++;save();
+    setTimeout(function(){
+      gainXP(b.r,window.innerWidth/2,window.innerHeight/2);
+      gainCoins(b.rc,window.innerWidth/2,window.innerHeight/2+30);
+      confetti(50);toast('🏆','BOSS VAINCU !',b.t+' detruit !');snd('win');
+      renderBoss();
+    },400);
+  } else {save();renderBoss()}
+};
+
+// ============================================================
+// SHOP
+// ============================================================
+function renderShop(){
+  var html='<div style="font-size:.7rem;font-weight:800;color:var(--dim);margin-bottom:8px">BOUTIQUE</div>';
+  html+='<div class="shop-grid">';
+  SHOP_ITEMS.forEach(function(item,i){
+    var owned=item.type==='deco'&&S.ownedDeco.indexOf(item.id)!==-1;
+    html+='<div class="shop-item'+(owned?' owned':'')+'" onclick="buyItem('+i+')">'+
+      '<span class="shop-emoji">'+item.e+'</span>'+
+      '<div class="shop-name">'+item.n+'</div>'+
+      (owned?'<div class="shop-owned">Possede</div>':'<div class="shop-price">'+item.price+' 🌿</div>')+
+    '</div>';
+  });
+  html+='</div>';
+  document.getElementById('panel-shop').innerHTML=html;
+}
+
+window.buyItem=function(i){
+  var item=SHOP_ITEMS[i];
+  if(item.type==='deco'&&S.ownedDeco.indexOf(item.id)!==-1){toast(item.e,'Deja possede !','');return}
+  if(S.coins<item.price){toast('🌿','Pas assez de pieces !','Il te faut '+item.price+' 🌿');return}
+  S.coins-=item.price;
+  if(item.type==='seed'){S.ownedSeeds.push(item.seedIdx);toast(item.e,'Graines achetees !','Plante-les dans ton jardin')}
+  else{S.ownedDeco.push(item.id);toast(item.e,'Decoration achetee !','Regarde ta planete !')}
+  save();snd('coin');vibrate(30);renderShop();updateUI();
+};
+
+// ============================================================
+// COLLECTION
+// ============================================================
+function renderCollection(){
+  var lvl=getLvl()+1;
+  var u=CREATURES.filter(function(c){return lvl>=c.l}).length;
+  var html='<div style="font-size:.7rem;font-weight:800;color:var(--dim);margin-bottom:8px">'+u+'/'+CREATURES.length+' CREATURES</div>';
+  html+='<div class="collect-grid">';
+  CREATURES.forEach(function(c){
+    var un=lvl>=c.l;
+    html+='<div class="collect-item '+(un?'unlocked':'locked')+'">'+
+      '<span class="collect-emoji">'+(un?c.e:'❓')+'</span>'+
+      '<div class="collect-name">'+(un?c.n:'???')+'</div>'+
+      '<div class="collect-req">Niv. '+c.l+'</div></div>';
+  });
+  html+='</div>';
+  document.getElementById('panel-collection').innerHTML=html;
+}
+
+// ============================================================
+// LEADERBOARD
+// ============================================================
+function renderLB(){
+  LB[0].x=S.xp;
+  var sorted=LB.slice().sort(function(a,b){return(b.x||0)-(a.x||0)});
+  var html='<div style="font-size:.7rem;font-weight:800;color:var(--dim);margin-bottom:8px">CLASSEMENT HEBDO</div>';
+  sorted.forEach(function(p,i){
+    var ranks=['🥇','🥈','🥉'];
+    var lvl=LEVELS[0];for(var j=LEVELS.length-1;j>=0;j--)if((p.x||0)>=LEVELS[j].xp){lvl=LEVELS[j];break}
+    html+='<div class="lb-item'+(p.me?' me':'')+'">'+
+      '<div class="lb-rank">'+(ranks[i]||(i+1))+'</div>'+
+      '<div class="lb-avatar">'+p.a+'</div>'+
+      '<div class="lb-info"><div class="lb-name">'+p.n+(p.me?' (toi)':'')+'</div>'+
+      '<div class="lb-xp">'+(p.x||0).toLocaleString()+' XP</div></div>'+
+      '<div class="lb-lvl">'+lvl.e+' '+lvl.n+'</div></div>';
+  });
+  html+='<button class="invite-btn" onclick="shareGame()">Invite tes amis a jouer</button>';
+  html+='<div class="game-footer">&copy; 2026 Emmanuel Klein — SOS Planet<br>Aucune donnee personnelle collectee. 100% local.</div>';
+  document.getElementById('panel-leaderboard').innerHTML=html;
+}
+
+window.shareGame=function(){
+  var t='Rejoins SOS Planet ! Je suis niveau '+(getLvl()+1)+' ('+LEVELS[getLvl()].n+'). On sauve la planete en jouant !';
+  if(navigator.share)navigator.share({title:'SOS Planet — Le Jeu',text:t,url:location.href});
+  else{navigator.clipboard.writeText(t+' '+location.href);toast('📋','Lien copie !','Envoie-le a tes potes')}
+};
+
+// ============================================================
+// LEVEL UP
+// ============================================================
+function showLvlUp(idx){
+  snd('lvl');vibrate(200);confetti(60);
+  var lv=LEVELS[idx];
+  document.getElementById('lvlup-emoji').textContent=lv.e;
+  document.getElementById('lvlup-title').textContent='NIVEAU '+lv.n.toUpperCase()+' !';
+  document.getElementById('lvlup-sub').textContent='Ta planete evolue !';
+  // Check creature unlock
+  var newCreature=CREATURES.find(function(c){return c.l===(idx+1)});
+  document.getElementById('lvlup-unlock').textContent=newCreature?'Nouvelle creature : '+newCreature.e+' '+newCreature.n+' !':'';
   document.getElementById('lvlup').classList.add('show');
 }
+window.closeLvlUp=function(){document.getElementById('lvlup').classList.remove('show')};
 
-window.closeLevelUp = function() {
-  document.getElementById('lvlup').classList.remove('show');
-};
-
-function spawnConfetti() {
-  var colors = ['#10B981','#FBBF24','#EF4444','#3B82F6','#8B5CF6','#EC4899'];
-  for (var i = 0; i < 40; i++) {
-    var c = document.createElement('div');
-    c.className = 'confetti';
-    c.style.left = Math.random() * 100 + '%';
-    c.style.background = colors[Math.floor(Math.random() * colors.length)];
-    c.style.animationDelay = Math.random() * 0.5 + 's';
-    c.style.width = (6 + Math.random() * 6) + 'px';
-    c.style.height = (6 + Math.random() * 6) + 'px';
-    document.body.appendChild(c);
-    setTimeout(function(el) { el.remove(); }.bind(null, c), 2500);
-  }
-}
-
-function updateUI() {
-  var lv = getLevel();
-  var prog = getXpProgress();
-
-  // Level badge
-  document.getElementById('level-badge').textContent = 'Niv. ' + (lv.idx + 1) + ' — ' + lv.data.emoji + ' ' + lv.data.name;
-
-  // XP bar
-  document.getElementById('xp-bar').style.width = prog.pct + '%';
-  document.getElementById('xp-text').textContent = prog.current + ' / ' + prog.needed + ' XP';
-
-  // Planet
-  var surface = document.getElementById('planet-surface');
-  surface.style.background = buildPlanetGradient(lv.idx);
-  document.getElementById('planet-name').textContent = 'Ta planete : ' + lv.data.desc;
-  if (state.xp > 0) document.getElementById('planet').classList.add('glow');
-
-  // Creatures on planet
-  renderPlanetCreatures(lv.idx);
-
-  // Streak
-  updateStreakDisplay();
-
-  // Leaderboard update
-  LEADERBOARD[0].xp = state.xp;
-}
-
-function buildPlanetGradient(lvlIdx) {
-  var gradients = [
-    'radial-gradient(circle at 35% 35%, #8B8B8B, #4B4B4B, #2A2A2A)',
-    'radial-gradient(circle at 35% 35%, #6B8B5E, #4B6043, #2A3B22)',
-    'radial-gradient(circle at 35% 35%, #4D9B4D, #2D7028, #1A4D1A)',
-    'radial-gradient(circle at 35% 35%, #3D8B3D, #1A6B1A, #0D4D0D)',
-    'radial-gradient(circle at 35% 35%, #2D8B5E, #1A6B4D, #0D4D3D, #1565A0 80%)',
-    'radial-gradient(circle at 35% 35%, #2D6B8B, #1A4D6B, #0C3547, #1565C0 80%)',
-    'radial-gradient(circle at 35% 35%, #4D8B3D, #2D6B1A, #1A4D0D, #D4A017 70%)',
-    'radial-gradient(circle at 35% 35%, #0D7B3D, #0B5E2A, #083D1A, #2D8B2D 80%)',
-    'radial-gradient(circle at 35% 35%, #1B8B50, #107340, #0B5E2A, #8B6914 70%, #3B82F6 90%)',
-    'radial-gradient(circle at 35% 35%, #15915D, #107A4E, #0B6B3D, #2563EB 60%, #D4A017 85%)',
-    'radial-gradient(circle at 35% 35%, #10B981, #0D9B6B, #0B7B50, #3B82F6 50%, #FBBF24 75%, #8B5CF6 95%)'
-  ];
-  return gradients[Math.min(lvlIdx, gradients.length - 1)];
-}
-
-function renderPlanetCreatures(lvlIdx) {
-  var container = document.getElementById('planet-creatures');
-  container.innerHTML = '';
-  var unlocked = CREATURES.filter(function(c) { return (lvlIdx + 1) >= c.lvl; });
-  // Show max 6 on planet
-  var showing = unlocked.slice(-6);
-  var positions = [
-    {top:'20%',left:'25%'},{top:'30%',left:'65%'},{top:'55%',left:'20%'},
-    {top:'60%',left:'70%'},{top:'40%',left:'45%'},{top:'75%',left:'40%'}
-  ];
-  showing.forEach(function(c, i) {
-    var el = document.createElement('span');
-    el.className = 'creature';
-    el.textContent = c.emoji;
-    el.style.top = positions[i].top;
-    el.style.left = positions[i].left;
-    el.style.animationDelay = (i * 0.4) + 's';
-    container.appendChild(el);
-  });
-}
-
-// ===== RENDER PANELS =====
-
-function renderQuests() {
-  var quests = getDailyQuests();
-  var html = '<div style="padding:0 0 8px;font-size:.75rem;color:var(--dim);font-weight:600;margin-bottom:4px">QUETES DU JOUR (' + state.todayDone.length + '/3)</div>';
-  quests.forEach(function(q, i) {
-    var done = state.todayDone.indexOf(i) !== -1;
-    html += '<div class="quest-card' + (done ? ' done' : '') + '">' +
-      '<div class="quest-emoji">' + q.emoji + '</div>' +
-      '<div class="quest-info"><div class="quest-title">' + q.title + '</div>' +
-      '<div class="quest-reward">+' + q.xp + ' XP</div></div>' +
-      (done ? '<button class="quest-btn done-btn">Fait !</button>' :
-        '<button class="quest-btn do" onclick="completeQuest(' + i + ')">Go !</button>') +
-    '</div>';
-  });
-  // Bonus streak
-  if (state.streak >= 3) {
-    html += '<div style="text-align:center;padding:10px;font-size:.75rem;color:var(--gold);font-weight:700">🔥 Streak x' + state.streak + ' — Les XP sont plus savoureux !</div>';
-  }
-  document.getElementById('panel-quests').innerHTML = html;
-}
-
-function renderBoss() {
-  var boss = BOSSES[state.bossIndex % BOSSES.length];
-  var pct = Math.min(100, Math.round(state.bossProgress / boss.goal * 100));
-  document.getElementById('panel-boss').innerHTML =
-    '<div class="boss-card">' +
-      '<span class="boss-emoji">' + boss.emoji + '</span>' +
-      '<div class="boss-title">' + boss.title + '</div>' +
-      '<div class="boss-desc">' + boss.desc + '</div>' +
-      '<div class="boss-progress"><div class="boss-bar" style="width:' + pct + '%"></div></div>' +
-      '<div class="boss-count">' + state.bossProgress + ' / ' + boss.goal + ' — ' + pct + '%</div>' +
-      '<div class="boss-reward">Recompense : ' + boss.reward + '</div>' +
-      '<button class="boss-contrib-btn" onclick="contributeBoss()">Contribuer (+1 a +5)</button>' +
-    '</div>' +
-    '<div style="font-size:.7rem;color:var(--dim);text-align:center;padding:8px">Defi collectif : chaque joueur contribue. Tous ensemble !</div>';
-}
-
-function renderCollection() {
-  var lvl = getLevel().idx + 1;
-  var html = '<div style="padding:0 0 10px;font-size:.75rem;color:var(--dim);font-weight:600">' + CREATURES.filter(function(c){return lvl>=c.lvl}).length + '/' + CREATURES.length + ' CREATURES DEBLOQUEES</div>';
-  html += '<div class="collect-grid">';
-  CREATURES.forEach(function(c) {
-    var unlocked = lvl >= c.lvl;
-    html += '<div class="collect-item ' + (unlocked ? 'unlocked' : 'locked') + '">' +
-      '<span class="collect-emoji">' + (unlocked ? c.emoji : '❓') + '</span>' +
-      '<div class="collect-name">' + (unlocked ? c.name : '???') + '</div>' +
-      '<div class="collect-req">Niv. ' + c.lvl + '</div>' +
-    '</div>';
-  });
-  html += '</div>';
-  document.getElementById('panel-collection').innerHTML = html;
-}
-
-function renderLeaderboard() {
-  LEADERBOARD[0].xp = state.xp;
-  var sorted = LEADERBOARD.slice().sort(function(a, b) { return b.xp - a.xp; });
-  var html = '<div style="padding:0 0 10px;font-size:.75rem;color:var(--dim);font-weight:600">CLASSEMENT HEBDO</div>';
-  sorted.forEach(function(p, i) {
-    var rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
-    var rankText = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
-    var pLvl = getLevelForXP(p.xp);
-    html += '<div class="lb-item' + (p.me ? ' me' : '') + '">' +
-      '<div class="lb-rank ' + rankClass + '">' + rankText + '</div>' +
-      '<div class="lb-avatar" style="background:rgba(255,255,255,.08)">' + p.avatar + '</div>' +
-      '<div class="lb-info"><div class="lb-name">' + p.name + (p.me ? ' (toi)' : '') + '</div>' +
-      '<div class="lb-xp">' + p.xp.toLocaleString() + ' XP</div></div>' +
-      '<div class="lb-level">' + pLvl.emoji + ' ' + pLvl.name + '</div>' +
-    '</div>';
-  });
-  html += '<div class="invite-section"><button class="invite-btn" onclick="shareInvite()">Invite tes amis a jouer</button></div>';
-  html += '<div class="game-footer">&copy; 2026 Emmanuel Klein — SOS Planet<br>Aucune donnee personnelle collectee. Tout est stocke sur ton telephone.</div>';
-  document.getElementById('panel-leaderboard').innerHTML = html;
-}
-
-function getLevelForXP(xp) {
-  for (var i = LEVELS.length - 1; i >= 0; i--) {
-    if (xp >= LEVELS[i].xp) return LEVELS[i];
-  }
-  return LEVELS[0];
-}
-
-window.shareInvite = function() {
-  var text = 'Rejoins-moi sur SOS Planet ! Je suis niveau ' + (getLevel().idx + 1) + ' (' + getLevel().data.name + '). On sauve la planete en jouant.';
-  if (navigator.share) {
-    navigator.share({title: 'SOS Planet — Le Jeu', text: text, url: location.href});
-  } else {
-    navigator.clipboard.writeText(text + ' ' + location.href);
-    showAchievement('📋', 'Lien copie !', 'Envoie-le a tes amis');
-  }
-};
-
-// Expose to onclick
-window.completeQuest = completeQuest;
-window.contributeBoss = contributeBoss;
-
-// ===== TABS =====
-var TABS = [
-  {id:'quests', label:'Quetes', notif:true},
-  {id:'boss', label:'Boss'},
-  {id:'collection', label:'Collection'},
-  {id:'leaderboard', label:'Classement'}
+// ============================================================
+// TABS
+// ============================================================
+var TABS=[
+  {id:'quests',label:'Quetes',notif:true},
+  {id:'boss',label:'Boss'},
+  {id:'shop',label:'Boutique'},
+  {id:'collection',label:'Bestiaire'},
+  {id:'leaderboard',label:'Classement'}
 ];
-var activeTab = 'quests';
+var activeTab='quests';
 
-function renderTabs() {
-  var html = '';
-  TABS.forEach(function(t) {
-    html += '<div class="gtab' + (activeTab === t.id ? ' active' : '') + '" onclick="switchTab(\'' + t.id + '\')">' +
-      t.label + (t.notif && state.todayDone.length < 3 ? '<span class="notif"></span>' : '') + '</div>';
+function renderTabs(){
+  var html='';
+  TABS.forEach(function(t){
+    var hasNotif=t.notif&&S.done.length<3;
+    html+='<div class="gtab'+(activeTab===t.id?' active':'')+'" onclick="switchTab(\''+t.id+'\')">'+
+      t.label+(hasNotif?'<span class="notif"></span>':'')+'</div>';
   });
-  document.getElementById('game-tabs').innerHTML = html;
+  document.getElementById('game-tabs').innerHTML=html;
 }
 
-window.switchTab = function(id) {
-  activeTab = id;
-  renderTabs();
-  TABS.forEach(function(t) {
-    var panel = document.getElementById('panel-' + t.id);
-    panel.classList.toggle('active', t.id === id);
-  });
+window.switchTab=function(id){
+  activeTab=id;renderTabs();
+  TABS.forEach(function(t){document.getElementById('panel-'+t.id).classList.toggle('active',t.id===id)});
 };
 
-// ===== INIT =====
+// ============================================================
+// UPDATE UI
+// ============================================================
+function updateUI(){
+  var lvl=getLvl(),lv=LEVELS[lvl];
+  var next=LEVELS[lvl+1];
+  var base=lv.xp,needed=next?(next.xp-base):1,current=S.xp-base;
+  var pct=next?Math.min(100,Math.round(current/needed*100)):100;
+
+  document.getElementById('level-badge').textContent='Niv. '+(lvl+1)+' '+lv.e+' '+lv.n;
+  document.getElementById('xp-bar').style.width=pct+'%';
+  document.getElementById('xp-text').textContent=current+' / '+needed+' XP';
+  document.getElementById('coins-num').textContent=S.coins;
+  document.getElementById('streak-num').textContent=S.streak;
+  var si=document.getElementById('streak-icon');
+  si.textContent=S.streak>0?'🔥':'💤';
+  document.getElementById('streak').className='streak-badge'+(S.streak>0?'':' dead');
+  document.getElementById('planet-label').textContent=lv.e+' '+lv.n+(lvl<10?' — prochain : '+LEVELS[lvl+1].e+' '+LEVELS[lvl+1].n:'  MAX !');
+}
+
+// ============================================================
+// INIT
+// ============================================================
 checkStreak();
-getDailyQuests();
+getQuests();
+initPlanet();
 renderTabs();
 renderQuests();
 renderBoss();
+renderShop();
 renderCollection();
-renderLeaderboard();
+renderLB();
+renderGarden();
 updateUI();
 switchTab('quests');
+drawPlanet();
+
+// Show spin wheel if not spun today
+setTimeout(function(){if(S.spinDay!==today())showWheel()},800);
 
 })();
 </script>
