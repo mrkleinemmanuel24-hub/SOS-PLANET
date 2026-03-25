@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Groupes par affinite</title>
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);
+  --card-hover:rgba(16,185,129,0.15);--danger:#EF4444;--blue:#3B82F6;
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.section{padding:20px;max-width:600px;margin:0 auto}
+.section-title{font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--card-border)}
+
+.my-groups-banner{background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(59,130,246,0.15));border:1px solid var(--accent);border-radius:14px;padding:16px;text-align:center;margin-bottom:20px}
+.my-groups-count{font-size:1.1rem;font-weight:800;color:var(--accent)}
+.my-groups-sub{font-size:.8rem;color:var(--text-dim);margin-top:4px}
+
+.cat-title{font-size:.9rem;font-weight:700;color:var(--gold);margin:20px 0 12px;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:8px}
+.cat-title::after{content:'';flex:1;height:1px;background:rgba(251,191,36,0.2)}
+
+.aff-card{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.aff-card:hover{border-color:var(--accent);background:var(--card-hover)}
+.aff-card.joined{border-color:var(--accent);background:rgba(16,185,129,0.1)}
+.aff-top{display:flex;align-items:center;gap:12px}
+.aff-emoji{font-size:1.8rem;flex-shrink:0}
+.aff-info{flex:1}
+.aff-name{font-size:.95rem;font-weight:700}
+.aff-desc{font-size:.75rem;color:var(--text-dim);margin-top:2px}
+.aff-meta{display:flex;gap:12px;margin-top:6px;font-size:.75rem;color:var(--text-dim)}
+.aff-btn{padding:8px 16px;border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;flex-shrink:0}
+.aff-btn.join{background:var(--accent);color:#fff}
+.aff-btn.join:hover{background:var(--accent-light)}
+.aff-btn.joined{background:rgba(16,185,129,0.15);color:var(--accent);border:1px solid rgba(16,185,129,0.3)}
+.aff-btn.full{background:var(--card);color:var(--text-dim);border:1px solid var(--card-border);cursor:default}
+
+/* Group detail overlay */
+.detail-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,22,40,0.98);z-index:200;overflow-y:auto;padding-bottom:80px}
+.detail-overlay.show{display:block}
+.detail-inner{max-width:600px;margin:0 auto;padding:20px}
+.detail-back{font-size:.85rem;font-weight:600;color:var(--accent);cursor:pointer;margin-bottom:16px;display:inline-flex;align-items:center;gap:4px}
+.detail-header{text-align:center;margin-bottom:20px}
+.detail-emoji{font-size:3rem;display:block;margin-bottom:8px}
+.detail-name{font-size:1.4rem;font-weight:900}
+.detail-desc{font-size:.85rem;color:var(--text-dim);margin-top:4px}
+.detail-stats{display:flex;gap:12px;justify-content:center;margin-top:16px}
+.detail-stat{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:10px 16px;text-align:center}
+.detail-stat-val{font-size:1.2rem;font-weight:900;color:var(--accent)}
+.detail-stat-label{font-size:.65rem;color:var(--text-dim);margin-top:2px}
+
+.feed-post{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:14px;margin-bottom:8px}
+.feed-author{font-size:.8rem;font-weight:700;color:var(--accent)}
+.feed-text{font-size:.85rem;margin-top:4px;line-height:1.4}
+.feed-time{font-size:.7rem;color:var(--text-dim);margin-top:6px}
+.feed-actions{display:flex;gap:8px;margin-top:8px}
+.feed-action-btn{padding:4px 10px;border:none;border-radius:6px;font-size:.7rem;font-weight:600;cursor:pointer;background:rgba(255,255,255,0.05);color:var(--text-dim);border:1px solid var(--card-border);transition:all .2s}
+.feed-action-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+.resource-item{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.15);border-radius:10px;margin-bottom:6px}
+.resource-icon{font-size:1.1rem;flex-shrink:0}
+.resource-text{font-size:.8rem;font-weight:600}
+.resource-text a{color:var(--gold)}
+
+/* Toast */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 24px;border-radius:30px;font-size:.85rem;font-weight:700;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="social.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Social</a>
+  <h1>💚 Affinites</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="section">
+  <div class="my-groups-banner">
+    <div class="my-groups-count" id="my-count">0 / 5 groupes rejoints</div>
+    <div class="my-groups-sub">Tu peux rejoindre jusqu'a 5 groupes par affinite</div>
+  </div>
+</div>
+
+<div class="section" id="groups-container"></div>
+
+<!-- Group detail overlay -->
+<div class="detail-overlay" id="detail-overlay">
+  <div class="detail-inner" id="detail-inner"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="defis.html"><span>🏆</span>Defis</a>
+  <a href="social.html" class="active"><span>👥</span>Social</a>
+  <a href="carte.html"><span>🗺️</span>Carte</a>
+  <a href="compteurs.html"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-social.js"></script>
+<script src="js/planet-moderation.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var AFFINITY_GROUPS = [
+    // Habitat & Energie
+    { id:'ag-maison', cat:'Habitat & Energie', emoji:'🏠', name:'Maison passive / renovation', desc:'Isolation, DPE, materiaux biosources', members:1842, score:4200 },
+    { id:'ag-autonomie', cat:'Habitat & Energie', emoji:'⚡', name:'Autonomie energetique', desc:'Solaire, eolien, batteries', members:2310, score:5100 },
+    { id:'ag-bois', cat:'Habitat & Energie', emoji:'🪵', name:'Construction bois', desc:'Ossature, CLT, chanvre, paille', members:987, score:2800 },
+    { id:'ag-pac', cat:'Habitat & Energie', emoji:'🌡️', name:'Pompes a chaleur', desc:'PAC, geothermie, aerothermie', members:1456, score:3400 },
+    // Eau & Jardin
+    { id:'ag-eau', cat:'Eau & Jardin', emoji:'💧', name:'Economiser l\'eau', desc:'Douches, recup pluie, mulch', members:2890, score:6200 },
+    { id:'ag-perma', cat:'Eau & Jardin', emoji:'🌿', name:'Permaculture & potager', desc:'Design, associations, semis', members:3000, score:7100 },
+    { id:'ag-abeilles', cat:'Eau & Jardin', emoji:'🐝', name:'Apiculture & pollinisateurs', desc:'Ruches, plantes melliferes', members:1234, score:3100 },
+    { id:'ag-pluie', cat:'Eau & Jardin', emoji:'🌧️', name:'Recuperation eau de pluie', desc:'Cuves, filtration, reglementation', members:876, score:2200 },
+    // Mobilite
+    { id:'ag-velotaf', cat:'Mobilite', emoji:'🚲', name:'Velotaf', desc:'Velo domicile-travail, equipement, itineraires', members:2456, score:5800 },
+    { id:'ag-ve', cat:'Mobilite', emoji:'⚡', name:'Voiture electrique', desc:'Bornes, autonomie, comparatifs', members:1890, score:4100 },
+    { id:'ag-marche', cat:'Mobilite', emoji:'🚶', name:'Marche & rando', desc:'Sentiers, materiel, nature', members:1678, score:3900 },
+    { id:'ag-train', cat:'Mobilite', emoji:'🚂', name:'Voyager sans avion', desc:'Train, road trip, slow travel', members:2100, score:4600 },
+    // Alimentation
+    { id:'ag-vege', cat:'Alimentation', emoji:'🥬', name:'Vegetarien / Vegan', desc:'Recettes, nutrition, transition', members:2780, score:6400 },
+    { id:'ag-amap', cat:'Alimentation', emoji:'🧑‍🌾', name:'AMAP & circuits courts', desc:'Trouver une AMAP, producteurs locaux', members:1540, score:3600 },
+    { id:'ag-antigaspi', cat:'Alimentation', emoji:'🍞', name:'Anti-gaspi', desc:'Conservation, batch cooking, restes', members:2200, score:5000 },
+    { id:'ag-faitmaison', cat:'Alimentation', emoji:'🫙', name:'Fait maison', desc:'Conserves, fermentation, pain, cosmetiques', members:1980, score:4500 },
+    // Mode de vie
+    { id:'ag-zerodechet', cat:'Mode de vie', emoji:'♻️', name:'Zero dechet', desc:'Vrac, alternatives, DIY', members:2650, score:6000 },
+    { id:'ag-repair', cat:'Mode de vie', emoji:'🔧', name:'Repair Cafe & DIY', desc:'Reparer, upcycler, detourner', members:1345, score:3200 },
+    { id:'ag-parents', cat:'Mode de vie', emoji:'👶', name:'Parentalite ecolo', desc:'Couches, jouets, education', members:1120, score:2700 },
+    { id:'ag-minimal', cat:'Mode de vie', emoji:'💰', name:'Minimalisme', desc:'Desencombrer, consommer moins', members:1567, score:3700 }
+  ];
+
+  var GROUP_POSTS = {
+    'ag-maison': [
+      { author:'Pierre M.', text:'On vient de finir l\'isolation par l\'exterieur. Passage de DPE F a C ! Cout: 18k EUR avec aides MaPrimeRenov.', time:'il y a 2h' },
+      { author:'Claire D.', text:'Quelqu\'un a de l\'experience avec la laine de bois ? Hesitation entre Steico et Pavatex.', time:'il y a 5h' },
+      { author:'Marc T.', text:'Retour d\'experience apres 1 an en maison passive: facture chauffage divisee par 6 !', time:'hier' },
+      { author:'Julie R.', text:'Attention aux ponts thermiques autour des fenetres. Notre artisan avait oublie... 3 mois de galere.', time:'il y a 2j' },
+      { author:'Luc B.', text:'Les briques de chanvre c\'est top pour la regulation d\'humidite. Je recommande !', time:'il y a 3j' }
+    ],
+    'ag-autonomie': [
+      { author:'Thomas K.', text:'Installation 6kWc terminee ! Production 8200 kWh/an, autoconsommation 70%. ROI prevu 8 ans.', time:'il y a 1h' },
+      { author:'Nadia L.', text:'Batterie domestique ou revente du surplus ? Le calcul n\'est pas si simple...', time:'il y a 4h' },
+      { author:'Antoine S.', text:'Petit eolien vertical sur le toit: 800 EUR, production decevante (200 kWh/an). Pas recommande.', time:'hier' },
+      { author:'Marie V.', text:'Le nouveau tarif de rachat EDF est tombe. Calcul mis a jour dans le groupe.', time:'il y a 2j' },
+      { author:'Paul H.', text:'Micro-onduleur vs onduleur string: retour apres 3 ans de comparaison.', time:'il y a 3j' }
+    ],
+    'ag-perma': [
+      { author:'Sophie G.', text:'Association tomates/basilic/carottes = succes ! Les tomates n\'ont eu aucun mildiou cette annee.', time:'il y a 3h' },
+      { author:'Karim A.', text:'Design de mon jardin en permaculture: 50m2, 40 varietes, 200kg de recolte/an !', time:'il y a 6h' },
+      { author:'Emma P.', text:'Semis de fevrier: qui a deja demarre ? J\'ai lance tomates, poivrons et aubergines.', time:'hier' },
+      { author:'Hugo D.', text:'La grelinette > le motoculteur. Mon sol est vivant apres 2 ans de non-labour.', time:'il y a 2j' },
+      { author:'Lisa M.', text:'Buttes de culture en lasagnes: tutoriel photo dans les ressources epinglees.', time:'il y a 4j' }
+    ]
+  };
+
+  var GROUP_RESOURCES = {
+    'ag-maison': [
+      { icon:'📋', text:'Guide MaPrimeRenov 2026', link:'#' },
+      { icon:'🏗️', text:'Annuaire artisans RGE', link:'#' },
+      { icon:'📊', text:'Simulateur DPE en ligne', link:'#' }
+    ],
+    'ag-autonomie': [
+      { icon:'☀️', text:'Calculateur solaire PVGIS', link:'#' },
+      { icon:'💰', text:'Aides a l\'installation photovoltaique', link:'#' },
+      { icon:'📖', text:'Guide autoconsommation Enedis', link:'#' }
+    ],
+    'ag-perma': [
+      { icon:'🌱', text:'Calendrier des semis par region', link:'#' },
+      { icon:'📚', text:'Livre: Permaculture de Mollison', link:'#' },
+      { icon:'🗺️', text:'Carte des jardins partages', link:'#' }
+    ]
+  };
+
+  // Default posts/resources for groups that don't have custom ones
+  var DEFAULT_POSTS = [
+    { author:'Marie L.', text:'Super contente d\'avoir rejoint ce groupe ! Plein de bonnes idees ici.', time:'il y a 1h' },
+    { author:'Thomas R.', text:'Quelqu\'un dans la region parisienne pour echanger des astuces ?', time:'il y a 3h' },
+    { author:'Sophie K.', text:'J\'ai commence il y a 2 mois et je vois deja la difference. Courage a tous !', time:'hier' },
+    { author:'Karim D.', text:'Astuce du jour: commencer petit, mais commencer. Le plus dur c\'est le premier pas.', time:'il y a 2j' },
+    { author:'Emma B.', text:'Merci pour tous les conseils ! La communaute est vraiment bienveillante.', time:'il y a 3j' }
+  ];
+  var DEFAULT_RESOURCES = [
+    { icon:'📖', text:'Guide du debutant', link:'#' },
+    { icon:'🔗', text:'Liens utiles du groupe', link:'#' }
+  ];
+
+  var STORAGE_KEY = 'planet_affinity_groups';
+
+  function getJoined() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { return []; }
+  }
+  function saveJoined(arr) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch(e) {}
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2500);
+  }
+
+  function updateCount() {
+    var joined = getJoined();
+    document.getElementById('my-count').textContent = joined.length + ' / 5 groupes rejoints';
+  }
+
+  function render() {
+    var container = document.getElementById('groups-container');
+    container.innerHTML = '';
+    var joined = getJoined();
+    var currentCat = '';
+
+    AFFINITY_GROUPS.forEach(function(g) {
+      if (g.cat !== currentCat) {
+        currentCat = g.cat;
+        var catEl = document.createElement('div');
+        catEl.className = 'cat-title';
+        catEl.textContent = currentCat;
+        container.appendChild(catEl);
+      }
+
+      var isJoined = joined.indexOf(g.id) !== -1;
+      var card = document.createElement('div');
+      card.className = 'aff-card' + (isJoined ? ' joined' : '');
+      card.innerHTML =
+        '<div class="aff-top">' +
+          '<div class="aff-emoji">' + g.emoji + '</div>' +
+          '<div class="aff-info">' +
+            '<div class="aff-name">' + g.name + '</div>' +
+            '<div class="aff-desc">' + g.desc + '</div>' +
+            '<div class="aff-meta">' +
+              '<span>👥 ' + g.members.toLocaleString('fr-FR') + ' membres</span>' +
+              '<span>⭐ ' + g.score.toLocaleString('fr-FR') + ' pts</span>' +
+            '</div>' +
+          '</div>' +
+          (isJoined ?
+            '<button class="aff-btn joined" data-id="' + g.id + '" data-action="leave">✓ Membre</button>' :
+            (joined.length >= 5 ?
+              '<button class="aff-btn full">Limite atteinte</button>' :
+              '<button class="aff-btn join" data-id="' + g.id + '" data-action="join">Rejoindre</button>'
+            )
+          ) +
+        '</div>';
+
+      card.addEventListener('click', function(e) {
+        if (e.target.closest('.aff-btn')) return;
+        showDetail(g);
+      });
+
+      container.appendChild(card);
+    });
+
+    // Bind join/leave buttons
+    container.querySelectorAll('.aff-btn[data-action]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var id = this.getAttribute('data-id');
+        var action = this.getAttribute('data-action');
+        var j = getJoined();
+        if (action === 'join') {
+          if (j.length >= 5) { showToast('Maximum 5 groupes !'); return; }
+          j.push(id);
+          saveJoined(j);
+          showToast('Groupe rejoint ! 🎉');
+        } else {
+          j = j.filter(function(x) { return x !== id; });
+          saveJoined(j);
+          showToast('Groupe quitte');
+        }
+        updateCount();
+        render();
+      });
+    });
+
+    updateCount();
+  }
+
+  function showDetail(group) {
+    var overlay = document.getElementById('detail-overlay');
+    var inner = document.getElementById('detail-inner');
+    var posts = GROUP_POSTS[group.id] || DEFAULT_POSTS;
+    var resources = GROUP_RESOURCES[group.id] || DEFAULT_RESOURCES;
+    var joined = getJoined();
+    var isJoined = joined.indexOf(group.id) !== -1;
+
+    var html = '<div class="detail-back" onclick="closeDetail()">&larr; Retour aux groupes</div>' +
+      '<div class="detail-header">' +
+        '<div class="detail-emoji">' + group.emoji + '</div>' +
+        '<div class="detail-name">' + group.name + '</div>' +
+        '<div class="detail-desc">' + group.desc + '</div>' +
+        '<div class="detail-stats">' +
+          '<div class="detail-stat"><div class="detail-stat-val">' + group.members.toLocaleString('fr-FR') + '</div><div class="detail-stat-label">membres</div></div>' +
+          '<div class="detail-stat"><div class="detail-stat-val">' + group.score.toLocaleString('fr-FR') + '</div><div class="detail-stat-label">score groupe</div></div>' +
+        '</div>' +
+      '</div>';
+
+    if (!isJoined) {
+      html += '<div style="text-align:center;margin:16px 0"><button class="aff-btn join" onclick="joinFromDetail(\'' + group.id + '\')">Rejoindre ce groupe</button></div>';
+    }
+
+    // Pinned resources
+    html += '<div class="section-title" style="margin-top:20px">📌 Ressources epinglees</div>';
+    resources.forEach(function(r) {
+      html += '<div class="resource-item"><div class="resource-icon">' + r.icon + '</div><div class="resource-text"><a href="' + r.link + '">' + r.text + '</a></div></div>';
+    });
+
+    // Discussion feed
+    html += '<div class="section-title" style="margin-top:20px">💬 Discussion</div>';
+    posts.forEach(function(p) {
+      html += '<div class="feed-post">' +
+        '<div class="feed-author">' + p.author + '</div>' +
+        '<div class="feed-text">' + p.text + '</div>' +
+        '<div class="feed-time">' + p.time + '</div>' +
+        '<div class="feed-actions">' +
+          '<button class="feed-action-btn" onclick="this.textContent=\'👍 Aime\';this.style.color=\'var(--accent)\'">👍 J\'aime</button>' +
+          '<button class="feed-action-btn" onclick="this.textContent=\'💬 Envoye\';this.style.color=\'var(--accent)\'">💬 Repondre</button>' +
+        '</div>' +
+      '</div>';
+    });
+
+    inner.innerHTML = html;
+    overlay.classList.add('show');
+  }
+
+  window.closeDetail = function() {
+    document.getElementById('detail-overlay').classList.remove('show');
+  };
+
+  window.joinFromDetail = function(id) {
+    var j = getJoined();
+    if (j.length >= 5) { showToast('Maximum 5 groupes !'); return; }
+    if (j.indexOf(id) === -1) {
+      j.push(id);
+      saveJoined(j);
+      showToast('Groupe rejoint ! 🎉');
+      updateCount();
+      render();
+      closeDetail();
+    }
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>

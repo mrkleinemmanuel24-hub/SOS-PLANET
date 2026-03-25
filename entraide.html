@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Entraide</title>
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);
+  --card-hover:rgba(16,185,129,0.15);--danger:#EF4444;--blue:#3B82F6;
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.section{padding:20px;max-width:600px;margin:0 auto}
+.section-title{font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--card-border)}
+
+/* Form */
+.form-group{margin-bottom:14px}
+.form-label{font-size:.85rem;font-weight:700;margin-bottom:6px;display:block}
+.form-input,.form-textarea{width:100%;padding:14px 16px;border:2px solid var(--card-border);border-radius:12px;background:var(--card);color:var(--text);font-size:1rem;font-weight:600;outline:none;transition:border-color .2s;font-family:inherit}
+.form-input:focus,.form-textarea:focus{border-color:var(--accent)}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--text-dim);font-weight:400}
+.form-textarea{resize:vertical;min-height:80px}
+.form-select{width:100%;padding:14px 16px;border:2px solid var(--card-border);border-radius:12px;background:var(--card);color:var(--text);font-size:1rem;font-weight:600;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.form-select:focus{border-color:var(--accent)}
+.form-select option{background:#1a2744;color:var(--text)}
+.btn-submit{width:100%;padding:16px;border:none;border-radius:14px;background:var(--accent);color:#fff;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s}
+.btn-submit:hover{background:var(--accent-light);transform:translateY(-2px)}
+.form-error{color:var(--danger);font-size:.8rem;margin-top:6px;display:none}
+.form-error.show{display:block}
+
+/* Filters */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.filter-btn{padding:6px 14px;border:1px solid var(--card-border);border-radius:20px;background:var(--card);color:var(--text-dim);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s}
+.filter-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(16,185,129,0.15)}
+.filter-btn:hover{border-color:var(--accent)}
+
+/* Question card */
+.q-card{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.q-card:hover{border-color:var(--accent);background:var(--card-hover)}
+.q-header{display:flex;align-items:flex-start;gap:12px}
+.q-votes{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;min-width:40px}
+.q-vote-btn{background:none;border:none;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:color .2s;padding:2px}
+.q-vote-btn:hover{color:var(--accent)}
+.q-vote-btn.voted{color:var(--accent)}
+.q-vote-count{font-size:1rem;font-weight:900;color:var(--accent)}
+.q-body{flex:1}
+.q-title{font-size:.95rem;font-weight:700;line-height:1.3}
+.q-meta{font-size:.7rem;color:var(--text-dim);margin-top:4px;display:flex;gap:10px;flex-wrap:wrap}
+.q-cat{padding:2px 8px;border-radius:6px;font-size:.65rem;font-weight:700;background:rgba(16,185,129,0.15);color:var(--accent)}
+.q-answers-count{font-size:.75rem;font-weight:700;color:var(--gold);flex-shrink:0}
+
+/* Expanded question */
+.q-expanded{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--card-border)}
+.q-expanded.show{display:block}
+.q-description{font-size:.85rem;color:var(--text);margin-bottom:14px;line-height:1.5}
+.q-answer{background:rgba(255,255,255,0.03);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px}
+.q-answer.best{border-color:var(--gold);background:rgba(251,191,36,0.05)}
+.q-answer-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.q-answer-author{font-size:.8rem;font-weight:700;color:var(--accent)}
+.q-answer-badge{font-size:.65rem;padding:2px 6px;border-radius:4px;background:rgba(251,191,36,0.15);color:var(--gold);font-weight:700}
+.q-answer-text{font-size:.85rem;line-height:1.4}
+.q-answer-meta{font-size:.7rem;color:var(--text-dim);margin-top:6px;display:flex;gap:10px;align-items:center}
+.q-answer-vote{display:flex;align-items:center;gap:4px}
+.q-answer-vote button{background:none;border:none;cursor:pointer;font-size:.8rem;color:var(--text-dim);transition:color .2s}
+.q-answer-vote button:hover{color:var(--accent)}
+
+/* Answer form */
+.answer-form{margin-top:12px;padding-top:12px;border-top:1px solid var(--card-border)}
+.answer-input{width:100%;padding:12px;border:2px solid var(--card-border);border-radius:10px;background:var(--card);color:var(--text);font-size:.9rem;font-family:inherit;outline:none;resize:vertical;min-height:60px}
+.answer-input:focus{border-color:var(--accent)}
+.btn-answer{margin-top:8px;padding:10px 20px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-answer:hover{background:var(--accent-light)}
+
+/* Toast */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 24px;border-radius:30px;font-size:.85rem;font-weight:700;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="social.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Social</a>
+  <h1>🤝 Entraide</h1>
+  <div class="spacer"></div>
+</div>
+
+<!-- Post a question -->
+<div class="section">
+  <div class="section-title">Poser une question</div>
+  <div class="form-group">
+    <label class="form-label">Titre de ta question</label>
+    <input type="text" class="form-input" id="q-title" placeholder="Ex: Comment reduire ma facture d'eau ?" maxlength="120">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Description (optionnel)</label>
+    <textarea class="form-textarea" id="q-desc" placeholder="Donne plus de details..." maxlength="500"></textarea>
+  </div>
+  <div class="form-group" style="display:flex;gap:10px">
+    <div style="flex:1">
+      <label class="form-label">Categorie</label>
+      <select class="form-select" id="q-cat">
+        <option value="Habitat">🏠 Habitat</option>
+        <option value="Eau">💧 Eau</option>
+        <option value="Energie">⚡ Energie</option>
+        <option value="Jardin">🌿 Jardin</option>
+        <option value="Mobilite">🚲 Mobilite</option>
+        <option value="Alimentation">🥗 Alimentation</option>
+        <option value="Dechets">♻️ Dechets</option>
+        <option value="General">🌍 General</option>
+      </select>
+    </div>
+    <div style="flex:1">
+      <label class="form-label">Lieu (optionnel)</label>
+      <input type="text" class="form-input" id="q-location" placeholder="Paris, Lyon..." maxlength="50">
+    </div>
+  </div>
+  <div class="form-error" id="form-error"></div>
+  <button class="btn-submit" onclick="submitQuestion()">Publier ma question</button>
+</div>
+
+<!-- Filters -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">Questions de la communaute</div>
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-filter="all">Toutes</button>
+    <button class="filter-btn" data-filter="Habitat">🏠 Habitat</button>
+    <button class="filter-btn" data-filter="Eau">💧 Eau</button>
+    <button class="filter-btn" data-filter="Energie">⚡ Energie</button>
+    <button class="filter-btn" data-filter="Jardin">🌿 Jardin</button>
+    <button class="filter-btn" data-filter="Mobilite">🚲 Mobilite</button>
+    <button class="filter-btn" data-filter="Alimentation">🥗 Alimentation</button>
+    <button class="filter-btn" data-filter="Dechets">♻️ Dechets</button>
+    <button class="filter-btn" data-filter="voted">🔥 + votes</button>
+    <button class="filter-btn" data-filter="recent">🕐 Recentes</button>
+    <button class="filter-btn" data-filter="unanswered">❓ Sans reponse</button>
+  </div>
+  <div id="questions-list"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="defis.html"><span>🏆</span>Defis</a>
+  <a href="social.html" class="active"><span>👥</span>Social</a>
+  <a href="carte.html"><span>🗺️</span>Carte</a>
+  <a href="compteurs.html"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-social.js"></script>
+<script src="js/planet-moderation.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var QA_KEY = 'planet_qa_questions';
+
+  var DEMO_QUESTIONS = [
+    { id:'dq1', title:'Comment reduire ma facture d\'eau de 50% ?', desc:'On est une famille de 4, on consomme 150m3/an. Des astuces concretes ?', cat:'Eau', author:'Marie L.', date:'2026-03-24', votes:42, location:'Lyon',
+      answers:[
+        { id:'a1', author:'Pierre M.', text:'Mousseurs sur tous les robinets (5 EUR/piece), ca reduit de 50% le debit. Douche timer 5 min. Recup eau de pluie pour le jardin. On est passe de 160 a 80 m3/an.', votes:28, best:true, date:'2026-03-24' },
+        { id:'a2', author:'Sophie K.', text:'Le mulch au jardin c\'est magique : 80% d\'arrosage en moins. Et les plantes poussent mieux !', votes:15, best:false, date:'2026-03-24' }
+      ]},
+    { id:'dq2', title:'Quel DPE viser pour une renovation ?', desc:'Maison annees 70, actuellement F. Budget 30k EUR. C\'est realiste de passer en C ?', cat:'Habitat', author:'Thomas R.', date:'2026-03-23', votes:38, location:'Strasbourg',
+      answers:[
+        { id:'a3', author:'Claire D.', text:'Avec 30k et les aides MaPrimeRenov, C est tout a fait possible. Priorite: isolation combles + murs + fenetres double vitrage. On a fait F -> C pour 25k (apres aides).', votes:22, best:true, date:'2026-03-23' },
+        { id:'a4', author:'Marc T.', text:'Attention a l\'ordre des travaux : isolation AVANT changement de chauffage, sinon le dimensionnement sera mauvais.', votes:18, best:false, date:'2026-03-23' }
+      ]},
+    { id:'dq3', title:'Velotaf en hiver : comment rester motive ?', desc:'Je velotaf depuis avril mais l\'hiver arrive et j\'hesite a reprendre la voiture...', cat:'Mobilite', author:'Karim A.', date:'2026-03-22', votes:35, location:'Paris',
+      answers:[
+        { id:'a5', author:'Emma P.', text:'Equipement adapte = tout change. Veste Goretex, gants chauffants, sur-pantalon, lumieres. Je roule 365j/an, meme par -5. Le plus dur c\'est les 5 premieres minutes.', votes:31, best:true, date:'2026-03-22' }
+      ]},
+    { id:'dq4', title:'Compost en appartement : quelle solution ?', desc:'Studio 25m2, pas de balcon. Le lombricomposteur c\'est viable ?', cat:'Dechets', author:'Julie R.', date:'2026-03-22', votes:29, location:'',
+      answers:[
+        { id:'a6', author:'Hugo D.', text:'Lombricomposteur = top en appart. Zero odeur si bien gere. Sinon depuis 2024 ta commune doit fournir une solution compost gratuite (loi AGEC).', votes:19, best:true, date:'2026-03-22' },
+        { id:'a7', author:'Lisa M.', text:'J\'utilise un Bokashi, ca fermente sans odeur et en 2 semaines c\'est pret. 50 EUR le kit.', votes:12, best:false, date:'2026-03-22' }
+      ]},
+    { id:'dq5', title:'Panneau solaire : autoconsommation ou revente ?', desc:'6 kWc sur le toit, sud, Toulouse. Quel est le plus rentable en 2026 ?', cat:'Energie', author:'Antoine S.', date:'2026-03-21', votes:27, location:'Toulouse',
+      answers:[
+        { id:'a8', author:'Nadia L.', text:'En 2026 avec les nouveaux tarifs, l\'autoconsommation avec revente du surplus est le plus rentable. ROI moyen 7-9 ans dans le sud.', votes:20, best:true, date:'2026-03-21' }
+      ]},
+    { id:'dq6', title:'AMAP : comment trouver la bonne ?', desc:'Je veux m\'inscrire en AMAP mais il y en a 3 autour de chez moi. Des criteres de choix ?', cat:'Alimentation', author:'Sophie G.', date:'2026-03-21', votes:24, location:'Nantes',
+      answers:[
+        { id:'a9', author:'Karim A.', text:'Visite la ferme avant de t\'engager. Verifie la diversite des legumes, la distance, et surtout le feeling avec le maraicher. Mon critere #1 : bio ou pas.', votes:16, best:true, date:'2026-03-21' }
+      ]},
+    { id:'dq7', title:'Comment convaincre mes enfants de manger vege ?', desc:'Ados de 12 et 15 ans, fans de nuggets...', cat:'Alimentation', author:'Luc B.', date:'2026-03-20', votes:22, location:'',
+      answers:[
+        { id:'a10', author:'Marie L.', text:'Les impliquer dans la cuisine ! Mon fils de 14 ans est devenu fan de falafels et de curry de lentilles. Ne pas forcer, proposer des alternatives gourmandes.', votes:18, best:true, date:'2026-03-20' },
+        { id:'a11', author:'Emma P.', text:'Les documentaires sur Netflix (Seaspiracy, Cowspiracy) ont convaincu ma fille de 13 ans toute seule.', votes:11, best:false, date:'2026-03-20' }
+      ]},
+    { id:'dq8', title:'Poele a granules : bon plan ou arnaque ?', desc:'On me propose un poele a granules a 4000 EUR. Avis ?', cat:'Energie', author:'Paul H.', date:'2026-03-20', votes:19, location:'Bordeaux',
+      answers:[
+        { id:'a12', author:'Thomas R.', text:'Bon plan si maison bien isolee. Mauvais plan si passoire thermique (tu chauffes dehors). Verifie aussi le cout des granules : 350 EUR/tonne en 2026.', votes:14, best:true, date:'2026-03-20' }
+      ]},
+    { id:'dq9', title:'Permaculture debutant : par ou commencer ?', desc:'Jardin de 100m2, terre argileuse, exposition sud-ouest.', cat:'Jardin', author:'Clara V.', date:'2026-03-19', votes:31, location:'Rennes',
+      answers:[
+        { id:'a13', author:'Sophie G.', text:'1. Observer un an (soleil, vent, eau). 2. Pailler TOUT (carton + BRF). 3. Commencer petit (3x3m). 4. Planter des engrais verts cet automne. La terre argileuse est riche, patience !', votes:25, best:true, date:'2026-03-19' },
+        { id:'a14', author:'Hugo D.', text:'Avec de l\'argile, la grelinette est ta meilleure amie. Surtout ne pas retourner la terre, ca detruit la vie du sol.', votes:17, best:false, date:'2026-03-19' }
+      ]},
+    { id:'dq10', title:'Zéro dechet en famille : les premiers pas ?', desc:'Famille de 5, on produit 3 poubelles/semaine. Par quoi commencer ?', cat:'Dechets', author:'Rose N.', date:'2026-03-19', votes:26, location:'Marseille',
+      answers:[
+        { id:'a15', author:'Julie R.', text:'1. Gourdes pour tous (bye bouteilles plastique). 2. Sacs en tissu pour les courses. 3. Vrac pour les cereales/pates. Rien que ca : -30% de dechets en 1 mois !', votes:21, best:true, date:'2026-03-19' }
+      ]},
+    { id:'dq11', title:'Eau du robinet avec mauvais gout : que faire ?', desc:'Mon eau est potable mais a un gout de chlore insupportable.', cat:'Eau', author:'Ines C.', date:'2026-03-18', votes:18, location:'Paris',
+      answers:[
+        { id:'a16', author:'Pierre M.', text:'Carafe avec charbon actif (Binchotan). 5 EUR, dure 6 mois. Le gout de chlore disparait en 4h. Alternative : laisser l\'eau reposer 1h a l\'air libre.', votes:13, best:true, date:'2026-03-18' }
+      ]},
+    { id:'dq12', title:'Train vs avion Paris-Barcelone ?', desc:'Difference de temps et de prix en 2026 ? L\'avion est 3x moins cher...', cat:'Mobilite', author:'Fabrice L.', date:'2026-03-18', votes:21, location:'',
+      answers:[
+        { id:'a17', author:'Emma P.', text:'TGV : 6h30 centre a centre, 90 EUR, 6 kg CO2. Avion : 5h porte a porte (avec aeroport), 45 EUR, 200 kg CO2. Le train gagne en confort et en ecologie, pas en prix.', votes:19, best:true, date:'2026-03-18' }
+      ]},
+    { id:'dq13', title:'Potager sur balcon : quelles plantes ?', desc:'Balcon 6m2 plein sud. Que planter pour avoir des resultats ?', cat:'Jardin', author:'Gaelle F.', date:'2026-03-17', votes:16, location:'Lyon',
+      answers:[
+        { id:'a18', author:'Sophie G.', text:'Tomates cerises, basilic, fraises, radis, salades, herbes aromatiques. En pots de 30L minimum pour les tomates. Arrosage regulier indispensable !', votes:12, best:true, date:'2026-03-17' }
+      ]},
+    { id:'dq14', title:'Economies d\'energie : les appareils en veille ?', desc:'J\'ai entendu que les appareils en veille c\'est 10% de la facture. Vrai ?', cat:'Energie', author:'Samuel J.', date:'2026-03-17', votes:14, location:'',
+      answers:[
+        { id:'a19', author:'Antoine S.', text:'Environ 7-10% selon l\'ADEME. Multiprises avec interrupteur = solution simple. Box internet la nuit = 30 EUR/an d\'economies. TV en veille = 15 EUR/an.', votes:10, best:true, date:'2026-03-17' }
+      ]},
+    { id:'dq15', title:'Comment reduire le plastique en cuisine ?', desc:'On a encore trop d\'emballages plastique malgre nos efforts.', cat:'Dechets', author:'Manon B.', date:'2026-03-16', votes:20, location:'Lille',
+      answers:[]
+    }
+  ];
+
+  function getQuestions() {
+    var stored = null;
+    try { stored = JSON.parse(localStorage.getItem(QA_KEY)); } catch(e) {}
+    if (!stored || stored.length === 0) {
+      stored = DEMO_QUESTIONS.slice();
+      try { localStorage.setItem(QA_KEY, JSON.stringify(stored)); } catch(e) {}
+    }
+    return stored;
+  }
+  function saveQuestions(qs) {
+    try { localStorage.setItem(QA_KEY, JSON.stringify(qs)); } catch(e) {}
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2500);
+  }
+
+  var currentFilter = 'all';
+  var expandedId = null;
+
+  // Filters
+  document.getElementById('filters').addEventListener('click', function(e) {
+    var btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    currentFilter = btn.getAttribute('data-filter');
+    expandedId = null;
+    renderQuestions();
+  });
+
+  window.submitQuestion = function() {
+    var title = document.getElementById('q-title').value.trim();
+    var desc = document.getElementById('q-desc').value.trim();
+    var cat = document.getElementById('q-cat').value;
+    var location = document.getElementById('q-location').value.trim();
+    var errEl = document.getElementById('form-error');
+    errEl.classList.remove('show');
+
+    if (!title || title.length < 10) {
+      errEl.textContent = 'Le titre doit faire au moins 10 caracteres.';
+      errEl.classList.add('show');
+      return;
+    }
+
+    // Moderation
+    var check = PlanetModeration.moderateContent(title + ' ' + (desc || ''));
+    if (check.blocked) {
+      errEl.textContent = check.reason;
+      errEl.classList.add('show');
+      return;
+    }
+
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('planet_user')); } catch(e) {}
+
+    var qs = getQuestions();
+    var newQ = {
+      id: 'q-' + Date.now(),
+      title: title,
+      desc: desc,
+      cat: cat,
+      author: user ? user.pseudo : 'Anonyme',
+      date: new Date().toISOString().slice(0,10),
+      votes: 0,
+      location: location,
+      answers: []
+    };
+    qs.unshift(newQ);
+    saveQuestions(qs);
+
+    document.getElementById('q-title').value = '';
+    document.getElementById('q-desc').value = '';
+    document.getElementById('q-location').value = '';
+    showToast('Question publiee ! +5 XP 🎉');
+    renderQuestions();
+  };
+
+  function renderQuestions() {
+    var container = document.getElementById('questions-list');
+    var qs = getQuestions();
+    container.innerHTML = '';
+
+    // Filter
+    var filtered = qs;
+    if (currentFilter === 'voted') {
+      filtered = qs.slice().sort(function(a,b) { return b.votes - a.votes; });
+    } else if (currentFilter === 'recent') {
+      filtered = qs.slice().sort(function(a,b) { return b.date > a.date ? 1 : -1; });
+    } else if (currentFilter === 'unanswered') {
+      filtered = qs.filter(function(q) { return !q.answers || q.answers.length === 0; });
+    } else if (currentFilter !== 'all') {
+      filtered = qs.filter(function(q) { return q.cat === currentFilter; });
+    }
+
+    filtered.forEach(function(q) {
+      var card = document.createElement('div');
+      card.className = 'q-card';
+      var isExpanded = expandedId === q.id;
+      var ansCount = q.answers ? q.answers.length : 0;
+
+      var html = '<div class="q-header">' +
+        '<div class="q-votes">' +
+          '<button class="q-vote-btn" data-qid="' + q.id + '" data-dir="up" title="Vote +">&#9650;</button>' +
+          '<span class="q-vote-count">' + q.votes + '</span>' +
+          '<button class="q-vote-btn" data-qid="' + q.id + '" data-dir="down" title="Vote -">&#9660;</button>' +
+        '</div>' +
+        '<div class="q-body">' +
+          '<div class="q-title">' + q.title + '</div>' +
+          '<div class="q-meta">' +
+            '<span class="q-cat">' + q.cat + '</span>' +
+            '<span>' + q.author + '</span>' +
+            '<span>' + q.date + '</span>' +
+            (q.location ? '<span>📍 ' + q.location + '</span>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="q-answers-count">💬 ' + ansCount + '</div>' +
+      '</div>';
+
+      // Expanded section
+      html += '<div class="q-expanded' + (isExpanded ? ' show' : '') + '">';
+      if (q.desc) {
+        html += '<div class="q-description">' + q.desc + '</div>';
+      }
+      if (q.answers && q.answers.length > 0) {
+        q.answers.forEach(function(a) {
+          html += '<div class="q-answer' + (a.best ? ' best' : '') + '">' +
+            '<div class="q-answer-header">' +
+              '<span class="q-answer-author">' + a.author + '</span>' +
+              (a.best ? '<span class="q-answer-badge">⭐ Meilleure reponse</span>' : '') +
+            '</div>' +
+            '<div class="q-answer-text">' + a.text + '</div>' +
+            '<div class="q-answer-meta">' +
+              '<div class="q-answer-vote">' +
+                '<button onclick="voteAnswer(\'' + q.id + '\',\'' + a.id + '\',1,event)">👍</button>' +
+                '<span>' + a.votes + '</span>' +
+                '<button onclick="voteAnswer(\'' + q.id + '\',\'' + a.id + '\',-1,event)">👎</button>' +
+              '</div>' +
+              '<span>' + a.date + '</span>' +
+            '</div>' +
+          '</div>';
+        });
+      }
+      // Answer form
+      html += '<div class="answer-form">' +
+        '<textarea class="answer-input" placeholder="Ecris ta reponse..." data-qid="' + q.id + '"></textarea>' +
+        '<button class="btn-answer" onclick="submitAnswer(\'' + q.id + '\',event)">Repondre (+5 XP)</button>' +
+      '</div>';
+      html += '</div>';
+
+      card.innerHTML = html;
+
+      // Toggle expand on header click
+      card.querySelector('.q-header').addEventListener('click', function() {
+        expandedId = expandedId === q.id ? null : q.id;
+        renderQuestions();
+      });
+
+      // Vote buttons
+      card.querySelectorAll('.q-vote-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var qid = this.getAttribute('data-qid');
+          var dir = this.getAttribute('data-dir');
+          voteQuestion(qid, dir === 'up' ? 1 : -1);
+        });
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  function voteQuestion(qid, delta) {
+    var qs = getQuestions();
+    var q = qs.find(function(x) { return x.id === qid; });
+    if (q) {
+      q.votes = Math.max(0, q.votes + delta);
+      saveQuestions(qs);
+      renderQuestions();
+    }
+  }
+
+  window.voteAnswer = function(qid, aid, delta, e) {
+    if (e) e.stopPropagation();
+    var qs = getQuestions();
+    var q = qs.find(function(x) { return x.id === qid; });
+    if (q && q.answers) {
+      var a = q.answers.find(function(x) { return x.id === aid; });
+      if (a) {
+        a.votes = Math.max(0, a.votes + delta);
+        saveQuestions(qs);
+        renderQuestions();
+      }
+    }
+  };
+
+  window.submitAnswer = function(qid, e) {
+    if (e) e.stopPropagation();
+    var textarea = document.querySelector('.answer-input[data-qid="' + qid + '"]');
+    var text = textarea ? textarea.value.trim() : '';
+    if (!text || text.length < 5) {
+      showToast('Reponse trop courte');
+      return;
+    }
+
+    var check = PlanetModeration.moderateContent(text);
+    if (check.blocked) {
+      showToast(check.reason);
+      return;
+    }
+
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('planet_user')); } catch(e2) {}
+
+    var qs = getQuestions();
+    var q = qs.find(function(x) { return x.id === qid; });
+    if (q) {
+      q.answers.push({
+        id: 'a-' + Date.now(),
+        author: user ? user.pseudo : 'Anonyme',
+        text: text,
+        votes: 0,
+        best: false,
+        date: new Date().toISOString().slice(0,10)
+      });
+      saveQuestions(qs);
+      showToast('Reponse publiee ! +5 XP 🎉');
+      renderQuestions();
+    }
+  };
+
+  renderQuestions();
+})();
+</script>
+</body>
+</html>

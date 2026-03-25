@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Carte des actions</title>
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);
+  --card-hover:rgba(16,185,129,0.15);--danger:#EF4444;--blue:#3B82F6;
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.section{padding:20px;max-width:600px;margin:0 auto}
+.section-title{font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--card-border)}
+
+/* Map container */
+.map-container{position:relative;width:100%;aspect-ratio:1;background:rgba(16,185,129,0.03);border:1px solid var(--card-border);border-radius:16px;overflow:hidden;margin-bottom:16px}
+.map-grid{position:absolute;top:0;left:0;width:100%;height:100%;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(10,1fr)}
+.map-cell{border:1px solid rgba(255,255,255,0.02)}
+.map-street-h{position:absolute;height:2px;background:rgba(255,255,255,0.06);left:0;right:0}
+.map-street-v{position:absolute;width:2px;background:rgba(255,255,255,0.06);top:0;bottom:0}
+.map-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.2rem;z-index:10;filter:drop-shadow(0 0 6px rgba(59,130,246,0.6))}
+.map-pin{position:absolute;font-size:1.3rem;cursor:pointer;z-index:5;transition:transform .2s;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))}
+.map-pin:hover{transform:scale(1.3);z-index:20}
+
+/* Pin popup */
+.pin-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,22,40,0.98);border:2px solid var(--accent);border-radius:16px;padding:24px;max-width:350px;width:90%;z-index:300;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.pin-popup.show{display:block}
+.pin-popup-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:250}
+.pin-popup-overlay.show{display:block}
+.popup-close{position:absolute;top:12px;right:16px;font-size:1.2rem;cursor:pointer;color:var(--text-dim)}
+.popup-type{font-size:1.5rem;margin-bottom:8px}
+.popup-title{font-size:1.1rem;font-weight:800;margin-bottom:4px}
+.popup-details{font-size:.85rem;color:var(--text-dim);margin-bottom:12px;line-height:1.4}
+.popup-btns{display:flex;gap:8px}
+.popup-btn{flex:1;padding:12px;border:none;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s}
+.popup-btn.go{background:var(--accent);color:#fff}
+.popup-btn.go:hover{background:var(--accent-light)}
+.popup-btn.share{background:var(--card);color:var(--text);border:1px solid var(--card-border)}
+
+/* Filters */
+.pin-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.pin-filter{padding:6px 12px;border:1px solid var(--card-border);border-radius:20px;background:var(--card);color:var(--text-dim);font-size:.7rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:4px}
+.pin-filter.active{border-color:var(--accent);color:var(--text);background:rgba(16,185,129,0.15)}
+.pin-filter-dot{width:8px;height:8px;border-radius:50%}
+
+/* Pin list */
+.pin-list-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.pin-list-item:hover{border-color:var(--accent);background:var(--card-hover)}
+.pin-list-emoji{font-size:1.3rem;flex-shrink:0}
+.pin-list-info{flex:1}
+.pin-list-title{font-size:.85rem;font-weight:700}
+.pin-list-addr{font-size:.7rem;color:var(--text-dim)}
+.pin-list-date{font-size:.65rem;color:var(--accent);font-weight:600}
+
+/* Add pin form */
+.add-form{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:20px;display:none}
+.add-form.show{display:block}
+.form-group{margin-bottom:12px}
+.form-label{font-size:.85rem;font-weight:700;margin-bottom:6px;display:block}
+.form-input{width:100%;padding:12px 14px;border:2px solid var(--card-border);border-radius:10px;background:var(--card);color:var(--text);font-size:.9rem;font-weight:600;outline:none;transition:border-color .2s;font-family:inherit}
+.form-input:focus{border-color:var(--accent)}
+.form-input::placeholder{color:var(--text-dim);font-weight:400}
+.form-select{width:100%;padding:12px 14px;border:2px solid var(--card-border);border-radius:10px;background:var(--card);color:var(--text);font-size:.9rem;font-weight:600;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.form-select option{background:#1a2744;color:var(--text)}
+.btn-add{width:100%;padding:14px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-add:hover{background:var(--accent-light)}
+.btn-toggle-form{width:100%;padding:14px;border:none;border-radius:12px;background:rgba(16,185,129,0.15);color:var(--accent);font-size:.9rem;font-weight:700;cursor:pointer;border:1px solid rgba(16,185,129,0.3);transition:all .2s;margin-bottom:16px}
+.btn-toggle-form:hover{background:rgba(16,185,129,0.25)}
+
+/* Toast */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 24px;border-radius:30px;font-size:.85rem;font-weight:700;z-index:400;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Accueil</a>
+  <h1>🗺️ Carte des actions</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="section">
+  <!-- Filters -->
+  <div class="pin-filters" id="pin-filters"></div>
+
+  <!-- Map -->
+  <div class="map-container" id="map-container">
+    <div class="map-grid" id="map-grid"></div>
+    <!-- Streets -->
+    <div class="map-street-h" style="top:20%"></div>
+    <div class="map-street-h" style="top:40%"></div>
+    <div class="map-street-h" style="top:60%"></div>
+    <div class="map-street-h" style="top:80%"></div>
+    <div class="map-street-v" style="left:25%"></div>
+    <div class="map-street-v" style="left:50%"></div>
+    <div class="map-street-v" style="left:75%"></div>
+    <div class="map-center">📍</div>
+    <div id="map-pins"></div>
+  </div>
+
+  <!-- Add pin -->
+  <button class="btn-toggle-form" onclick="toggleForm()">➕ Ajouter un lieu sur la carte</button>
+  <div class="add-form" id="add-form">
+    <div class="form-group">
+      <label class="form-label">Type de lieu</label>
+      <select class="form-select" id="pin-type">
+        <option value="repair">🟢 Repair Cafe</option>
+        <option value="cleanwalk">🔵 Clean Walk</option>
+        <option value="compost">🟡 Composteur collectif</option>
+        <option value="amap">🟠 AMAP</option>
+        <option value="alerte">🔴 Alerte pollution</option>
+        <option value="troc">🟢 Troc / Echange</option>
+        <option value="atelier">🔵 Atelier</option>
+        <option value="autre">⚪ Autre</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Titre</label>
+      <input type="text" class="form-input" id="pin-title" placeholder="Ex: Repair Cafe du 14e" maxlength="60">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Adresse</label>
+      <input type="text" class="form-input" id="pin-address" placeholder="Ex: 12 rue des Lilas, Paris 14e" maxlength="100">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date / Horaires (optionnel)</label>
+      <input type="text" class="form-input" id="pin-date" placeholder="Ex: Samedi 10h-13h" maxlength="50">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description (optionnel)</label>
+      <input type="text" class="form-input" id="pin-desc" placeholder="Details..." maxlength="200">
+    </div>
+    <button class="btn-add" onclick="addPin()">Ajouter sur la carte</button>
+  </div>
+
+  <!-- Pin list -->
+  <div class="section-title" style="margin-top:20px">Lieux a proximite</div>
+  <div id="pin-list"></div>
+</div>
+
+<!-- Popup overlay -->
+<div class="pin-popup-overlay" id="popup-overlay" onclick="closePopup()"></div>
+<div class="pin-popup" id="pin-popup">
+  <span class="popup-close" onclick="closePopup()">&times;</span>
+  <div class="popup-type" id="popup-type"></div>
+  <div class="popup-title" id="popup-title"></div>
+  <div class="popup-details" id="popup-details"></div>
+  <div class="popup-btns">
+    <button class="popup-btn go" onclick="goToPin()">🗺️ J'y vais</button>
+    <button class="popup-btn share" onclick="sharePin()">📤 Partager</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="defis.html"><span>🏆</span>Defis</a>
+  <a href="social.html"><span>👥</span>Social</a>
+  <a href="carte.html" class="active"><span>🗺️</span>Carte</a>
+  <a href="compteurs.html"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-social.js"></script>
+<script src="js/planet-moderation.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var PIN_TYPES = {
+    repair: { emoji:'🟢', label:'Repair Cafe', color:'#10B981' },
+    cleanwalk: { emoji:'🔵', label:'Clean Walk', color:'#3B82F6' },
+    compost: { emoji:'🟡', label:'Composteur', color:'#FBBF24' },
+    amap: { emoji:'🟠', label:'AMAP', color:'#F59E0B' },
+    alerte: { emoji:'🔴', label:'Alerte', color:'#EF4444' },
+    troc: { emoji:'🟢', label:'Troc', color:'#14B8A6' },
+    atelier: { emoji:'🔵', label:'Atelier', color:'#8B5CF6' },
+    autre: { emoji:'⚪', label:'Autre', color:'#9CA3AF' }
+  };
+
+  var DEMO_PINS = [
+    { id:'p1', type:'repair', title:'Repair Cafe du 14e', address:'12 rue des Lilas, Paris 14e', date:'Samedi 10h-13h', desc:'Reparation petit electromenager, couture, informatique. Gratuit.', x:35, y:28 },
+    { id:'p2', type:'cleanwalk', title:'Clean Walk Montsouris', address:'Parc Montsouris, Paris 14e', date:'Dimanche 14h', desc:'Ramassage de dechets. Gants et sacs fournis. RDV entree Dareau.', x:42, y:55 },
+    { id:'p3', type:'compost', title:'Composteur collectif Daguerre', address:'23 rue Daguerre, Paris 14e', date:'Permanent', desc:'Composteur de quartier. Apportez vos dechets verts !', x:60, y:38 },
+    { id:'p4', type:'amap', title:'AMAP des Alesias', address:'Place d\'Alesia, Paris 14e', date:'Mercredi 18h-19h30', desc:'Panier legumes bio 15 EUR/semaine. Maraicher a 30km de Paris.', x:55, y:65 },
+    { id:'p5', type:'alerte', title:'Alerte PFAS secteur 14e', address:'Secteur sud 14e arrondissement', date:'Mars 2026', desc:'Eau non conforme aux normes PFAS. Analyses en cours.', x:48, y:75 },
+    { id:'p6', type:'atelier', title:'Atelier compost Mediatheque', address:'Mediatheque Marguerite Yourcenar', date:'Samedi 15h', desc:'Apprenez a composter en appartement. Places limitees.', x:25, y:45 },
+    { id:'p7', type:'troc', title:'Troc vetements Centre social', address:'Centre social 14e', date:'Dimanche 10h-16h', desc:'Amenez vos vetements, repartez avec d\'autres ! Gratuit.', x:70, y:30 },
+    { id:'p8', type:'repair', title:'Repair Cafe Moulin a Cafe', address:'8 rue Sainte-Leonie, Paris 14e', date:'1er samedi du mois', desc:'Electro, velo, couture, informatique. Cafe offert.', x:30, y:60 },
+    { id:'p9', type:'cleanwalk', title:'Nettoyage berges Seine', address:'Quai de Bercy, Paris 12e', date:'Samedi 9h', desc:'Grande operation nettoyage des berges. 200 benevoles attendus.', x:78, y:22 },
+    { id:'p10', type:'amap', title:'AMAP Bio du Marche', address:'Marche Brune, Paris 14e', date:'Vendredi 17h-19h', desc:'Fruits, legumes, fromages, pain. 4 producteurs locaux.', x:40, y:42 },
+    { id:'p11', type:'compost', title:'Jardin partage Didot', address:'Rue Didot, Paris 14e', date:'Permanent', desc:'Jardin partage avec composteur collectif. Inscription requise.', x:20, y:70 },
+    { id:'p12', type:'atelier', title:'Fabriquer ses cosmetiques', address:'Maison du Developpement Durable', date:'Mercredi 14h', desc:'Atelier DIY : creme, baume a levres, dentifrice. 5 EUR.', x:65, y:50 },
+    { id:'p13', type:'troc', title:'Bourse aux jouets', address:'Ecole Alouettes, Paris 14e', date:'Dimanche 15 avril', desc:'Echange de jouets entre familles. Amenez 5, repartez avec 5.', x:52, y:18 },
+    { id:'p14', type:'repair', title:'Velo-repair', address:'Place Denfert-Rochereau', date:'Mercredi et samedi', desc:'Atelier auto-reparation velo. Outils a disposition.', x:45, y:35 },
+    { id:'p15', type:'alerte', title:'Qualite air degradee', address:'Boulevard Peripherique sud', date:'Temps reel', desc:'PM2.5 au-dessus des seuils. Evitez le jogging en exterieur.', x:80, y:80 }
+  ];
+
+  var PINS_KEY = 'planet_map_pins';
+  var activeFilters = Object.keys(PIN_TYPES);
+  var currentPopupPin = null;
+
+  function getPins() {
+    var stored = null;
+    try { stored = JSON.parse(localStorage.getItem(PINS_KEY)); } catch(e) {}
+    if (!stored || stored.length === 0) {
+      stored = DEMO_PINS.slice();
+      try { localStorage.setItem(PINS_KEY, JSON.stringify(stored)); } catch(e) {}
+    }
+    return stored;
+  }
+  function savePins(pins) {
+    try { localStorage.setItem(PINS_KEY, JSON.stringify(pins)); } catch(e) {}
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2500);
+  }
+
+  // Build filters
+  function buildFilters() {
+    var container = document.getElementById('pin-filters');
+    container.innerHTML = '';
+    Object.keys(PIN_TYPES).forEach(function(key) {
+      var pt = PIN_TYPES[key];
+      var isActive = activeFilters.indexOf(key) !== -1;
+      container.innerHTML += '<button class="pin-filter' + (isActive ? ' active' : '') + '" data-type="' + key + '">' +
+        '<span class="pin-filter-dot" style="background:' + pt.color + '"></span>' + pt.label +
+      '</button>';
+    });
+    container.querySelectorAll('.pin-filter').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var type = this.getAttribute('data-type');
+        var idx = activeFilters.indexOf(type);
+        if (idx !== -1) {
+          activeFilters.splice(idx, 1);
+        } else {
+          activeFilters.push(type);
+        }
+        buildFilters();
+        renderMap();
+        renderList();
+      });
+    });
+  }
+
+  // Render map pins
+  function renderMap() {
+    var container = document.getElementById('map-pins');
+    container.innerHTML = '';
+    var pins = getPins();
+    pins.forEach(function(p) {
+      if (activeFilters.indexOf(p.type) === -1) return;
+      var pt = PIN_TYPES[p.type] || PIN_TYPES.autre;
+      var pin = document.createElement('div');
+      pin.className = 'map-pin';
+      pin.textContent = pt.emoji;
+      pin.style.left = p.x + '%';
+      pin.style.top = p.y + '%';
+      pin.title = p.title;
+      pin.addEventListener('click', function() { showPopup(p); });
+      container.appendChild(pin);
+    });
+  }
+
+  // Render list
+  function renderList() {
+    var container = document.getElementById('pin-list');
+    container.innerHTML = '';
+    var pins = getPins();
+    pins.forEach(function(p) {
+      if (activeFilters.indexOf(p.type) === -1) return;
+      var pt = PIN_TYPES[p.type] || PIN_TYPES.autre;
+      container.innerHTML += '<div class="pin-list-item" onclick="showPopupById(\'' + p.id + '\')">' +
+        '<div class="pin-list-emoji">' + pt.emoji + '</div>' +
+        '<div class="pin-list-info">' +
+          '<div class="pin-list-title">' + p.title + '</div>' +
+          '<div class="pin-list-addr">📍 ' + p.address + '</div>' +
+          (p.date ? '<div class="pin-list-date">📅 ' + p.date + '</div>' : '') +
+        '</div>' +
+      '</div>';
+    });
+  }
+
+  function showPopup(pin) {
+    currentPopupPin = pin;
+    var pt = PIN_TYPES[pin.type] || PIN_TYPES.autre;
+    document.getElementById('popup-type').textContent = pt.emoji + ' ' + pt.label;
+    document.getElementById('popup-title').textContent = pin.title;
+    document.getElementById('popup-details').innerHTML =
+      '📍 ' + pin.address +
+      (pin.date ? '<br>📅 ' + pin.date : '') +
+      (pin.desc ? '<br><br>' + pin.desc : '');
+    document.getElementById('pin-popup').classList.add('show');
+    document.getElementById('popup-overlay').classList.add('show');
+  }
+
+  window.showPopupById = function(id) {
+    var pins = getPins();
+    var pin = pins.find(function(p) { return p.id === id; });
+    if (pin) showPopup(pin);
+  };
+
+  window.closePopup = function() {
+    document.getElementById('pin-popup').classList.remove('show');
+    document.getElementById('popup-overlay').classList.remove('show');
+  };
+
+  window.goToPin = function() {
+    if (currentPopupPin) {
+      window.open('https://www.google.com/maps/search/' + encodeURIComponent(currentPopupPin.address), '_blank');
+    }
+    closePopup();
+  };
+
+  window.sharePin = function() {
+    if (currentPopupPin && navigator.clipboard) {
+      navigator.clipboard.writeText(currentPopupPin.title + ' — ' + currentPopupPin.address);
+      showToast('Copie ! 📋');
+    }
+    closePopup();
+  };
+
+  window.toggleForm = function() {
+    document.getElementById('add-form').classList.toggle('show');
+  };
+
+  window.addPin = function() {
+    var type = document.getElementById('pin-type').value;
+    var title = document.getElementById('pin-title').value.trim();
+    var address = document.getElementById('pin-address').value.trim();
+    var date = document.getElementById('pin-date').value.trim();
+    var desc = document.getElementById('pin-desc').value.trim();
+
+    if (!title || !address) {
+      showToast('Titre et adresse requis');
+      return;
+    }
+
+    var check = PlanetModeration.moderateContent(title + ' ' + address + ' ' + desc);
+    if (check.blocked) {
+      showToast(check.reason);
+      return;
+    }
+
+    var pins = getPins();
+    pins.push({
+      id: 'p-' + Date.now(),
+      type: type,
+      title: title,
+      address: address,
+      date: date,
+      desc: desc,
+      x: 10 + Math.random() * 80,
+      y: 10 + Math.random() * 80
+    });
+    savePins(pins);
+
+    document.getElementById('pin-title').value = '';
+    document.getElementById('pin-address').value = '';
+    document.getElementById('pin-date').value = '';
+    document.getElementById('pin-desc').value = '';
+    document.getElementById('add-form').classList.remove('show');
+
+    renderMap();
+    renderList();
+    showToast('Lieu ajoute sur la carte ! 📍');
+  };
+
+  // Init
+  buildFilters();
+  renderMap();
+  renderList();
+
+  // Request geolocation
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      // We have position but use fake map anyway for the prototype
+    }, function() {});
+  }
+
+})();
+</script>
+</body>
+</html>

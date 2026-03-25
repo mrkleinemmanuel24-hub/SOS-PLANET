@@ -460,6 +460,205 @@ var PlanetSocial = (function() {
     { name: 'Royaume-Uni', flag: '🇬🇧', xp: 1000000 }
   ];
 
+  // ---- AFFINITY GROUPS ----
+  var AFFINITY_KEY = 'planet_affinity_groups';
+
+  function getAffinityGroups() {
+    try { return JSON.parse(localStorage.getItem(AFFINITY_KEY)) || []; } catch(e) { return []; }
+  }
+
+  function joinAffinityGroup(groupId) {
+    var groups = getAffinityGroups();
+    if (groups.length >= 5) return false;
+    if (groups.indexOf(groupId) !== -1) return false;
+    groups.push(groupId);
+    try { localStorage.setItem(AFFINITY_KEY, JSON.stringify(groups)); } catch(e) {}
+    return true;
+  }
+
+  function leaveAffinityGroup(groupId) {
+    var groups = getAffinityGroups();
+    groups = groups.filter(function(g) { return g !== groupId; });
+    try { localStorage.setItem(AFFINITY_KEY, JSON.stringify(groups)); } catch(e) {}
+    return groups;
+  }
+
+  // ---- Q&A SYSTEM ----
+  var QA_KEY = 'planet_qa_questions';
+
+  function getQAQuestions() {
+    try { return JSON.parse(localStorage.getItem(QA_KEY)) || []; } catch(e) { return []; }
+  }
+
+  function postQuestion(title, desc, cat, location) {
+    var qs = getQAQuestions();
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('planet_user')); } catch(e) {}
+    var q = {
+      id: 'q-' + Date.now(),
+      title: title,
+      desc: desc || '',
+      cat: cat,
+      author: user ? user.pseudo : 'Anonyme',
+      date: today(),
+      votes: 0,
+      location: location || '',
+      answers: []
+    };
+    qs.unshift(q);
+    save(QA_KEY, qs);
+    return q;
+  }
+
+  function postAnswer(questionId, text) {
+    var qs = getQAQuestions();
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('planet_user')); } catch(e) {}
+    var q = qs.find(function(x) { return x.id === questionId; });
+    if (!q) return null;
+    var a = {
+      id: 'a-' + Date.now(),
+      author: user ? user.pseudo : 'Anonyme',
+      text: text,
+      votes: 0,
+      best: false,
+      date: today()
+    };
+    q.answers.push(a);
+    save(QA_KEY, qs);
+    return a;
+  }
+
+  function voteQuestion(questionId, delta) {
+    var qs = getQAQuestions();
+    var q = qs.find(function(x) { return x.id === questionId; });
+    if (q) {
+      q.votes = Math.max(0, q.votes + delta);
+      save(QA_KEY, qs);
+    }
+    return q;
+  }
+
+  function voteAnswer(questionId, answerId, delta) {
+    var qs = getQAQuestions();
+    var q = qs.find(function(x) { return x.id === questionId; });
+    if (q && q.answers) {
+      var a = q.answers.find(function(x) { return x.id === answerId; });
+      if (a) { a.votes = Math.max(0, a.votes + delta); save(QA_KEY, qs); return a; }
+    }
+    return null;
+  }
+
+  // ---- MAP PINS ----
+  var PINS_KEY = 'planet_map_pins';
+
+  function getMapPins() {
+    try { return JSON.parse(localStorage.getItem(PINS_KEY)) || []; } catch(e) { return []; }
+  }
+
+  function addMapPin(pin) {
+    var pins = getMapPins();
+    pin.id = 'p-' + Date.now();
+    pins.push(pin);
+    try { localStorage.setItem(PINS_KEY, JSON.stringify(pins)); } catch(e) {}
+    return pin;
+  }
+
+  function filterMapPins(types) {
+    var pins = getMapPins();
+    if (!types || types.length === 0) return pins;
+    return pins.filter(function(p) { return types.indexOf(p.type) !== -1; });
+  }
+
+  // ---- MENTOR SYSTEM ----
+  function getMentor() {
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('planet_user')); } catch(e) {}
+    if (!user) return null;
+    var level = getCurrentLevelNum(user.xp || 0);
+    if (level >= 5) return null; // No mentor needed, you ARE a mentor
+    // Auto-assign Sophie (level 7) as mentor
+    var friends = getFriends();
+    var mentor = friends.find(function(f) { return f.level >= 5; });
+    return mentor || { name: 'Sophie', level: 7, avatar: 'S', color: '#8B5CF6' };
+  }
+
+  function canBeMentor() {
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('planet_user')); } catch(e) {}
+    if (!user) return false;
+    return getCurrentLevelNum(user.xp || 0) >= 5;
+  }
+
+  // ---- EXPERT BADGE DETECTION ----
+  function checkExpertBadge() {
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('planet_user')); } catch(e) {}
+    if (!user) return [];
+    var qs = getQAQuestions();
+    var domainCounts = {};
+    var domainPositive = {};
+    qs.forEach(function(q) {
+      if (q.answers) {
+        q.answers.forEach(function(a) {
+          if (a.author === user.pseudo) {
+            if (!domainCounts[q.cat]) { domainCounts[q.cat] = 0; domainPositive[q.cat] = 0; }
+            domainCounts[q.cat]++;
+            if (a.votes > 0) domainPositive[q.cat]++;
+          }
+        });
+      }
+    });
+    var expertDomains = [];
+    Object.keys(domainCounts).forEach(function(d) {
+      if (domainCounts[d] >= 50) {
+        var pct = domainCounts[d] > 0 ? (domainPositive[d] / domainCounts[d]) * 100 : 0;
+        if (pct >= 80) expertDomains.push(d);
+      }
+    });
+    return expertDomains;
+  }
+
+  // ---- NOTIFICATION BADGE COUNTER ----
+  function getUnreadNotificationCount() {
+    var notifs = getNotifications();
+    var count = 0;
+    notifs.forEach(function(n) { if (!n.read) count++; });
+    return count;
+  }
+
+  function markNotificationsRead() {
+    var notifs = getNotifications();
+    notifs.forEach(function(n) { n.read = true; });
+    save(KEYS.notifications, notifs);
+  }
+
+  // ---- TREND DATA GENERATION ----
+  function generateTrendData() {
+    var names = ['Marie','Karim','Sophie','Lucas','Emma','Pierre','Claire','Marc','Julie','Hugo'];
+    var actions = ['a composte','a fait du velo','a trie ses dechets','a economise de l\'eau','a mange vege','a pris le train','a repare un objet','a fait ses courses en vrac'];
+    var emojis = ['🌿','🚲','♻️','💧','🥗','🚂','🔧','🛒'];
+    var idx = Math.floor(Math.random() * names.length);
+    var aidx = Math.floor(Math.random() * actions.length);
+    return {
+      user: names[idx],
+      action: actions[aidx],
+      emoji: emojis[aidx],
+      text: names[idx] + ' ' + actions[aidx] + ' ' + emojis[aidx]
+    };
+  }
+
+  function getTrendStats() {
+    return {
+      usersToday: 12847 + Math.floor(Math.random() * 500),
+      usersWeek: 89234 + Math.floor(Math.random() * 2000),
+      usersMonth: 342156 + Math.floor(Math.random() * 5000),
+      co2ThisWeek: 847,
+      co2LastWeek: 756,
+      growthPercent: 12
+    };
+  }
+
   // ---- PUBLIC API ----
   return {
     KEYS: KEYS,
@@ -492,6 +691,31 @@ var PlanetSocial = (function() {
     needsReminder: needsReminder,
     getNotifications: getNotifications,
     addNotification: addNotification,
-    getCurrentLevelNum: getCurrentLevelNum
+    getCurrentLevelNum: getCurrentLevelNum,
+    // v5: Affinity groups
+    getAffinityGroups: getAffinityGroups,
+    joinAffinityGroup: joinAffinityGroup,
+    leaveAffinityGroup: leaveAffinityGroup,
+    // v5: Q&A
+    getQAQuestions: getQAQuestions,
+    postQuestion: postQuestion,
+    postAnswer: postAnswer,
+    voteQuestion: voteQuestion,
+    voteAnswer: voteAnswer,
+    // v5: Map pins
+    getMapPins: getMapPins,
+    addMapPin: addMapPin,
+    filterMapPins: filterMapPins,
+    // v5: Mentor
+    getMentor: getMentor,
+    canBeMentor: canBeMentor,
+    // v5: Expert
+    checkExpertBadge: checkExpertBadge,
+    // v5: Notifications
+    getUnreadNotificationCount: getUnreadNotificationCount,
+    markNotificationsRead: markNotificationsRead,
+    // v5: Trends
+    generateTrendData: generateTrendData,
+    getTrendStats: getTrendStats
   };
 })();

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Experts</title>
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);
+  --card-hover:rgba(16,185,129,0.15);--danger:#EF4444;--blue:#3B82F6;
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.section{padding:20px;max-width:600px;margin:0 auto}
+.section-title{font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--card-border)}
+
+/* Expert card */
+.expert-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:20px;margin-bottom:12px;transition:all .2s}
+.expert-card:hover{border-color:var(--accent);background:var(--card-hover)}
+.expert-top{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.expert-avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:900;color:#fff;flex-shrink:0;border:3px solid var(--gold)}
+.expert-info{flex:1}
+.expert-name{font-size:1rem;font-weight:800;display:flex;align-items:center;gap:6px}
+.expert-badge{font-size:.7rem;padding:2px 8px;border-radius:6px;background:rgba(251,191,36,0.15);color:var(--gold);font-weight:700;border:1px solid rgba(251,191,36,0.3)}
+.expert-domain{font-size:.8rem;color:var(--accent);font-weight:600;margin-top:2px}
+.expert-stats{display:flex;gap:16px;margin-top:8px}
+.expert-stat{display:flex;flex-direction:column;align-items:center}
+.expert-stat-val{font-size:1rem;font-weight:900;color:var(--accent)}
+.expert-stat-label{font-size:.6rem;color:var(--text-dim)}
+.expert-bio{font-size:.8rem;color:var(--text-dim);line-height:1.4;margin-bottom:12px}
+.expert-domains{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.expert-domain-tag{padding:4px 10px;border-radius:8px;font-size:.7rem;font-weight:600;background:rgba(16,185,129,0.1);color:var(--accent);border:1px solid rgba(16,185,129,0.2)}
+.btn-ask{width:100%;padding:12px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-ask:hover{background:var(--accent-light);transform:translateY(-2px)}
+
+/* How to become */
+.howto{background:linear-gradient(135deg,rgba(251,191,36,0.1),rgba(16,185,129,0.1));border:1px solid rgba(251,191,36,0.3);border-radius:16px;padding:24px;text-align:center;margin-top:20px}
+.howto-title{font-size:1.1rem;font-weight:900;color:var(--gold);margin-bottom:12px}
+.howto-steps{text-align:left}
+.howto-step{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.howto-num{width:28px;height:28px;border-radius:50%;background:rgba(251,191,36,0.2);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;flex-shrink:0}
+.howto-text{font-size:.85rem;line-height:1.4}
+.howto-text strong{color:var(--gold)}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="social.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Social</a>
+  <h1>⭐ Experts</h1>
+  <div class="spacer"></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Experts de la communaute</div>
+  <div id="experts-list"></div>
+
+  <div class="howto">
+    <div class="howto-title">⭐ Comment devenir expert ?</div>
+    <div class="howto-steps">
+      <div class="howto-step">
+        <div class="howto-num">1</div>
+        <div class="howto-text">Reponds aux questions dans <a href="entraide.html">Entraide</a></div>
+      </div>
+      <div class="howto-step">
+        <div class="howto-num">2</div>
+        <div class="howto-text">Atteins <strong>50+ reponses</strong> dans un domaine</div>
+      </div>
+      <div class="howto-step">
+        <div class="howto-num">3</div>
+        <div class="howto-text">Maintiens <strong>80%+ de votes positifs</strong></div>
+      </div>
+      <div class="howto-step">
+        <div class="howto-num">⭐</div>
+        <div class="howto-text">Le <strong>badge Expert</strong> est attribue automatiquement !</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="defis.html"><span>🏆</span>Defis</a>
+  <a href="social.html" class="active"><span>👥</span>Social</a>
+  <a href="carte.html"><span>🗺️</span>Carte</a>
+  <a href="compteurs.html"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-social.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var EXPERTS = [
+    { pseudo:'GreenPierre', avatar:'P', color:'#10B981', domain:'Habitat & Renovation', bio:'Artisan RGE depuis 15 ans. Specialiste isolation et DPE.', answers:187, positive:94, domains:['Habitat','Energie'] },
+    { pseudo:'AquaSophie', avatar:'S', color:'#3B82F6', domain:'Eau & Conservation', bio:'Ingenieure hydraulique. Experte en gestion durable de l\'eau.', answers:142, positive:91, domains:['Eau','Jardin'] },
+    { pseudo:'SolairMax', avatar:'M', color:'#FBBF24', domain:'Energie Renouvelable', bio:'Installateur photovoltaique. 200+ installations en France.', answers:134, positive:89, domains:['Energie','Habitat'] },
+    { pseudo:'JardinEmma', avatar:'E', color:'#8B5CF6', domain:'Permaculture & Jardin', bio:'Formatrice en permaculture. Auteure de "Mon jardin nourricier".', answers:198, positive:96, domains:['Jardin','Alimentation'] },
+    { pseudo:'VeloKarim', avatar:'K', color:'#EC4899', domain:'Mobilite Douce', bio:'Velotafeur depuis 8 ans. 15 000 km/an sans voiture.', answers:112, positive:88, domains:['Mobilite'] },
+    { pseudo:'ChefVerte', avatar:'C', color:'#F59E0B', domain:'Alimentation Durable', bio:'Cheffe cuisiniere vegetale. Ateliers anti-gaspi en ecoles.', answers:156, positive:92, domains:['Alimentation','Dechets'] },
+    { pseudo:'RecycloHugo', avatar:'H', color:'#06B6D4', domain:'Zero Dechet & Recyclage', bio:'Ambassadeur zero dechet. 2 kg de dechets/an pour une famille de 4.', answers:168, positive:90, domains:['Dechets'] },
+    { pseudo:'PFASAlert', avatar:'A', color:'#EF4444', domain:'PFAS & Pollution', bio:'Chimiste environnemental. Lanceur d\'alerte PFAS en France.', answers:87, positive:93, domains:['PFAS','Eau'] },
+    { pseudo:'BioNadia', avatar:'N', color:'#14B8A6', domain:'Biodiversite', bio:'Ecologue. Etude des corridors ecologiques en milieu urbain.', answers:95, positive:91, domains:['Biodiversite','Jardin'] },
+    { pseudo:'MinimalLisa', avatar:'L', color:'#A855F7', domain:'Minimalisme & Zero Dechet', bio:'Blogueuse minimaliste. "Moins c\'est mieux" depuis 2019.', answers:78, positive:87, domains:['Dechets','General'] }
+  ];
+
+  var container = document.getElementById('experts-list');
+
+  EXPERTS.forEach(function(e) {
+    var domainsHtml = '';
+    e.domains.forEach(function(d) {
+      domainsHtml += '<span class="expert-domain-tag">' + d + '</span>';
+    });
+
+    container.innerHTML += '<div class="expert-card">' +
+      '<div class="expert-top">' +
+        '<div class="expert-avatar" style="background:' + e.color + '">' + e.avatar + '</div>' +
+        '<div class="expert-info">' +
+          '<div class="expert-name">' + e.pseudo + ' <span class="expert-badge">⭐ Expert</span></div>' +
+          '<div class="expert-domain">' + e.domain + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="expert-stats">' +
+        '<div class="expert-stat"><div class="expert-stat-val">' + e.answers + '</div><div class="expert-stat-label">reponses</div></div>' +
+        '<div class="expert-stat"><div class="expert-stat-val">' + e.positive + '%</div><div class="expert-stat-label">positifs</div></div>' +
+      '</div>' +
+      '<div class="expert-bio">' + e.bio + '</div>' +
+      '<div class="expert-domains">' + domainsHtml + '</div>' +
+      '<a href="entraide.html" class="btn-ask">Poser une question</a>' +
+    '</div>';
+  });
+})();
+</script>
+</body>
+</html>

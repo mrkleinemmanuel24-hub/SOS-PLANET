@@ -580,12 +580,36 @@ a{color:var(--accent);text-decoration:none}
   </div>
 </div>
 
+<!-- Personalized feed (shows after 7-day journey) -->
+<div id="personalized-feed" style="display:none;padding:0 20px 20px">
+  <div class="today-title">📰 Mon fil personnalise</div>
+
+  <!-- Posts from my affinity groups -->
+  <div id="feed-affinity" style="margin-bottom:16px"></div>
+
+  <!-- Popular questions in my domains -->
+  <div id="feed-questions" style="margin-bottom:16px"></div>
+
+  <!-- Friends activity -->
+  <div id="feed-friends" style="margin-bottom:16px"></div>
+
+  <!-- Trend of the day -->
+  <div id="feed-trend" style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(59,130,246,0.15));border:1px solid var(--accent);border-radius:14px;padding:16px;text-align:center;margin-bottom:16px">
+    <div style="font-size:1.5rem;margin-bottom:4px">📈</div>
+    <div style="font-size:1rem;font-weight:800;color:var(--accent)">45 000 actions aujourd'hui</div>
+    <div style="font-size:.8rem;color:var(--text-dim)">+12% vs hier</div>
+  </div>
+
+  <!-- Map shortcut -->
+  <a href="carte.html" style="display:block;padding:14px;border:none;border-radius:12px;background:rgba(16,185,129,0.15);color:var(--accent);font-size:.9rem;font-weight:700;text-align:center;border:1px solid rgba(16,185,129,0.3);text-decoration:none">🗺️ Ajouter un lieu sur la carte</a>
+</div>
+
 <!-- Bottom nav -->
 <nav class="bottom-nav">
   <a href="index.html" class="active"><span>🏠</span>Accueil</a>
   <a href="defis.html"><span>🏆</span>Defis</a>
-  <a href="amis.html"><span>👥</span>Amis</a>
-  <a href="engagements.html"><span>🌍</span>Explorer</a>
+  <a href="social.html"><span>👥</span>Social</a>
+  <a href="carte.html"><span>🗺️</span>Carte</a>
   <a href="compteurs.html"><span>📊</span>Impact</a>
 </nav>
 
@@ -1201,6 +1225,58 @@ a{color:var(--accent);text-decoration:none}
     document.getElementById('reminder-overlay').style.display = 'none';
   };
 
+  // ==== PERSONALIZED FEED (after 7-day journey) ====
+  function renderPersonalizedFeed() {
+    var day = PlanetSocial.getJourneyDay();
+    if (day <= 7) return; // Still in journey
+
+    var feedSection = document.getElementById('personalized-feed');
+    if (!feedSection) return;
+    feedSection.style.display = 'block';
+
+    // Posts from my affinity groups
+    var affinityContainer = document.getElementById('feed-affinity');
+    var affinityGroups = [];
+    try { affinityGroups = JSON.parse(localStorage.getItem('planet_affinity_groups')) || []; } catch(e) {}
+    if (affinityGroups.length > 0) {
+      var groupNames = { 'ag-maison':'Maison passive', 'ag-autonomie':'Autonomie energetique', 'ag-perma':'Permaculture', 'ag-velotaf':'Velotaf', 'ag-zerodechet':'Zero dechet', 'ag-vege':'Vegetarien', 'ag-bois':'Construction bois', 'ag-pac':'Pompes a chaleur', 'ag-eau':'Economiser l\'eau', 'ag-abeilles':'Apiculture', 'ag-pluie':'Recup eau de pluie', 'ag-ve':'Voiture electrique', 'ag-marche':'Marche & rando', 'ag-train':'Sans avion', 'ag-amap':'AMAP', 'ag-antigaspi':'Anti-gaspi', 'ag-faitmaison':'Fait maison', 'ag-repair':'Repair Cafe', 'ag-parents':'Parentalite ecolo', 'ag-minimal':'Minimalisme' };
+      var feedHtml = '<div style="font-size:.85rem;font-weight:700;margin-bottom:8px;color:var(--gold)">💚 Mes groupes</div>';
+      var feedPosts = [
+        { author:'Marie L.', text:'Nouvelle technique pour economiser l\'eau au jardin !', time:'il y a 30min' },
+        { author:'Thomas K.', text:'Retour d\'experience panneau solaire apres 1 an', time:'il y a 2h' },
+        { author:'Sophie G.', text:'Recette anti-gaspi du jour : soupe de fanes', time:'il y a 4h' }
+      ];
+      feedPosts.slice(0,3).forEach(function(p) {
+        feedHtml += '<div class="social-mini"><div class="social-mini-icon">💬</div><div class="social-mini-text"><strong>' + p.author + '</strong> ' + p.text + '</div><div class="social-mini-time">' + p.time + '</div></div>';
+      });
+      feedHtml += '<div style="text-align:center;margin-top:6px"><a href="affinites.html" style="font-size:.8rem;font-weight:700">Voir mes groupes &rarr;</a></div>';
+      affinityContainer.innerHTML = feedHtml;
+    }
+
+    // Popular questions
+    var questionsContainer = document.getElementById('feed-questions');
+    var qaQuestions = [];
+    try { qaQuestions = JSON.parse(localStorage.getItem('planet_qa_questions')) || []; } catch(e) {}
+    if (qaQuestions.length > 0) {
+      var topQs = qaQuestions.slice().sort(function(a,b) { return b.votes - a.votes; }).slice(0,3);
+      var qHtml = '<div style="font-size:.85rem;font-weight:700;margin-bottom:8px;color:var(--gold)">🤝 Questions populaires</div>';
+      topQs.forEach(function(q) {
+        qHtml += '<div class="social-mini"><div class="social-mini-icon">❓</div><div class="social-mini-text"><strong>' + q.title + '</strong></div><div class="social-mini-time">👍 ' + q.votes + '</div></div>';
+      });
+      qHtml += '<div style="text-align:center;margin-top:6px"><a href="entraide.html" style="font-size:.8rem;font-weight:700">Voir toutes les questions &rarr;</a></div>';
+      questionsContainer.innerHTML = qHtml;
+    }
+
+    // Friends activity
+    var friendsContainer = document.getElementById('feed-friends');
+    var activities = PlanetSocial.DEMO_ACTIVITIES.slice(0, 3);
+    var fHtml = '<div style="font-size:.85rem;font-weight:700;margin-bottom:8px;color:var(--gold)">👥 Activite de mes amis</div>';
+    activities.forEach(function(a) {
+      fHtml += '<div class="social-mini"><div class="social-mini-icon">' + a.icon + '</div><div class="social-mini-text"><strong>' + a.user + '</strong> ' + a.text + '</div><div class="social-mini-time">' + a.time + '</div></div>';
+    });
+    friendsContainer.innerHTML = fHtml;
+  }
+
   // ==== INIT ====
   var user = getUser();
   if (user && user.pseudo) {
@@ -1212,6 +1288,7 @@ a{color:var(--accent);text-decoration:none}
     renderJourney();
     renderSocialFeed();
     renderInvitePrompt();
+    renderPersonalizedFeed();
     checkReminder();
   } else {
     // New user — show onboarding

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Tendances</title>
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);
+  --card-hover:rgba(16,185,129,0.15);--danger:#EF4444;--blue:#3B82F6;
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.section{padding:20px;max-width:600px;margin:0 auto}
+.section-title{font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--card-border)}
+
+/* Big numbers */
+.big-numbers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+.big-num{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:16px 12px;text-align:center}
+.big-num-val{font-size:1.4rem;font-weight:900;color:var(--accent);font-variant-numeric:tabular-nums}
+.big-num-label{font-size:.65rem;color:var(--text-dim);margin-top:4px}
+
+/* Growth */
+.growth-banner{background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(59,130,246,0.15));border:1px solid var(--accent);border-radius:14px;padding:16px;text-align:center;margin-bottom:20px}
+.growth-arrow{font-size:1.5rem;color:var(--accent);font-weight:900}
+.growth-text{font-size:1rem;font-weight:700;color:var(--accent)}
+.growth-sub{font-size:.8rem;color:var(--text-dim);margin-top:4px}
+
+/* CO2 comparison */
+.co2-compare{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:20px;margin-bottom:20px}
+.co2-row{margin-bottom:12px}
+.co2-row:last-child{margin-bottom:0}
+.co2-row-label{font-size:.8rem;font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between}
+.co2-bar{height:24px;border-radius:8px;background:rgba(255,255,255,0.08);overflow:hidden;position:relative}
+.co2-fill{height:100%;border-radius:8px;transition:width 1s ease}
+.co2-fill.this-week{background:linear-gradient(90deg,var(--accent),var(--accent-light))}
+.co2-fill.last-week{background:linear-gradient(90deg,rgba(59,130,246,0.6),rgba(59,130,246,0.3))}
+
+/* Bar chart */
+.bar-chart{margin-bottom:10px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bar-label{font-size:.8rem;font-weight:600;width:120px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:20px;background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width 1s ease;min-width:4px}
+.bar-val{font-size:.75rem;font-weight:700;color:var(--text-dim);width:40px;text-align:right;flex-shrink:0}
+
+/* Domain cards */
+.domain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+@media(max-width:500px){.domain-grid{grid-template-columns:repeat(2,1fr)}}
+.domain-card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:12px;text-align:center;transition:all .2s}
+.domain-card:hover{border-color:var(--accent);background:var(--card-hover)}
+.domain-emoji{font-size:1.5rem;display:block;margin-bottom:4px}
+.domain-name{font-size:.7rem;font-weight:700;margin-bottom:2px}
+.domain-count{font-size:.65rem;color:var(--accent);font-weight:600}
+.domain-trend{font-size:.75rem;font-weight:700}
+.domain-trend.up{color:var(--accent)}
+.domain-trend.down{color:var(--danger)}
+
+/* Heatmap */
+.heatmap{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+@media(max-width:450px){.heatmap{grid-template-columns:repeat(3,1fr)}}
+.region-cell{border-radius:10px;padding:10px 8px;text-align:center;transition:all .2s}
+.region-cell:hover{transform:scale(1.05)}
+.region-name{font-size:.7rem;font-weight:700;color:#fff}
+.region-users{font-size:.6rem;color:rgba(255,255,255,0.7);margin-top:2px}
+.region-cell.dark-green{background:rgba(16,185,129,0.6);border:1px solid rgba(16,185,129,0.8)}
+.region-cell.medium-green{background:rgba(16,185,129,0.35);border:1px solid rgba(16,185,129,0.5)}
+.region-cell.light-green{background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.3)}
+.region-cell.gray{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1)}
+.legend{display:flex;gap:12px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:.65rem;color:var(--text-dim)}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+
+/* Ticker */
+.ticker-wrap{overflow:hidden;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:10px 0;margin-top:20px}
+.ticker{display:flex;gap:40px;animation:ticker-scroll 30s linear infinite;white-space:nowrap}
+@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{font-size:.8rem;font-weight:600;color:var(--text);display:inline-flex;align-items:center;gap:6px;flex-shrink:0}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Accueil</a>
+  <h1>📈 Tendances</h1>
+  <div class="spacer"></div>
+</div>
+
+<!-- Active users -->
+<div class="section">
+  <div class="section-title">Utilisateurs actifs</div>
+  <div class="big-numbers">
+    <div class="big-num"><div class="big-num-val" id="users-today">12 847</div><div class="big-num-label">Aujourd'hui</div></div>
+    <div class="big-num"><div class="big-num-val" id="users-week">89 234</div><div class="big-num-label">Cette semaine</div></div>
+    <div class="big-num"><div class="big-num-val" id="users-month">342 156</div><div class="big-num-label">Ce mois</div></div>
+  </div>
+  <div class="growth-banner">
+    <div class="growth-arrow">↑</div>
+    <div class="growth-text">+12% cette semaine</div>
+    <div class="growth-sub">vs semaine precedente</div>
+  </div>
+</div>
+
+<!-- CO2 comparison -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">CO2 economise</div>
+  <div class="co2-compare">
+    <div class="co2-row">
+      <div class="co2-row-label"><span>🟢 Cette semaine</span><span style="color:var(--accent);font-weight:700">847 tonnes</span></div>
+      <div class="co2-bar"><div class="co2-fill this-week" style="width:85%"></div></div>
+    </div>
+    <div class="co2-row">
+      <div class="co2-row-label"><span>🔵 Semaine derniere</span><span style="color:var(--blue);font-weight:700">756 tonnes</span></div>
+      <div class="co2-bar"><div class="co2-fill last-week" style="width:76%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Top engagements -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">Top 5 engagements ce mois</div>
+  <div class="bar-chart" id="top-engagements"></div>
+</div>
+
+<!-- Top challenges -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">Top 5 defis completes</div>
+  <div class="bar-chart" id="top-challenges"></div>
+</div>
+
+<!-- By domain -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">Par domaine</div>
+  <div class="domain-grid" id="domain-grid"></div>
+</div>
+
+<!-- France heatmap -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">Carte de France des actions</div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(16,185,129,0.6)"></div> >1000</div>
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(16,185,129,0.35)"></div> 500-1000</div>
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(16,185,129,0.2)"></div> 100-500</div>
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.06)"></div> <100</div>
+  </div>
+  <div class="heatmap" id="heatmap"></div>
+</div>
+
+<!-- Live ticker -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">En direct</div>
+  <div class="ticker-wrap">
+    <div class="ticker" id="ticker"></div>
+  </div>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="defis.html"><span>🏆</span>Defis</a>
+  <a href="social.html"><span>👥</span>Social</a>
+  <a href="carte.html"><span>🗺️</span>Carte</a>
+  <a href="compteurs.html" class="active"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-social.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // Top engagements
+  var topEngagements = [
+    { name:'Douche courte', count:45200, color:'var(--accent)' },
+    { name:'Velo/marche', count:38700, color:'var(--accent-light)' },
+    { name:'Repas vege', count:34100, color:'var(--gold)' },
+    { name:'Tri dechets', count:28900, color:'var(--blue)' },
+    { name:'Sac reutilisable', count:24600, color:'#8B5CF6' }
+  ];
+
+  var topChallenges = [
+    { name:'Zero dechet 7j', count:12400, color:'var(--accent)' },
+    { name:'Sans voiture 5j', count:9800, color:'var(--accent-light)' },
+    { name:'7 repas vege', count:8900, color:'var(--gold)' },
+    { name:'Douche 3min', count:7600, color:'var(--blue)' },
+    { name:'Zero achat neuf', count:5200, color:'#8B5CF6' }
+  ];
+
+  function renderBars(containerId, data) {
+    var container = document.getElementById(containerId);
+    var max = data[0].count;
+    data.forEach(function(d) {
+      var pct = (d.count / max) * 100;
+      container.innerHTML += '<div class="bar-row">' +
+        '<div class="bar-label">' + d.name + '</div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + d.color + '"></div></div>' +
+        '<div class="bar-val">' + (d.count >= 1000 ? (d.count/1000).toFixed(1)+'k' : d.count) + '</div>' +
+      '</div>';
+    });
+  }
+  renderBars('top-engagements', topEngagements);
+  renderBars('top-challenges', topChallenges);
+
+  // Domain cards
+  var domains = [
+    { emoji:'🏠', name:'Habitat', count:18420, trend:'+8%' },
+    { emoji:'💧', name:'Eau', count:24310, trend:'+15%' },
+    { emoji:'⚡', name:'Energie', count:21050, trend:'+11%' },
+    { emoji:'🌿', name:'Jardin', count:15800, trend:'+22%' },
+    { emoji:'🚲', name:'Mobilite', count:19340, trend:'+9%' },
+    { emoji:'🥗', name:'Alimentation', count:22100, trend:'+13%' },
+    { emoji:'♻️', name:'Dechets', count:26780, trend:'+18%' },
+    { emoji:'🧪', name:'PFAS', count:8920, trend:'+45%' },
+    { emoji:'🦋', name:'Biodiversite', count:11200, trend:'+7%' }
+  ];
+
+  var domainGrid = document.getElementById('domain-grid');
+  domains.forEach(function(d) {
+    var isUp = d.trend.indexOf('+') === 0;
+    domainGrid.innerHTML += '<div class="domain-card">' +
+      '<div class="domain-emoji">' + d.emoji + '</div>' +
+      '<div class="domain-name">' + d.name + '</div>' +
+      '<div class="domain-count">' + d.count.toLocaleString('fr-FR') + ' actifs</div>' +
+      '<div class="domain-trend ' + (isUp?'up':'down') + '">' + (isUp?'↑':'↓') + ' ' + d.trend + '</div>' +
+    '</div>';
+  });
+
+  // France heatmap
+  var regions = [
+    { name:'Ile-de-France', users:4520 },
+    { name:'Auvergne-RA', users:2890 },
+    { name:'Nouvelle-Aquit.', users:1830 },
+    { name:'Occitanie', users:2100 },
+    { name:'PACA', users:2340 },
+    { name:'Grand Est', users:1560 },
+    { name:'Hauts-de-Fr.', users:1290 },
+    { name:'Bretagne', users:1450 },
+    { name:'Pays de Loire', users:1120 },
+    { name:'Normandie', users:870 },
+    { name:'Bourgogne-FC', users:680 },
+    { name:'Centre-VdL', users:540 },
+    { name:'Corse', users:85 }
+  ];
+
+  var heatmap = document.getElementById('heatmap');
+  regions.forEach(function(r) {
+    var cls = r.users > 1000 ? 'dark-green' : (r.users > 500 ? 'medium-green' : (r.users > 100 ? 'light-green' : 'gray'));
+    heatmap.innerHTML += '<div class="region-cell ' + cls + '">' +
+      '<div class="region-name">' + r.name + '</div>' +
+      '<div class="region-users">' + r.users.toLocaleString('fr-FR') + ' users</div>' +
+    '</div>';
+  });
+
+  // Live ticker
+  var tickerActions = [
+    'Marie vient de composter 🌿',
+    'Karim a fait 10km a velo 🚲',
+    'Sophie a invite 3 amis 👥',
+    'Lucas a trie ses dechets ♻️',
+    'Emma a economise 15L d\'eau 💧',
+    'Pierre a plante un arbre 🌳',
+    'Claire a pris le train 🚂',
+    'Marc a mange vege 🥗',
+    'Julie a repare son velo 🔧',
+    'Hugo a eteint ses veilles 🔌',
+    'Lisa a fait ses courses en vrac 🛒',
+    'Thomas a fait une douche de 3min 🚿',
+    'Nadia a rejoint une AMAP 🧑‍🌾',
+    'Antoine installe des panneaux solaires ☀️',
+    'Rose fait du covoiturage 🚗'
+  ];
+
+  function buildTicker() {
+    var ticker = document.getElementById('ticker');
+    var html = '';
+    // Duplicate for seamless loop
+    for (var j = 0; j < 2; j++) {
+      tickerActions.forEach(function(a) {
+        html += '<span class="ticker-item">' + a + ' —</span>';
+      });
+    }
+    ticker.innerHTML = html;
+  }
+  buildTicker();
+
+  // Animate numbers
+  function animateNumber(el, target, duration) {
+    var start = 0;
+    var startTime = null;
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      var p = Math.min((ts - startTime) / duration, 1);
+      var val = Math.round(start + (target - start) * p);
+      el.textContent = val.toLocaleString('fr-FR');
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  animateNumber(document.getElementById('users-today'), 12847, 1500);
+  animateNumber(document.getElementById('users-week'), 89234, 2000);
+  animateNumber(document.getElementById('users-month'), 342156, 2500);
+
+  // Refresh ticker items periodically
+  var names = ['Marie','Karim','Sophie','Lucas','Emma','Pierre','Claire','Marc','Julie','Hugo','Lisa','Thomas','Nadia','Antoine','Rose','Ines','Fabrice','Samuel','Gaelle','Paul'];
+  var actions = ['a composte','a fait du velo','a trie ses dechets','a economise de l\'eau','a mange vege','a pris le train','a repare un objet','a fait ses courses en vrac','a plante des graines','a rejoint un defi'];
+  var emojis = ['🌿','🚲','♻️','💧','🥗','🚂','🔧','🛒','🌱','🏆'];
+
+  setInterval(function() {
+    var idx = Math.floor(Math.random() * names.length);
+    var aidx = Math.floor(Math.random() * actions.length);
+    var newAction = names[idx] + ' ' + actions[aidx] + ' ' + emojis[aidx];
+    tickerActions.push(newAction);
+    if (tickerActions.length > 30) tickerActions.shift();
+    buildTicker();
+  }, 5000);
+
+})();
+</script>
+</body>
+</html>

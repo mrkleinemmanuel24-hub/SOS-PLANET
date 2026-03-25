@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23059669'/><text x='50' y='70' font-size='60' text-anchor='middle'>🌍</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOS Planet — Mon profil</title>
+<meta name="theme-color" content="#0A1628">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#0A1628;--bg-green:#0F2E1A;--accent:#10B981;--accent-light:#34D399;
+  --gold:#FBBF24;--text:#E8E4DC;--text-dim:#9CA3AF;
+  --card:rgba(255,255,255,0.06);--card-border:rgba(255,255,255,0.08);
+  --card-hover:rgba(16,185,129,0.15);--danger:#EF4444;--blue:#3B82F6;
+}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(170deg,var(--bg-deep) 0%,var(--bg-green) 50%,var(--bg-deep) 100%);color:var(--text);min-height:100vh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+.topbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);z-index:100}
+.topbar a{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.topbar h1{flex:1;text-align:center;font-size:1rem;font-weight:800}
+.topbar .spacer{width:80px}
+
+.section{padding:20px;max-width:600px;margin:0 auto}
+.section-title{font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--card-border)}
+
+/* Profile header */
+.profile-header{text-align:center;padding:30px 20px;margin-bottom:10px}
+.avatar-selector{display:flex;justify-content:center;margin-bottom:16px;position:relative}
+.avatar-big{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:rgba(16,185,129,0.2);border:3px solid var(--accent);cursor:pointer;transition:all .2s}
+.avatar-big:hover{transform:scale(1.1);border-color:var(--gold)}
+.avatar-grid{display:none;position:absolute;top:90px;left:50%;transform:translateX(-50%);background:rgba(10,22,40,0.98);border:1px solid var(--card-border);border-radius:14px;padding:12px;display:none;grid-template-columns:repeat(5,1fr);gap:8px;z-index:50;box-shadow:0 10px 40px rgba(0,0,0,0.5)}
+.avatar-grid.show{display:grid}
+.avatar-option{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;cursor:pointer;background:var(--card);border:2px solid var(--card-border);transition:all .2s}
+.avatar-option:hover{border-color:var(--accent);transform:scale(1.1)}
+.avatar-option.selected{border-color:var(--gold);background:rgba(251,191,36,0.15)}
+.profile-pseudo{font-size:1.4rem;font-weight:900;margin-bottom:4px}
+.profile-pseudo input{background:transparent;border:none;border-bottom:2px solid var(--card-border);color:var(--text);font-size:1.4rem;font-weight:900;text-align:center;outline:none;width:200px;transition:border-color .2s}
+.profile-pseudo input:focus{border-color:var(--accent)}
+.profile-level{font-size:.9rem;color:var(--gold);font-weight:700}
+
+/* XP Bar */
+.xp-bar-wrap{background:rgba(255,255,255,0.08);border-radius:12px;height:16px;overflow:hidden;margin:12px auto;max-width:300px}
+.xp-bar-fill{height:100%;border-radius:12px;background:linear-gradient(90deg,var(--accent),var(--accent-light));transition:width .8s}
+.xp-labels{display:flex;justify-content:space-between;font-size:.75rem;max-width:300px;margin:6px auto 0}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:14px;text-align:center}
+.stat-val{font-size:1.3rem;font-weight:900;color:var(--accent)}
+.stat-label{font-size:.65rem;color:var(--text-dim);margin-top:2px}
+
+/* Group list */
+.group-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;margin-bottom:8px}
+.group-item-emoji{font-size:1.2rem;flex-shrink:0}
+.group-item-name{flex:1;font-size:.85rem;font-weight:700}
+.btn-leave{padding:6px 12px;border:none;border-radius:8px;font-size:.7rem;font-weight:700;cursor:pointer;background:rgba(239,68,68,0.15);color:var(--danger);border:1px solid rgba(239,68,68,0.3);transition:all .2s}
+.btn-leave:hover{background:rgba(239,68,68,0.25)}
+
+/* Input field */
+.profile-field{margin-bottom:14px}
+.profile-field label{font-size:.85rem;font-weight:700;display:block;margin-bottom:6px}
+.profile-field input{width:100%;padding:12px 14px;border:2px solid var(--card-border);border-radius:10px;background:var(--card);color:var(--text);font-size:.9rem;outline:none;transition:border-color .2s}
+.profile-field input:focus{border-color:var(--accent)}
+
+/* Mentor section */
+.mentor-card{background:linear-gradient(135deg,rgba(251,191,36,0.1),rgba(16,185,129,0.1));border:1px solid rgba(251,191,36,0.3);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px}
+.mentor-title{font-size:1rem;font-weight:800;color:var(--gold);margin-bottom:8px}
+.mentor-avatar{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;background:rgba(251,191,36,0.2);border:2px solid var(--gold);margin:0 auto 8px}
+.mentor-name{font-size:.95rem;font-weight:700}
+.mentor-level{font-size:.75rem;color:var(--text-dim)}
+.btn-mentor{margin-top:12px;padding:12px 24px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-mentor:hover{background:var(--accent-light)}
+.mentor-unlock{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:14px;padding:16px;text-align:center;margin-bottom:16px}
+.mentor-unlock-text{font-size:.9rem;font-weight:700;color:var(--accent)}
+
+/* Expertise badges */
+.expertise-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.expertise-tag{padding:6px 12px;border-radius:8px;font-size:.75rem;font-weight:700;background:rgba(16,185,129,0.1);color:var(--accent);border:1px solid rgba(16,185,129,0.2)}
+
+/* Action buttons */
+.profile-actions{display:flex;flex-direction:column;gap:8px;margin-top:20px}
+.profile-action{padding:14px;border:none;border-radius:12px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;text-align:center;text-decoration:none;display:block}
+.profile-action.green{background:rgba(16,185,129,0.15);color:var(--accent);border:1px solid rgba(16,185,129,0.3)}
+.profile-action.gold{background:rgba(251,191,36,0.15);color:var(--gold);border:1px solid rgba(251,191,36,0.3)}
+.profile-action.red{background:rgba(239,68,68,0.1);color:var(--danger);border:1px solid rgba(239,68,68,0.2)}
+.profile-action:hover{transform:translateY(-2px)}
+
+/* Toast */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 24px;border-radius:30px;font-size:.85rem;font-weight:700;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav a{flex:1;text-align:center;padding:8px 4px 6px;font-size:.6rem;font-weight:600;color:var(--text-dim);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a span{font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html"><img src="img/sos-planet.png" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:contain;">&larr; Accueil</a>
+  <h1>👤 Mon profil</h1>
+  <div class="spacer"></div>
+</div>
+
+<!-- Profile header -->
+<div class="profile-header">
+  <div class="avatar-selector">
+    <div class="avatar-big" id="avatar-big" onclick="toggleAvatarGrid()">🌍</div>
+    <div class="avatar-grid" id="avatar-grid"></div>
+  </div>
+  <div class="profile-pseudo"><input type="text" id="pseudo-edit" placeholder="Pseudo..." maxlength="20"></div>
+  <div class="profile-level" id="profile-level">Niveau 1 — Graine 🌱</div>
+  <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-fill" style="width:0%"></div></div>
+  <div class="xp-labels"><span id="xp-current" style="color:var(--accent);font-weight:700">0 XP</span><span id="xp-next" style="color:var(--text-dim)"></span></div>
+  <div style="font-size:.8rem;color:var(--text-dim);margin-top:8px" id="streak-info"></div>
+</div>
+
+<!-- Stats -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">Mes statistiques</div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-val" id="stat-co2">0</div><div class="stat-label">kg CO2 economises</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-water">0</div><div class="stat-label">L eau economises</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-waste">0</div><div class="stat-label">kg dechets evites</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-days">0</div><div class="stat-label">jours actifs</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-questions">0</div><div class="stat-label">questions posees</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-answers">0</div><div class="stat-label">reponses donnees</div></div>
+  </div>
+</div>
+
+<!-- Expertise -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">Mes domaines d'expertise</div>
+  <div class="expertise-tags" id="expertise-tags">
+    <span class="expertise-tag" style="opacity:.4">Pas encore d'expertise — reponds aux questions !</span>
+  </div>
+</div>
+
+<!-- My groups -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">Mes groupes par affinite</div>
+  <div id="my-groups"></div>
+</div>
+
+<!-- Friends -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">Mes amis</div>
+  <div id="friends-count" style="font-size:.9rem;color:var(--text-dim);margin-bottom:10px"></div>
+  <a href="amis.html" class="profile-action green">Voir tous mes amis</a>
+</div>
+
+<!-- Mentor -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">Parrainage</div>
+  <div id="mentor-section"></div>
+</div>
+
+<!-- Location -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">Informations</div>
+  <div class="profile-field">
+    <label>Ma commune</label>
+    <input type="text" id="commune-input" placeholder="Ex: Strasbourg" maxlength="50">
+  </div>
+  <div class="profile-field">
+    <label>Mon entreprise (optionnel)</label>
+    <input type="text" id="entreprise-input" placeholder="Ex: Danone, SNCF..." maxlength="50">
+  </div>
+</div>
+
+<!-- Actions -->
+<div class="section" style="padding-top:0">
+  <div class="profile-actions">
+    <a href="partage.html" class="profile-action green">🎴 Voir ma carte de partage</a>
+    <a href="tendances.html" class="profile-action gold">📈 Voir les tendances</a>
+    <button class="profile-action red" onclick="resetProfile()">🗑️ Reinitialiser mon profil</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="defis.html"><span>🏆</span>Defis</a>
+  <a href="social.html"><span>👥</span>Social</a>
+  <a href="carte.html"><span>🗺️</span>Carte</a>
+  <a href="compteurs.html"><span>📊</span>Impact</a>
+</nav>
+
+<script src="js/planet-engine.js"></script>
+<script src="js/planet-social.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var AVATARS = ['🌍','🌱','🌿','🌳','🌲','🌻','🌸','🍀','🦋','🐝','🐢','🐬','🌊','🏔️','☀️','🌙','⭐','🔥','💧','🍃'];
+
+  var LEVELS = [
+    { level:1, name:'Debut', emoji:'🫘', xp:0 },
+    { level:2, name:'Graine', emoji:'🌱', xp:30 },
+    { level:3, name:'Feuille', emoji:'🌿', xp:80 },
+    { level:4, name:'Plante', emoji:'🪴', xp:150 },
+    { level:5, name:'Herbe', emoji:'🌾', xp:250 },
+    { level:6, name:'Jeune Pousse', emoji:'🌱', xp:350 },
+    { level:7, name:'Prairie', emoji:'🌿', xp:500 },
+    { level:8, name:'Sequoia', emoji:'🌳', xp:700 },
+    { level:9, name:'Foret Ancienne', emoji:'🌲', xp:900 },
+    { level:10, name:'Gardien de la Planete', emoji:'🌍', xp:1000 }
+  ];
+
+  function getUser() {
+    try { return JSON.parse(localStorage.getItem('planet_user')); } catch(e) { return null; }
+  }
+  function saveUser(u) {
+    try { localStorage.setItem('planet_user', JSON.stringify(u)); } catch(e) {}
+  }
+  function getLevel(xp) {
+    var lv = LEVELS[0];
+    for (var i = LEVELS.length - 1; i >= 0; i--) {
+      if (xp >= LEVELS[i].xp) { lv = LEVELS[i]; break; }
+    }
+    return lv;
+  }
+  function getNextLevel(lv) {
+    var idx = LEVELS.indexOf(lv);
+    return idx < LEVELS.length - 1 ? LEVELS[idx + 1] : null;
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2500);
+  }
+
+  // Avatar grid
+  var avatarGrid = document.getElementById('avatar-grid');
+  AVATARS.forEach(function(a) {
+    var opt = document.createElement('div');
+    opt.className = 'avatar-option';
+    opt.textContent = a;
+    opt.addEventListener('click', function() {
+      var user = getUser();
+      if (user) { user.avatar = a; saveUser(user); }
+      document.getElementById('avatar-big').textContent = a;
+      avatarGrid.classList.remove('show');
+      showToast('Avatar mis a jour !');
+    });
+    avatarGrid.appendChild(opt);
+  });
+
+  window.toggleAvatarGrid = function() {
+    avatarGrid.classList.toggle('show');
+  };
+
+  // Close avatar grid on outside click
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.avatar-selector')) {
+      avatarGrid.classList.remove('show');
+    }
+  });
+
+  // Pseudo edit
+  var pseudoEdit = document.getElementById('pseudo-edit');
+  pseudoEdit.addEventListener('change', function() {
+    var user = getUser();
+    if (user && this.value.trim()) {
+      user.pseudo = this.value.trim();
+      saveUser(user);
+      showToast('Pseudo mis a jour !');
+    }
+  });
+
+  // Commune & entreprise
+  document.getElementById('commune-input').addEventListener('change', function() {
+    var user = getUser();
+    if (user) { user.commune = this.value.trim(); saveUser(user); showToast('Commune enregistree'); }
+  });
+  document.getElementById('entreprise-input').addEventListener('change', function() {
+    var user = getUser();
+    if (user) { user.entreprise = this.value.trim(); saveUser(user); showToast('Entreprise enregistree'); }
+  });
+
+  window.resetProfile = function() {
+    if (confirm('Reinitialiser tout le profil ? Toutes les donnees seront perdues.')) {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    }
+  };
+
+  function render() {
+    var user = getUser();
+    if (!user) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    // Avatar
+    document.getElementById('avatar-big').textContent = user.avatar || '🌍';
+
+    // Pseudo
+    pseudoEdit.value = user.pseudo || '';
+
+    // Level
+    var lv = getLevel(user.xp || 0);
+    var nextLv = getNextLevel(lv);
+    document.getElementById('profile-level').textContent = 'Niveau ' + lv.level + ' — ' + lv.name + ' ' + lv.emoji;
+
+    // XP bar
+    var xpInLevel = (user.xp || 0) - lv.xp;
+    var xpNeeded = nextLv ? (nextLv.xp - lv.xp) : 1;
+    var pct = nextLv ? Math.min(100, (xpInLevel / xpNeeded) * 100) : 100;
+    document.getElementById('xp-fill').style.width = pct + '%';
+    document.getElementById('xp-current').textContent = (user.xp || 0) + ' XP';
+    document.getElementById('xp-next').textContent = nextLv ? (nextLv.xp - (user.xp||0)) + ' XP pour ' + nextLv.name : 'Max !';
+
+    // Streak
+    document.getElementById('streak-info').textContent = '🔥 Streak : ' + (user.streak || 0) + ' jours';
+
+    // Stats
+    var counters = PlanetEngine.getPersonalCounters();
+    document.getElementById('stat-co2').textContent = Math.round(counters.co2);
+    document.getElementById('stat-water').textContent = Math.round(counters.water);
+    document.getElementById('stat-waste').textContent = Math.round(counters.waste);
+    document.getElementById('stat-days').textContent = user.streak || 0;
+
+    // Q&A stats
+    var qaQuestions = [];
+    try { qaQuestions = JSON.parse(localStorage.getItem('planet_qa_questions')) || []; } catch(e) {}
+    var myQuestions = qaQuestions.filter(function(q) { return q.author === user.pseudo; }).length;
+    var myAnswers = 0;
+    qaQuestions.forEach(function(q) {
+      if (q.answers) {
+        q.answers.forEach(function(a) {
+          if (a.author === user.pseudo) myAnswers++;
+        });
+      }
+    });
+    document.getElementById('stat-questions').textContent = myQuestions;
+    document.getElementById('stat-answers').textContent = myAnswers;
+
+    // Commune & entreprise
+    document.getElementById('commune-input').value = user.commune || '';
+    document.getElementById('entreprise-input').value = user.entreprise || '';
+
+    // My affinity groups
+    var affinityGroups = [];
+    try { affinityGroups = JSON.parse(localStorage.getItem('planet_affinity_groups')) || []; } catch(e) {}
+    var groupsContainer = document.getElementById('my-groups');
+    groupsContainer.innerHTML = '';
+    if (affinityGroups.length === 0) {
+      groupsContainer.innerHTML = '<div style="font-size:.85rem;color:var(--text-dim)">Aucun groupe rejoint. <a href="affinites.html">Decouvrir les groupes</a></div>';
+    } else {
+      affinityGroups.forEach(function(gid) {
+        var name = gid.replace('ag-','').replace(/-/g,' ');
+        groupsContainer.innerHTML += '<div class="group-item">' +
+          '<div class="group-item-emoji">💚</div>' +
+          '<div class="group-item-name">' + name + '</div>' +
+          '<button class="btn-leave" onclick="leaveGroup(\'' + gid + '\')">Quitter</button>' +
+        '</div>';
+      });
+    }
+
+    // Friends
+    var friends = PlanetSocial.getFriends();
+    document.getElementById('friends-count').textContent = friends.length + ' ami' + (friends.length > 1 ? 's' : '');
+
+    // Mentor
+    var mentorSection = document.getElementById('mentor-section');
+    var level = lv.level;
+    if (level >= 5) {
+      mentorSection.innerHTML = '<div class="mentor-unlock">' +
+        '<div class="mentor-unlock-text">🎉 Tu peux maintenant parrainer un nouveau membre !</div>' +
+        '<div style="font-size:.8rem;color:var(--text-dim);margin-top:6px">Les nouveaux membres de niveau 1-2 te seront automatiquement assignes.</div>' +
+      '</div>';
+    } else {
+      // Assign Sophie as mentor (level 7)
+      var mentor = friends.find(function(f) { return f.level >= 5; }) || { name:'Sophie', level:7, avatar:'S', color:'#8B5CF6' };
+      mentorSection.innerHTML = '<div class="mentor-card">' +
+        '<div class="mentor-title">Ton parrain / ta marraine</div>' +
+        '<div class="mentor-avatar" style="background:' + mentor.color + '">' + mentor.avatar + '</div>' +
+        '<div class="mentor-name">' + mentor.name + '</div>' +
+        '<div class="mentor-level">Niveau ' + mentor.level + '</div>' +
+        '<button class="btn-mentor" onclick="messageMentor()">💬 Envoyer un message</button>' +
+      '</div>';
+    }
+  }
+
+  window.leaveGroup = function(gid) {
+    var groups = [];
+    try { groups = JSON.parse(localStorage.getItem('planet_affinity_groups')) || []; } catch(e) {}
+    groups = groups.filter(function(g) { return g !== gid; });
+    try { localStorage.setItem('planet_affinity_groups', JSON.stringify(groups)); } catch(e) {}
+    showToast('Groupe quitte');
+    render();
+  };
+
+  window.messageMentor = function() {
+    showToast('Message envoye a ton parrain ! 💬');
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>
