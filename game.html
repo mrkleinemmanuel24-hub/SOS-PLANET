@@ -248,7 +248,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1p
 @keyframes event-glow{0%{box-shadow:0 0 0 0 rgba(251,191,36,0)}100%{box-shadow:0 0 12px 2px rgba(251,191,36,.15)}}
 
 /* ===== MASCOT ===== */
-.mascot-bubble{margin:0 16px 8px;padding:10px 14px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:16px 16px 16px 4px;font-size:.75rem;font-weight:600;color:var(--text);line-height:1.4;position:relative;animation:mascot-pop .4s ease}
+.mascot-bubble{margin:0 16px 8px;padding:8px 12px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:16px 16px 16px 4px;font-size:.75rem;font-weight:600;color:var(--text);line-height:1.4;position:relative;animation:mascot-pop .4s ease;display:flex;align-items:center;gap:8px}
 @keyframes mascot-pop{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
 </style>
 </head>
@@ -274,7 +274,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1p
   </div>
 
   <!-- Mascot -->
-  <div class="mascot-bubble" id="mascot-bubble"></div>
+  <div class="mascot-bubble" id="mascot-bubble"><img src="img/game/planeto-happy.png" id="mascot-img" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0"> <span id="mascot-text"></span></div>
 
   <!-- Hub Explorer -->
   <div class="hub-section">
@@ -411,20 +411,32 @@ var LEVELS = [
 ];
 
 var CREATURES = [
-  {e:'🐝',n:'Abeille',l:2},{e:'🐸',n:'Grenouille',l:3},{e:'🦔',n:'Herisson',l:4},
-  {e:'🐿️',n:'Ecureuil',l:5},{e:'🦊',n:'Renard',l:6},{e:'🦉',n:'Chouette',l:7},
-  {e:'🦌',n:'Cerf',l:8},{e:'🐬',n:'Dauphin',l:9},{e:'🦅',n:'Aigle',l:10},
-  {e:'🐋',n:'Baleine',l:11},{e:'🐺',n:'Loup',l:12},{e:'🐻',n:'Ours',l:13},
-  {e:'🐆',n:'Leopard',l:14},{e:'🦁',n:'Lion',l:15},{e:'🐘',n:'Elephant',l:16},
-  {e:'🐼',n:'Panda',l:17},{e:'🦄',n:'Licorne',l:18},{e:'🐉',n:'Dragon',l:19},
-  {e:'🔮',n:'Phoenix',l:20}
+  {e:'🐝',n:'Abeille',l:2,img:'img/game/creature-abeille.png'},
+  {e:'🐸',n:'Grenouille',l:3},
+  {e:'🦔',n:'Herisson',l:4,img:'img/game/creature-herisson.png'},
+  {e:'🐿️',n:'Ecureuil',l:5},
+  {e:'🦊',n:'Renard',l:6,img:'img/game/creature-renard.png'},
+  {e:'🦉',n:'Chouette',l:7},
+  {e:'🦌',n:'Cerf',l:8},
+  {e:'🐬',n:'Dauphin',l:9,img:'img/game/creature-dauphin.png'},
+  {e:'🦅',n:'Aigle',l:10,img:'img/game/creature-aigle.png'},
+  {e:'🐋',n:'Baleine',l:11,img:'img/game/creature-baleine.png'},
+  {e:'🐺',n:'Loup',l:12,img:'img/game/creature-loup.png'},
+  {e:'🐻',n:'Ours',l:13,img:'img/game/creature-ours.png'},
+  {e:'🐆',n:'Leopard',l:14},
+  {e:'🦁',n:'Lion',l:15,img:'img/game/creature-lion.png'},
+  {e:'🐘',n:'Elephant',l:16,img:'img/game/creature-elephant.png'},
+  {e:'🐼',n:'Panda',l:17,img:'img/game/creature-panda.png'},
+  {e:'🦄',n:'Licorne',l:18,img:'img/game/creature-licorne.png'},
+  {e:'🐉',n:'Dragon',l:19,img:'img/game/creature-dragon.png'},
+  {e:'🔮',n:'Phoenix',l:20,img:'img/game/creature-phoenix.png'}
 ];
 
 var BOSSES = [
-  {e:'🌳',t:'Foret Collective',d:'Plantez 100 arbres ensemble !',g:100,r:200,rc:50},
-  {e:'🚲',t:'Semaine Sans Moteur',d:'500 km parcourus sans voiture !',g:500,r:150,rc:40},
-  {e:'♻️',t:'Zero Plastique',d:'1000 plastiques refuses !',g:1000,r:250,rc:60},
-  {e:'🍽️',t:'Le Grand Vegetal',d:'300 repas vege cette semaine !',g:300,r:180,rc:45},
+  {e:'🐉',t:'Dragon de Pollution',d:'Terrassez le dragon des fumees toxiques !',g:100,r:200,rc:50,img:'img/game/boss-pollution.png'},
+  {e:'🦑',t:'Kraken du Plastique',d:'Liberez les oceans du plastique !',g:500,r:150,rc:40,img:'img/game/boss-kraken.png'},
+  {e:'♻️',t:'Zero Plastique',d:'1000 plastiques refuses collectivement !',g:1000,r:250,rc:60},
+  {e:'👑',t:'Roi du Gaspillage',d:'Detronez le roi sur son tas de dechets !',g:300,r:180,rc:45,img:'img/game/boss-gaspillage.png'},
   {e:'⚡',t:'Blackout Challenge',d:'200h d\'appareils debranchees !',g:200,r:160,rc:40}
 ];
 
@@ -924,7 +936,7 @@ function renderChests(){
     var hrs=Math.floor(min/60);
     var tStr=hrs>0?hrs+'h '+((min%60))+'min':min+'min';
     html+='<div class="chest-card'+(ready?' ready':'')+'">'+
-      '<div class="chest-emoji">'+(ready?'🎁':'🔒')+'</div>'+
+      '<div class="chest-emoji">'+(ready?'<img src="img/game/chest-open.png" style="width:40px;height:40px;border-radius:8px;object-fit:cover">':'<img src="img/game/chest-closed.png" style="width:40px;height:40px;border-radius:8px;object-fit:cover;opacity:.6">')+'</div>'+
       '<div class="chest-info"><div class="chest-label">Coffre '+(chest.diff==='hard'?'Epique':chest.diff==='medium'?'Rare':'Commun')+'</div>'+
       '<div class="chest-timer">'+(ready?'Pret a ouvrir !':'Ouvre dans '+tStr)+'</div></div>'+
       (ready?'<button class="chest-open-btn" onclick="openChest('+i+')">OUVRIR !</button>':
@@ -1085,7 +1097,7 @@ function renderBoss(){
   var pct=Math.min(100,Math.round(S.bossHp/b.g*100));
   document.getElementById('panel-boss').innerHTML=
     '<div class="boss-card"><div class="boss-hp-label">DEFI COLLECTIF</div>'+
-    '<span class="boss-emoji" id="boss-sprite">'+b.e+'</span>'+
+    (b.img?'<img src="'+b.img+'" id="boss-sprite" style="width:120px;height:120px;border-radius:16px;object-fit:cover;display:block;margin:0 auto 8px;animation:boss-idle 3s ease-in-out infinite">':'<span class="boss-emoji" id="boss-sprite">'+b.e+'</span>')+
     '<div class="boss-title">'+b.t+'</div><div class="boss-desc">'+b.d+'</div>'+
     '<div class="boss-hp-bar"><div class="boss-hp" id="boss-hp-bar" style="width:'+pct+'%"></div></div>'+
     '<div class="boss-count">'+S.bossHp+' / '+b.g+' — '+pct+'%</div>'+
@@ -1157,8 +1169,9 @@ function renderCollection(){
   html+='<div class="collect-grid">';
   CREATURES.forEach(function(c){
     var un=lvl>=c.l;
+    var visual = un && c.img ? '<img src="'+c.img+'" style="width:52px;height:52px;border-radius:8px;object-fit:cover" loading="lazy">' : '<span class="collect-emoji">'+(un?c.e:'❓')+'</span>';
     html+='<div class="collect-item '+(un?'unlocked':'locked')+'">'+
-      '<span class="collect-emoji">'+(un?c.e:'❓')+'</span>'+
+      visual+
       '<div class="collect-name">'+(un?c.n:'???')+'</div>'+
       '<div class="collect-req">Niv. '+c.l+'</div></div>';
   });
@@ -1354,24 +1367,31 @@ function updateUI(){
 // MASCOT NOTIFICATIONS (Duolingo owl mechanic)
 // ============================================================
 function updateMascot(){
-  var el=document.getElementById('mascot-bubble');
-  if(!el) return;
-  var msg='';
+  var textEl=document.getElementById('mascot-text');
+  var imgEl=document.getElementById('mascot-img');
+  if(!textEl) return;
+  var msg='', face='img/game/planeto-happy.png';
   var readyChests=S.chests?S.chests.filter(function(c){return !c.claimed&&Date.now()>=c.unlockTime}).length:0;
   if(S.deadPlants>0){
-    msg='🌍 '+S.deadPlants+' plantes sont mortes... Planeto pleure.';
+    msg=S.deadPlants+' plantes sont mortes... Planeto pleure.';
+    face='img/game/planeto-sad.png';
   } else if(S.done.length===3){
-    msg='🌍 Planeto saute de joie ! Reviens demain !';
+    msg='Planeto saute de joie ! Reviens demain !';
+    face='img/game/planeto-proud.png';
   } else if(readyChests>0){
-    msg='🌍 He ! Tes coffres sont prets !';
+    msg='He ! Tes coffres sont prets !';
+    face='img/game/planeto-proud.png';
   } else if(S.streak>7){
-    msg='🌍 Planeto est FIER de toi ! '+S.streak+' jours !';
+    msg='Planeto est FIER de toi ! '+S.streak+' jours !';
+    face='img/game/planeto-proud.png';
   } else if(S.streak===0 && S.totalQ>0){
-    msg='🌍 Planeto est triste... Tu lui manques.';
+    msg='Planeto est triste... Tu lui manques.';
+    face='img/game/planeto-sad.png';
   } else {
-    msg='🌍 Planeto t\'attend ! Fais une quete !';
+    msg='Planeto t\'attend ! Fais une quete !';
   }
-  el.textContent=msg;
+  textEl.textContent=msg;
+  if(imgEl) imgEl.src=face;
 }
 
 // ============================================================
